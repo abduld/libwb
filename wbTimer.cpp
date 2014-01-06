@@ -48,7 +48,10 @@ uint64_t _hrtime(void) {
 }
 
 static inline uint64_t getTime(void) {
+#ifdef WB_USE_CUDA
     cudaThreadSynchronize();
+#endif /* WB_USE_CUDA */
+    
     return _hrtime();
 }
 

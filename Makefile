@@ -4,7 +4,7 @@
 # INPUT
 ##########################################
 CXX=g++
-DEFINES=
+DEFINES=-DWB_USE_CUDA
 CUDA_INCLUDE=/usr/local/cuda-5.5/include
 CXX_FLAGS=-fPIC -x c++ -O0 -g -I . -I $(CUDA_INCLUDE) -L $(HOME)/usr/lib -Wall  -I$(HOME)/usr/include $(DEFINES)
 LIBS=-lm -lstdc++ -lrt -lcuda -L$(HOME)/usr/lib

@@ -1,6 +1,7 @@
 
 #include "wb.h"
 
+#ifdef WB_USE_CUDA
 typedef struct st_wbCUDAMemory_t {
     void * mem;
     size_t sz;
@@ -38,4 +39,6 @@ cudaError_t wbCUDAFree(void * mem) {
     }
     return cudaSuccess;
 }
+
+#endif /* WB_USE_CUDA */
 
