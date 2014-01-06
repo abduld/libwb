@@ -258,10 +258,9 @@ static inline char * lineStrip(const char * line) {
     size_t slen = strlen(line);
 
     iter += slen - 1;
-    while (*iter != '\0' && *iter != '\r' && *iter != '\t' && *iter != '\n' && *iter != ' ') {
+    while (*iter == '\0' || *iter == '\r' || *iter == '\t' || *iter == '\n' || *iter == ' ') {
         *iter-- = '\0';
     }
-    *iter = '\0';
     return sl;
 }
 

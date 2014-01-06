@@ -43,7 +43,7 @@ void wbArg_delete(wbArg_t arg) {
 
 static int getInputFileCount(char * arg) {
     int count = 1;
-    while (*arg != '\0') {
+    while (*arg != '\0' && *arg != '-') {
         if (*arg == ',') {
             count++;
         }
