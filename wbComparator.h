@@ -51,11 +51,11 @@ static inline wbBool _almostEqual(float A, float B, float eps) {
 }
 
 static inline wbBool _almostEqual(double A, double B) {
-    return _almostEqual(A, B, 0.1);
+    return _almostEqual(A, B, 0.2);
 }
 
 static inline wbBool _almostEqual(float A, float B) {
-    return _almostEqual(A, B, 0.1f);
+    return _almostEqual(A, B, 0.2f);
 }
 
 static inline wbBool _almostEqual2sComplement(float A, float B, int maxUlps) {
