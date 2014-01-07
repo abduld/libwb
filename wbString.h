@@ -33,7 +33,7 @@ static inline string wbString_quote(string str) {
 
 static inline string wbString_quote(const char * str) {
   if (str == NULL) {
-    return string();
+    return wbString_quote("");
   } else {
     return wbString_quote(string(str));
   }
