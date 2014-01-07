@@ -47,7 +47,7 @@ OBJECTS = $(SOURCES:.cpp=.o)
 
 
 libwb.so:     $(OBJECTS)
-	mkdir Linux-x86-64
+	mkdir -p Linux-x86-64
 	$(CXX) -fPIC -shared $(LIBS) -o Linux-x86-64/$@ $(OBJECTS)
 
 libwb.a:     $(OBJECTS)
