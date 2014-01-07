@@ -210,11 +210,11 @@ char * wbFile_readLine(wbFile_t file) {
     if (file == NULL) {
         return NULL;
     }
-#ifdef LAZY_FILE_LOAD
-    FILE * handle;
     if (buffer == NULL) {
         buffer = wbNewArray(char, MAX_CHARS_PER_LINE);
     }
+#ifdef LAZY_FILE_LOAD
+    FILE * handle;
     memset(buffer, 0, MAX_CHARS_PER_LINE);
 
     handle = wbFile_getFileHandle(file);
@@ -235,6 +235,7 @@ char * wbFile_readLine(wbFile_t file) {
         fclose(wbFile_getFileHandle(file));
         wbFile_setFileHandle(file, NULL);
         wbFile_setDataOffset(file, 0);
+        wbFile_setLength(file, strlen(wbFile_getData(file)));
     }
 
     memset(buffer, 0, MAX_CHARS_PER_LINE);
