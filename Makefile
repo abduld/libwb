@@ -8,6 +8,7 @@ DEFINES=-DWB_USE_CUDA
 CUDA_INCLUDE=/usr/local/cuda-5.5/include
 CXX_FLAGS=-fPIC -x c++ -O0 -g -I . -I $(CUDA_INCLUDE) -L $(HOME)/usr/lib -Wall  -I$(HOME)/usr/include $(DEFINES)
 LIBS=-lm -lstdc++ -lrt -lcuda -L$(HOME)/usr/lib
+ARCH=$(shell uname -s)-$(shell uname -i)
 
 ##########################################
 ##########################################
@@ -47,15 +48,15 @@ OBJECTS = $(SOURCES:.cpp=.o)
 
 
 libwb.so:     $(OBJECTS)
-	mkdir Linux-x86-64
-	$(CXX) -fPIC -shared $(LIBS) -o Linux-x86-64/$@ $(OBJECTS)
+	mkdir -p $(ARCH)
+	$(CXX) -fPIC -shared $(LIBS) -o $(ARCH)/$@ $(OBJECTS)
 
 libwb.a:     $(OBJECTS)
-	mkdir Linux-x86-64
-	ar rcs -o Linux-x86-64/$@ $(OBJECTS)
+	mkdir -p $(ARCH)
+	ar rcs -o $(ARCH)/$@ $(OBJECTS)
 
 clean:
-	rm -fr Linux-x86-64
+	rm -fr $(ARCH)
 	-rm -f $(EXES) *.o *~
 
 
