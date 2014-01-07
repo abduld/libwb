@@ -245,17 +245,18 @@ char * wbFile_readLine(wbFile_t file) {
 
     newOffset = wbFile_getDataOffset(file);
     tmp = wbFile_getData(file) + wbFile_getDataOffset(file);
-    while (*tmp != '\n' && newOffset < wbFile_getLength(file)) {
+    while (*tmp != '\n' && newOffset <= wbFile_getLength(file)) {
         tmp++;
         lenToNewLine++;
         newOffset++;
     }
 
-    if (newOffset == wbFile_getLength(file)) {
+    if (newOffset == wbFile_getLength(file) + 1) {
         return NULL;
     }
 
     memcpy(buffer, wbFile_getData(file) + wbFile_getDataOffset(file), lenToNewLine);
+    wbFile_setDataOffset(file, newOffset + 1);
 
     return buffer;
 #endif
