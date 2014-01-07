@@ -201,7 +201,7 @@ char * wbFile_read(wbFile_t file) {
     return wbFile_read(file, len);
 }
 
-#define MAX_CHARS_PER_LINE	(1<<15)
+#define MAX_CHARS_PER_LINE	(1<<21)
 
 static char * buffer = NULL;
 
@@ -240,20 +240,16 @@ char * wbFile_readLine(wbFile_t file) {
 
     memset(buffer, 0, MAX_CHARS_PER_LINE);
 
-    if (wbFile_getDataOffset(file) > wbFile_getLength(file)) {
+    if (wbFile_getDataOffset(file) >= wbFile_getLength(file)) {
         return NULL;
     }
 
     newOffset = wbFile_getDataOffset(file);
     tmp = wbFile_getData(file) + wbFile_getDataOffset(file);
-    while (*tmp != '\n' && newOffset <= wbFile_getLength(file)) {
+    while (newOffset < wbFile_getLength(file) && *tmp != '\n') {
         tmp++;
         lenToNewLine++;
         newOffset++;
-    }
-
-    if (newOffset == wbFile_getLength(file) + 1) {
-        return NULL;
     }
 
     memcpy(buffer, wbFile_getData(file) + wbFile_getDataOffset(file), lenToNewLine);

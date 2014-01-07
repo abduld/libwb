@@ -122,7 +122,7 @@ static inline wbReal_t * csv_readAsReal(wbFile_t file, char sep, int rows, int c
     wbReal_t * data;
     char * line;
     wbReal_t var;
-    char seperator[1];
+    char seperator[2];
 
     if (file == NULL) {
         return NULL;
@@ -135,6 +135,7 @@ static inline wbReal_t * csv_readAsReal(wbFile_t file, char sep, int rows, int c
     } else {
         seperator[0] = sep;
     }
+    seperator[1] = '\0';
 
     if (columns == 1) {
         while ((line = wbFile_readLine(file)) != NULL) {
@@ -145,7 +146,6 @@ static inline wbReal_t * csv_readAsReal(wbFile_t file, char sep, int rows, int c
         while ((line = wbFile_readLine(file)) != NULL) {
             char * token = strtok(line, seperator);
             while (token != NULL) {
-
                 sscanf(token, "%f", &var);
                 token = strtok(NULL, seperator);
                 data[ii++] = var;

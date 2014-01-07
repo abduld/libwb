@@ -288,11 +288,7 @@ static inline void wbExport_close(wbExport_t exprt) {
 }
 
 static inline void wbExport_writeAsImage(wbExport_t exprt, wbImage_t img) {
-    wbExportKind_t kind;
-
-    kind = wbExport_getKind(exprt);
-
-    wbAssert(kind == wbExportKind_ppm);
+    wbAssert(wbExport_getKind(exprt) == wbExportKind_ppm);
 
     wbPPM_export(wbExport_getFile(exprt), img);
 
@@ -366,8 +362,7 @@ void wbExport(const char * file, int * data, int rows, int columns) {
 
 
     if (file == NULL) {
-        fprintf(stderr, "Failed to import file.\n");
-        wbExit();
+        return ;
     }
 
 
@@ -389,8 +384,7 @@ void wbExport(const char * file, wbReal_t * data, int rows, int columns) {
 
 
     if (file == NULL) {
-        fprintf(stderr, "Failed to import file.\n");
-        wbExit();
+        return ;
     }
 
 
@@ -407,8 +401,7 @@ void wbExport(const char * file, wbImage_t img) {
 
 
     if (file == NULL) {
-        fprintf(stderr, "Failed to import file.\n");
-        wbExit();
+        return ;
     }
 
 

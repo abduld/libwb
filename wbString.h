@@ -31,6 +31,14 @@ static inline string wbString_quote(string str) {
 }
 
 
+static inline string wbString_quote(const char * str) {
+  if (str == NULL) {
+    return string();
+  } else {
+    return wbString_quote(string(str));
+  }
+}
+
 static inline char * wbString_duplicate(const char * str) {
     if (str == NULL) {
         return NULL;
@@ -55,9 +63,13 @@ static inline string wbString(void) {
 
 template <typename T>
 static inline string wbString(const T & x) {
+  try {
     stringstream ss;
     ss << x;
     return ss.str();
+  } catch (exception & e) {
+    return string();
+  }
 }
 
 template <>

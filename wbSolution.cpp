@@ -110,10 +110,7 @@ wbBool wbSolution(char * expectedOutputFile,
     wbBool res;
     wbSolution_t sol;
 
-    if (expectedOutputFile == NULL ||
-            //outputFile == NULL ||
-            data == NULL ||
-            type0 == NULL) {
+    if (expectedOutputFile == NULL || data == NULL || type0 == NULL) {
         wbLog(ERROR, "Failed to grade solution");
         return wbFalse;
     }
@@ -132,14 +129,16 @@ wbBool wbSolution(char * expectedOutputFile,
 
     res = wbSolution_correctQ(expectedOutputFile, sol);
 
-    if (wbString_sameQ(type, "image")) {
-        wbImage_t img = wbImage_new(rows, columns);
-        memcpy(wbImage_getData(img), data, rows*columns*wbImage_channels*sizeof(wbReal_t));
-        wbExport(outputFile, img);
-        wbImage_delete(img);
-    } else if (wbString_sameQ(type, "vector") ||
-               wbString_sameQ(type, "matrix")) {
-        wbExport(outputFile, (wbReal_t *) data, rows, columns);
+    if (outputFile != NULL) {
+        if (wbString_sameQ(type, "image")) {
+            wbImage_t img = wbImage_new(rows, columns);
+            memcpy(wbImage_getData(img), data, rows*columns*wbImage_channels*sizeof(wbReal_t));
+            wbExport(outputFile, img);
+            wbImage_delete(img);
+        } else if (wbString_sameQ(type, "vector") ||
+                   wbString_sameQ(type, "matrix")) {
+            wbExport(outputFile, (wbReal_t *) data, rows, columns);
+        }
     }
 
     wbFree(type);
