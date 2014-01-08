@@ -1,3 +1,4 @@
+#include <iostream>
 
 #include    <wb.h>
 
@@ -7,6 +8,8 @@ void wb_atExit(void) {
     cudaDeviceSynchronize();
 #endif /* WB_USE_CUDA */
 
+    using std::cout;
+    using std::endl;
 
     cout << "{\n"
          << wbString_quote("timer") << ":" << wbTimer_toJSON() << ",\n"

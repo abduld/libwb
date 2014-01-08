@@ -12,7 +12,10 @@
 #include	<sstream>
 #include	<cstring>
 
-using namespace std;
+using std::string;
+using std::vector;
+using std::stringstream;
+using std::exception;
 
 template <typename T> static inline string wbString(const T & x);
 
