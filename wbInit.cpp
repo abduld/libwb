@@ -18,7 +18,7 @@ void wb_init(void) {
         return ;
     }
 
-#ifdef USE_CUDA
+#ifdef WB_USE_CUDA
     cuInit(0);
 
     /* Select a random GPU */
@@ -31,7 +31,7 @@ void wb_init(void) {
         cudaSetDevice(rand() % deviceCount);
     }
 
-#endif
+#endif /* WB_USE_CUDA */
 
     _hrtime();
     
