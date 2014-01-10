@@ -201,7 +201,7 @@ char * wbFile_read(wbFile_t file) {
     return wbFile_read(file, len);
 }
 
-#define MAX_CHARS_PER_LINE	(1<<21)
+#define MAX_CHARS_PER_LINE	(1<<17)
 
 static char * buffer = NULL;
 

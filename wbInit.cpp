@@ -18,12 +18,23 @@ void wb_init(void) {
         return ;
     }
 
+#ifdef USE_CUDA
     cuInit(0);
 
-#ifdef WB_USE_CUSTOM_MALLOC
-    wbMemoryManager_new(WB_DEFAULT_HEAP_SIZE);
-#endif /* WB_USE_CUSTOM_MALLOC */
+    /* Select a random GPU */
 
+    {
+        int deviceCount;
+        cudaGetDeviceCount(&deviceCount);
+        
+        srand(time(NULL));
+        cudaSetDevice(rand() % deviceCount);
+    }
+
+#endif
+
+    _hrtime();
+    
 
 #ifdef _MSC_VER
     QueryPerformanceFrequency((LARGE_INTEGER*) &_hrtime_frequency);
@@ -34,10 +45,6 @@ void wb_init(void) {
     _initializedQ = wbTrue;
 
     wbFile_init();
-
-#ifdef WB_USE_SANDBOX
-    wbSandbox_new();
-#endif
 
     solutionJSON = NULL;
 
