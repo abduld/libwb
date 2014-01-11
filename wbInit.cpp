@@ -33,12 +33,11 @@ void wb_init(void) {
 
 #endif /* WB_USE_CUDA */
 
-    _hrtime();
-    
-
 #ifdef _MSC_VER
     QueryPerformanceFrequency((LARGE_INTEGER*) &_hrtime_frequency);
 #endif
+
+    _hrtime();
 
     _timer = wbTimer_new();
     _logger = wbLogger_new();
