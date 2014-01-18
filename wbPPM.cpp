@@ -84,7 +84,8 @@ wbImage_t wbPPM_import(const char * filename) {
     if (header == NULL) {
         printf("Could not read from %s\n", filename);
         goto cleanup;
-    } else if (strcmp(header, "P6\n") != 0) {
+    } else if (strcmp(header, "P6") != 0 &&
+               strcmp(header, "P6\n") != 0) {
         printf("Could find magic number for %s\n", filename);
         goto cleanup;
     }

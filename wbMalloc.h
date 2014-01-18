@@ -32,7 +32,8 @@ static inline void * _malloc(size_t size) THROW {
 
 static inline void _free(void *ptr) THROW {
     if (ptr != NULL) {
-        memmgr_free(ptr);
+        // the memory free has a bug...
+        //memmgr_free(ptr);
     }
 }
 

@@ -16,12 +16,19 @@ static inline float _clamp(float x, float start, float end) {
 }
 
 wbImage_t wbImage_new(int width, int height, int channels) {
-    wbImage_t img = wbNew(struct st_wbImage_t);
+    float * data;
+    wbImage_t img;
+
+    img = wbNew(struct st_wbImage_t);
+
     wbImage_setWidth(img, width);
     wbImage_setHeight(img, height);
     wbImage_setChannels(img, channels);
     wbImage_setPitch(img, width * channels);
-    wbImage_setData(img, wbNewArray(float, width * height * channels));
+
+    data = wbNewArray(float, width * height * channels);
+
+    wbImage_setData(img, data);
     return img;
 }
 

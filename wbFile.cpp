@@ -126,6 +126,13 @@ char * wbFile_read(wbFile_t file, size_t size, size_t count) {
     if (file == NULL) {
         return NULL;
     }
+#ifndef LAZY_FILE_LOAD
+    if (wbFile_getData(file) != NULL) {
+        char * data = wbFile_getData(file) + wbFile_getDataOffset(file);
+        wbFile_setDataOffset(file, wbFile_getDataOffset(file) + size*count);
+        return data;
+    }
+#endif /* LAZY_FILE_LOAD */
 
     handle = wbFile_getFileHandle(file);
     buffer = wbNewArray(char, size*count);
@@ -151,10 +158,10 @@ void wbFile_rewind(wbFile_t file) {
         return ;
     }
 
-    if (wbFile_getData(file) != NULL) {
+    if (wbFile_getData(file) == NULL) {
         FILE * handle;
         handle = wbFile_getFileHandle(file);
-
+        wbAssert(handle != NULL);
         rewind(handle);
     }
 #ifndef LAZY_FILE_LOAD
