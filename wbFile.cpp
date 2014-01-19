@@ -118,6 +118,7 @@ void wbFile_close(wbFile_t file) { wbFile_delete(file); }
 char *wbFile_read(wbFile_t file, size_t size, size_t count) {
   size_t res;
   char *buffer;
+  size_t bufferlen;
   FILE *handle;
 
   if (file == NULL) {
@@ -132,7 +133,8 @@ char *wbFile_read(wbFile_t file, size_t size, size_t count) {
 #endif /* LAZY_FILE_LOAD */
 
   handle = wbFile_getFileHandle(file);
-  buffer = wbNewArray(char, size * count);
+  bufferlen = size * count + 1; // extra byte for null terminator
+  buffer = wbNewArray(char, bufferlen);
 
   res = fread(buffer, size, count, handle);
   if (res != count) {
@@ -140,6 +142,7 @@ char *wbFile_read(wbFile_t file, size_t size, size_t count) {
     wbDelete(buffer);
     return NULL;
   }
+  buffer[bufferlen - 1] = '\0'; // make valid C string
 
   return buffer;
 }
