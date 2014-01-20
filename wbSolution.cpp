@@ -138,14 +138,18 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
 
   if (outputFile != NULL) {
     if (wbString_sameQ(type, "image")) {
-      wbImage_t img = wbImage_new(rows, columns);
-      memcpy(wbImage_getData(img), data,
-             rows * columns * wbImage_channels * sizeof(wbReal_t));
+      wbImage_t inputImage = (wbImage_t)data;
+      wbImage_t img = wbImage_new(wbImage_getHeight(inputImage),
+                                  wbImage_getWidth(inputImage),
+                                  wbImage_getChannels(inputImage));
+      memcpy(wbImage_getData(img),
+             wbImage_getData(inputImage),
+             rows*columns*wbImage_channels*sizeof(wbReal_t));
       wbExport(outputFile, img);
       wbImage_delete(img);
     } else if (wbString_sameQ(type, "vector") ||
                wbString_sameQ(type, "matrix")) {
-      wbExport(outputFile, (wbReal_t *)data, rows, columns);
+      wbExport(outputFile, (wbReal_t *) data, rows, columns);
     }
   }
 
