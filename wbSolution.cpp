@@ -139,8 +139,8 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
   if (outputFile != NULL) {
     if (wbString_sameQ(type, "image")) {
       wbImage_t inputImage = (wbImage_t)data;
-      wbImage_t img = wbImage_new(wbImage_getHeight(inputImage),
-                                  wbImage_getWidth(inputImage),
+      wbImage_t img = wbImage_new(wbImage_getWidth(inputImage),
+                                  wbImage_getHeight(inputImage),
                                   wbImage_getChannels(inputImage));
       memcpy(wbImage_getData(img),
              wbImage_getData(inputImage),
