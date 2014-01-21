@@ -137,15 +137,6 @@ char *wbFile_read(wbFile_t file, size_t size, size_t count) {
   buffer = wbNewArray(char, bufferLen);
 
   res = fread(buffer, size, count, handle);
-
-#ifndef _WIN32 // windows line ending does not conform to this
-  if (res != count) {
-    wbLog(ERROR, "Failed to read data from ", wbFile_getFileName(file));
-    wbDelete(buffer);
-    return NULL;
-  }
-#endif /* _WIN32 */
-
   // make valid C string
   buffer[size * res] = '\0';
 
