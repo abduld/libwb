@@ -118,7 +118,7 @@ void wbFile_close(wbFile_t file) { wbFile_delete(file); }
 char *wbFile_read(wbFile_t file, size_t size, size_t count) {
   size_t res;
   char *buffer;
-  size_t bufferlen;
+  size_t bufferLen;
   FILE *handle;
 
   if (file == NULL) {
@@ -133,16 +133,21 @@ char *wbFile_read(wbFile_t file, size_t size, size_t count) {
 #endif /* LAZY_FILE_LOAD */
 
   handle = wbFile_getFileHandle(file);
-  bufferlen = size * count + 1; // extra byte for null terminator
-  buffer = wbNewArray(char, bufferlen);
+  bufferLen = size * count + 1;
+  buffer = wbNewArray(char, bufferLen);
 
   res = fread(buffer, size, count, handle);
+
+#ifndef _WIN32 // windows line ending does not conform to this
   if (res != count) {
     wbLog(ERROR, "Failed to read data from ", wbFile_getFileName(file));
     wbDelete(buffer);
     return NULL;
   }
-  buffer[bufferlen - 1] = '\0'; // make valid C string
+#endif /* _WIN32 */
+
+  // make valid C string
+  buffer[size * res] = '\0';
 
   return buffer;
 }
@@ -180,6 +185,14 @@ size_t wbFile_size(wbFile_t file) {
   if (file == NULL) {
     return 0;
   }
+#ifndef LAZY_FILE_LOAD
+  if (wbFile_getData(file) != NULL) {
+    if (wbFile_getLength(file) == 0) {
+      wbFile_setLength(file, strlen(wbFile_getData(file)));
+    }
+    return wbFile_getLength(file);
+  }
+#endif /* LAZY_FILE_LOAD */
 
   handle = wbFile_getFileHandle(file);
 
@@ -210,15 +223,12 @@ char *wbFile_read(wbFile_t file) {
 
 #define MAX_CHARS_PER_LINE (1 << 17)
 
-static char *buffer = NULL;
+static char buffer[MAX_CHARS_PER_LINE];
 
 char *wbFile_readLine(wbFile_t file) {
 
   if (file == NULL) {
     return NULL;
-  }
-  if (buffer == NULL) {
-    buffer = wbNewArray(char, MAX_CHARS_PER_LINE);
   }
 #ifdef LAZY_FILE_LOAD
   FILE *handle;
