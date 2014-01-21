@@ -114,7 +114,9 @@ wbImage_t wbPPM_import(const char *filename) {
     }
   }
 
+#ifdef LAZY_FILE_LOAD
   wbDelete(charData);
+#endif
 
 cleanup:
   wbFile_close(file);
