@@ -4,7 +4,7 @@
 # <author>  Tran Minh Quan. edit by Johannes Kast, Michael Sarahan      </author>
 # <email>   quantm@unist.ac.kr  kast.jo@googlemail.com msarahan@gmail.com </email>
 ############################################################################################
-project(hetero13)
+project(libwb)
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 find_package(CUDA REQUIRED)
 # collect source files
@@ -29,6 +29,20 @@ if(CUDA_FOUND)
 else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
 endif()
+
+if (UNIX)
+    include(CheckFunctionExists)
+    set(CMAKE_EXTRA_INCLUDE_FILES time.h)
+    CHECK_FUNCTION_EXISTS(clock_gettime HAVE_CLOCK_GETTIME)
+    if(NOT HAVE_CLOCK_GETTIME)
+        find_library(LIBRT_LIBRARIES rt)
+        if(NOT LIBRT_LIBRARIES)
+            message(FATAL_ERROR "librt not found")
+        else(NOT LIBRT_LIBRARIES)
+            set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBRT_LIBRARIES}" )
+        endif(NOT LIBRT_LIBRARIES)
+    endif(NOT HAVE_CLOCK_GETTIME)
+endif (UNIX)
 
 file( GLOB  wbhdr *.hpp *.h )
 file( GLOB  wbsrc *.cpp *.c )
