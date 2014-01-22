@@ -1,3 +1,4 @@
+
 #ifndef __WB_CUDA_H__
 #define __WB_CUDA_H__
 
@@ -20,7 +21,7 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
   int idx = _cudaMemoryListIdx;
   cudaError_t err = cudaMalloc(devPtr, sz);
   if (err == cudaSuccess) {
-    cudaMemset(*devPtr, 0, sz);
+    err = cudaMemset(*devPtr, 0, sz);
   }
   if (idx == 0) {
     memset(_cudaMemoryList, 0, sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);
