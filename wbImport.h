@@ -12,12 +12,12 @@ typedef enum en_wbImportKind_t {
   wbImportKind_ppm
 } wbImportKind_t;
 
-typedef enum en_wbImportType_t {
-  wbImportType_char = 0,
-  wbImportType_int,
-  wbImportType_float,
-  wbImportType_double
-} wbImportType_t;
+typedef enum en_wbType_t {
+  wbType_bit8 = 0,
+  wbType_int,
+  wbType_float,
+  wbType_double
+} wbType_t;
 
 typedef struct st_wbImportCSV_t {
   int rows;
@@ -76,8 +76,11 @@ typedef struct st_wbImport_t {
 #define wbImport_setCSV(imp, val) (wbImport_getCSV(imp) = val)
 #define wbImport_setImage(imp, val) (wbImport_getImage(imp) = val)
 
-void *wbImport(const char *file, int *rows, int *columns);
+
 void *wbImport(const char *file, int *rows);
+void *wbImport(const char *file, int *rows, int *columns);
+void *wbImport(const char *file, int *rows, const char * type);
+void * wbImport(const char *file, int *resRows, int *resColumns, const char *type);
 wbImage_t wbImport(const char *file);
 
 #endif /* __WB_IMPORT_H__ */

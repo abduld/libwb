@@ -3,7 +3,9 @@
 #include <wbCUDA.h>
 
 #ifndef WB_DEFAULT_HEAP_SIZE
-#define WB_DEFAULT_HEAP_SIZE (1024 * 1024 * 120)
+#define MB (1 << 20)
+const size_t WB_DEFAULT_HEAP_SIZE = (50 * MB);
+#undef MB
 #endif /* WB_DEFAULT_HEAP_SIZE */
 
 static bool _initializedQ = wbFalse;
@@ -31,9 +33,13 @@ __attribute__((__constructor__))
 
 #endif /* WB_USE_CUDA */
 
+#ifdef WB_USE_CUSTOM_MALLOC
+  wbMemoryManager_new(WB_DEFAULT_HEAP_SIZE);
+#endif /* WB_USE_CUSTOM_MALLOC */
+
 #ifdef _MSC_VER
   QueryPerformanceFrequency((LARGE_INTEGER *)&_hrtime_frequency);
-#endif
+#endif /* _MSC_VER */
 
   _hrtime();
 
@@ -42,6 +48,10 @@ __attribute__((__constructor__))
   _initializedQ = wbTrue;
 
   wbFile_init();
+
+#ifdef WB_USE_SANDBOX
+  wbSandbox_new();
+#endif /* WB_USE_SANDBOX */
 
   solutionJSON = NULL;
 

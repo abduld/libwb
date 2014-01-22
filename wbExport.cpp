@@ -37,7 +37,7 @@ static inline void wbExportRaw_delete(wbExportRaw_t raw) {
 }
 
 static inline void wbExportRaw_write(wbExportRaw_t raw, void *data, int rows,
-                                     int columns, wbBool asIntegerQ) {
+                                     int columns, wbType_t type) {
   int ii, jj;
   FILE *handle;
   wbFile_t file;
@@ -62,8 +62,11 @@ static inline void wbExportRaw_write(wbExportRaw_t raw, void *data, int rows,
 
   for (ii = 0; ii < rows; ii++) {
     for (jj = 0; jj < columns; jj++) {
-      if (asIntegerQ) {
+      if (type == wbType_integer) {
         int elem = ((int *)data)[ii * columns + jj];
+        fprintf(handle, "%d", elem);
+      } else if (type == wbType_ubit8) {
+        int elem = ((unsigned char *)data)[ii * columns + jj];
         fprintf(handle, "%d", elem);
       } else {
         wbReal_t elem = ((wbReal_t *)data)[ii * columns + jj];
@@ -79,18 +82,6 @@ static inline void wbExportRaw_write(wbExportRaw_t raw, void *data, int rows,
 
   return;
 
-}
-
-static inline void wbExportRaw_writeAsInteger(wbExportRaw_t raw, int *data,
-                                              int rows, int columns) {
-  wbExportRaw_write(raw, data, rows, columns, wbTrue);
-  return;
-}
-
-static inline void wbExportRaw_writeAsReal(wbExportRaw_t raw, wbReal_t *data,
-                                           int rows, int columns) {
-  wbExportRaw_write(raw, data, rows, columns, wbFalse);
-  return;
 }
 
 static inline void wbExportCSV_setFile(wbExportCSV_t csv, const char *path) {
@@ -129,7 +120,7 @@ static inline void wbExportCSV_delete(wbExportCSV_t csv) {
 }
 
 static inline void wbExportCSV_write(wbExportCSV_t csv, void *data, int rows,
-                                     int columns, char sep, wbBool asIntegerQ) {
+                                     int columns, char sep, wbType_t type) {
   int ii, jj;
   wbFile_t file;
   FILE *handle;
@@ -156,8 +147,11 @@ static inline void wbExportCSV_write(wbExportCSV_t csv, void *data, int rows,
 
   for (ii = 0; ii < rows; ii++) {
     for (jj = 0; jj < columns; jj++) {
-      if (asIntegerQ) {
+      if (type == wbType_integer) {
         int elem = ((int *)data)[ii * columns + jj];
+        fprintf(handle, "%d", elem);
+      } else if (type == wbType_ubit8) {
+        int elem = ((unsigned char *)data)[ii * columns + jj];
         fprintf(handle, "%d", elem);
       } else {
         wbReal_t elem = ((wbReal_t *)data)[ii * columns + jj];
@@ -173,36 +167,6 @@ static inline void wbExportCSV_write(wbExportCSV_t csv, void *data, int rows,
 
   return;
 
-}
-
-static inline void wbExportCSV_writeAsInteger(wbExportCSV_t csv, int *data,
-                                              int rows, int columns) {
-  char seperator;
-
-  if (csv == NULL) {
-    return;
-  }
-
-  seperator = wbExportCSV_getSeperator(csv);
-
-  wbExportCSV_write(csv, data, rows, columns, seperator, wbTrue);
-
-  return;
-}
-
-static inline void wbExportCSV_writeAsReal(wbExportCSV_t csv, wbReal_t *data,
-                                           int rows, int columns) {
-  char seperator;
-
-  if (csv == NULL) {
-    return;
-  }
-
-  seperator = wbExportCSV_getSeperator(csv);
-
-  wbExportCSV_write(csv, data, rows, columns, seperator, wbFalse);
-
-  return;
 }
 
 static inline wbExport_t wbExport_open(const char *file, wbExportKind_t kind) {
@@ -300,16 +264,16 @@ static inline void wbExport_writeAsImage(wbExport_t exprt, wbImage_t img) {
 }
 
 static inline void wbExport_write(wbExport_t exprt, void *data, int rows,
-                                  int columns, char sep, wbBool asIntegerQ) {
+                                  int columns, char sep, wbType_t type) {
   wbExportKind_t kind;
 
   kind = wbExport_getKind(exprt);
   if (kind == wbExportKind_tsv || kind == wbExportKind_csv) {
     wbExportCSV_t csv = wbExport_getCSV(exprt);
-    wbExportCSV_write(csv, data, rows, columns, sep, asIntegerQ);
+    wbExportCSV_write(csv, data, rows, columns, sep, type);
   } else if (kind == wbExportKind_raw) {
     wbExportRaw_t raw = wbExport_getRaw(exprt);
-    wbExportRaw_write(raw, data, rows, columns, asIntegerQ);
+    wbExportRaw_write(raw, data, rows, columns, type);
   } else {
     wbLog(ERROR, "Invalid export type.");
     wbExit();
@@ -318,20 +282,8 @@ static inline void wbExport_write(wbExport_t exprt, void *data, int rows,
 }
 
 static inline void wbExport_write(wbExport_t exprt, void *data, int rows,
-                                  int columns, wbBool asIntegerQ) {
-  wbExport_write(exprt, data, rows, columns, ',', asIntegerQ);
-}
-
-static inline void wbExport_writeAsInteger(wbExport_t exprt, int *data,
-                                           int rows, int columns) {
-  wbExport_write(exprt, data, rows, columns, wbTrue);
-  return;
-}
-
-static inline void wbExport_writeAsReal(wbExport_t exprt, wbReal_t *data,
-                                        int rows, int columns) {
-  wbExport_write(exprt, data, rows, columns, wbFalse);
-  return;
+                                  int columns, wbType_t type) {
+  wbExport_write(exprt, data, rows, columns, ',', type);
 }
 
 static wbExportKind_t _parseExportExtension(const char *file) {
@@ -359,9 +311,50 @@ static wbExportKind_t _parseExportExtension(const char *file) {
   return kind;
 }
 
+static
+void wbExport(const char *file, void *data, int rows, int columns, wbType_t type) {
+  wbExportKind_t kind;
+  wbExport_t exprt;
+
+  if (file == NULL) {
+    return;
+  }
+
+  kind = _parseExportExtension(file);
+  exprt = wbExport_open(file, kind);
+
+  wbExport_write(exprt, data, rows, columns, type);
+  wbExport_close(exprt);
+}
+
+void wbExport(const char *file, unsigned char *data, int rows) {
+  wbExport(file, data, rows, 1);
+  return;
+}
+
 void wbExport(const char *file, int *data, int rows) {
   wbExport(file, data, rows, 1);
   return;
+}
+
+void wbExport(const char *file, wbReal_t *data, int rows) {
+  wbExport(file, data, rows, 1);
+  return;
+}
+
+void wbExport(const char *file, unsigned char *data, int rows, int columns) {
+  wbExportKind_t kind;
+  wbExport_t exprt;
+
+  if (file == NULL) {
+    return;
+  }
+
+  kind = _parseExportExtension(file);
+  exprt = wbExport_open(file, kind);
+
+  wbExport_write(exprt, data, rows, columns, wbType_ubit8);
+  wbExport_close(exprt);
 }
 
 void wbExport(const char *file, int *data, int rows, int columns) {
@@ -375,13 +368,8 @@ void wbExport(const char *file, int *data, int rows, int columns) {
   kind = _parseExportExtension(file);
   exprt = wbExport_open(file, kind);
 
-  wbExport_writeAsInteger(exprt, data, rows, columns);
+  wbExport_write(exprt, data, rows, columns, wbType_integer);
   wbExport_close(exprt);
-}
-
-void wbExport(const char *file, wbReal_t *data, int rows) {
-  wbExport(file, data, rows, 1);
-  return;
 }
 
 void wbExport(const char *file, wbReal_t *data, int rows, int columns) {
@@ -395,7 +383,7 @@ void wbExport(const char *file, wbReal_t *data, int rows, int columns) {
   kind = _parseExportExtension(file);
   exprt = wbExport_open(file, kind);
 
-  wbExport_writeAsReal(exprt, data, rows, columns);
+  wbExport_write(exprt, data, rows, columns, wbType_real);
   wbExport_close(exprt);
 }
 

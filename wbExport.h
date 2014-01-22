@@ -71,6 +71,10 @@ typedef struct st_wbExport_t {
 
 void wbExport(const char *file, int *data, int rows, int columns);
 void wbExport(const char *file, int *data, int rows);
+void wbExport(const char *file, unsigned char *data, int rows, int columns);
+void wbExport(const char *file, unsigned char *data, int rows);
+void wbExport(const char *file, int *data, int rows, int columns);
+void wbExport(const char *file, int *data, int rows);
 void wbExport(const char *file, wbReal_t *data, int rows, int columns);
 void wbExport(const char *file, wbReal_t *data, int rows);
 void wbExport(const char *file, wbImage_t img);

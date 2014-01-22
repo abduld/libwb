@@ -497,8 +497,7 @@ static wbImportKind_t _parseImportExtension(const char *file) {
   return kind;
 }
 
-static void *
-wbImport(const char *file, int *resRows, int *resColumns, const char *type) {
+void * wbImport(const char *file, int *resRows, int *resColumns, const char *type) {
   void *data, *res;
   wbImport_t imp;
   size_t sz;
@@ -552,7 +551,11 @@ void *wbImport(const char *file, int *rows, int *columns) {
 }
 
 void *wbImport(const char *file, int *rows) {
-  return wbImport(file, rows, NULL);
+  return wbImport(file, rows, NULL, NULL);
+}
+
+void *wbImport(const char *file, int *rows, const char * type) {
+  return wbImport(file, rows, NULL, type);
 }
 
 wbImage_t wbImport(const char *file) {
