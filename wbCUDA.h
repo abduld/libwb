@@ -37,7 +37,7 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
     err = cudaMemcpy(*devPtr, rands, sz, cudaMemcpyHostToDevice);
     wbFree(rands);
 #else
-    cudaMemset(*devPtr, 0, sz);
+    err = cudaMemset(*devPtr, 0, sz);
 #endif
   }
 
