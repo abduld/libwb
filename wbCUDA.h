@@ -31,10 +31,10 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
   }
 
   if (err == cudaSuccess) {
-#if 0
+#if 1
     char * rands = wbRandom_list(sz);
     // can use curand here, but do not want to invoke a kernel
-    err = cudaMemcpy(devPtr, rands, sz, cudaMemcpyHostToDevice);
+    err = cudaMemcpy(*devPtr, rands, sz, cudaMemcpyHostToDevice);
     wbFree(rands);
 #else
     cudaMemset(*devPtr, 0, sz);
