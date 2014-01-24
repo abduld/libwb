@@ -160,7 +160,7 @@ csv_readAsReal(wbFile_t file, char sep, int rows, int columns) {
 }
 
 static inline wbImportCSV_t
-wbImportCSV_read(wbImportCSV_t csv, wbBool asIntegerQ) {
+wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
   void *data;
   wbFile_t file;
   char seperator;
@@ -190,7 +190,7 @@ wbImportCSV_read(wbImportCSV_t csv, wbBool asIntegerQ) {
     wbImportCSV_setData(csv, NULL);
   }
 
-  if (asIntegerQ) {
+  if (type == wbType_integer) {
     data = csv_readAsInteger(file, seperator, rows, columns);
   } else {
     data = csv_readAsReal(file, seperator, rows, columns);
@@ -202,11 +202,11 @@ wbImportCSV_read(wbImportCSV_t csv, wbBool asIntegerQ) {
 }
 
 static inline wbImportCSV_t wbImportCSV_readAsInteger(wbImportCSV_t csv) {
-  return wbImportCSV_read(csv, wbTrue);
+  return wbImportCSV_read(csv, wbType_integer);
 }
 
 static inline wbImportCSV_t wbImportCSV_readAsReal(wbImportCSV_t csv) {
-  return wbImportCSV_read(csv, wbFalse);
+  return wbImportCSV_read(csv, wbType_real);
 }
 
 static inline void wbImportRaw_setFile(wbImportRaw_t raw, const char *path) {
@@ -309,7 +309,7 @@ static inline wbBool wbImportRaw_findDimensions(wbImportRaw_t raw) {
 }
 
 static inline wbImportRaw_t
-wbImportRaw_read(wbImportRaw_t raw, wbBool asIntegerQ) {
+wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
   void *data;
   wbFile_t file;
   char seperator;
@@ -337,7 +337,7 @@ wbImportRaw_read(wbImportRaw_t raw, wbBool asIntegerQ) {
     wbImportRaw_setData(raw, NULL);
   }
 
-  if (asIntegerQ) {
+  if (type == wbType_integer) {
     data = csv_readAsInteger(file, seperator, rows, columns);
   } else {
     data = csv_readAsReal(file, seperator, rows, columns);
@@ -349,11 +349,11 @@ wbImportRaw_read(wbImportRaw_t raw, wbBool asIntegerQ) {
 }
 
 static inline wbImportRaw_t wbImportRaw_readAsInteger(wbImportRaw_t raw) {
-  return wbImportRaw_read(raw, wbTrue);
+  return wbImportRaw_read(raw, wbType_integer);
 }
 
 static inline wbImportRaw_t wbImportRaw_readAsReal(wbImportRaw_t raw) {
-  return wbImportRaw_read(raw, wbFalse);
+  return wbImportRaw_read(raw, wbType_real);
 }
 
 static inline wbImport_t wbImport_open(const char *file, wbImportKind_t kind) {
@@ -442,18 +442,18 @@ static inline void wbImport_close(wbImport_t imp) {
   return;
 }
 
-static inline void *wbImport_read(wbImport_t imp, wbBool asIntegerQ) {
+static inline void *wbImport_read(wbImport_t imp, wbType_t type) {
   void *data = NULL;
   wbImportKind_t kind;
 
   kind = wbImport_getKind(imp);
   if (kind == wbImportKind_tsv || kind == wbImportKind_csv) {
     wbImportCSV_t csv = wbImport_getCSV(imp);
-    wbImportCSV_read(csv, asIntegerQ);
+    wbImportCSV_read(csv, type);
     data = wbImportCSV_getData(csv);
   } else if (kind == wbImportKind_raw) {
     wbImportRaw_t raw = wbImport_getRaw(imp);
-    wbImportRaw_read(raw, asIntegerQ);
+    wbImportRaw_read(raw, type);
     data = wbImportRaw_getData(raw);
   } else {
     wbLog(ERROR, "Invalid import type.");
@@ -463,12 +463,12 @@ static inline void *wbImport_read(wbImport_t imp, wbBool asIntegerQ) {
 }
 
 static inline int *wbImport_readAsInteger(wbImport_t imp) {
-  void *data = wbImport_read(imp, wbTrue);
+  void *data = wbImport_read(imp, wbType_integer);
   return (int *)data;
 }
 
 static inline wbReal_t *wbImport_readAsReal(wbImport_t imp) {
-  void *data = wbImport_read(imp, wbFalse);
+  void *data = wbImport_read(imp, wbType_real);
   return (wbReal_t *)data;
 }
 
@@ -551,7 +551,7 @@ void *wbImport(const char *file, int *rows, int *columns) {
 }
 
 void *wbImport(const char *file, int *rows) {
-  return wbImport(file, rows, NULL, NULL);
+  return wbImport(file, rows, NULL, "Real");
 }
 
 void *wbImport(const char *file, int *rows, const char * type) {

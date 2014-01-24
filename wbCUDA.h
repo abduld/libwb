@@ -15,7 +15,7 @@ typedef struct st_wbCUDAMemory_t {
 #define _cudaMemoryListSize 1024
 
 extern size_t _cudaMallocSize;
-extern wbCUDAMemory_t _cudaMemoryList[_cudaMemoryListSize];
+extern wbCUDAMemory_t _cudaMemoryList[];
 extern int _cudaMemoryListIdx;
 
 char * wbRandom_list(size_t sz);
