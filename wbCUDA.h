@@ -31,7 +31,7 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
   }
 
   if (err == cudaSuccess) {
-#if 1
+#if 0
     char * rands = wbRandom_list(sz);
     // can use curand here, but do not want to invoke a kernel
     err = cudaMemcpy(*devPtr, rands, sz, cudaMemcpyHostToDevice);
@@ -57,7 +57,7 @@ static inline cudaError_t wbCUDAFree(void *mem) {
     if (_cudaMemoryList[ii].mem != NULL && _cudaMemoryList[ii].mem == mem) {
       cudaError_t err = cudaFree(mem);
       _cudaMallocSize -= _cudaMemoryList[ii].sz;
-      _cudaMemoryList[idx].mem = NULL;
+      _cudaMemoryList[ii].mem = NULL;
       return err;
     }
   }
