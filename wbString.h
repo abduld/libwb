@@ -226,7 +226,7 @@ wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4) << wbString(x5) << wbString(x6) << wbString(x7)
-     << wbString(x8) << wbString(x9) << wbString(x1);
+     << wbString(x8) << wbString(x9) << wbString(x10);
 
   return ss.str();
 }
