@@ -91,7 +91,7 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
   int ii = 0;
   int *data;
   char *line;
-  char seperator[1];
+  char seperator[2];
 
   if (file == NULL) {
     return NULL;
@@ -104,6 +104,7 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
   } else {
     seperator[0] = sep;
   }
+  seperator[1] = '\0';
 
   while ((line = wbFile_readLine(file)) != NULL) {
     char *token = strtok(line, seperator);
