@@ -68,6 +68,12 @@ extern char *solutionJSON;
 /***********************************************************/
 /***********************************************************/
 
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#else
+#include <CL/cl.h>
+#endif
+
 #include <wbTypes.h>
 #include <wbAssert.h>
 #include <wbMalloc.h>
@@ -85,6 +91,7 @@ extern char *solutionJSON;
 #include <wbExit.h>
 #include <wbInit.h>
 #include <wbCUDA.h>
+
 
 /***********************************************************/
 /***********************************************************/
