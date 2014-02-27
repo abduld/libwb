@@ -1,8 +1,7 @@
-
 Copyright (c) 2014, Abdul Dakkak All rights reserved.
 
-Developed by: 		Abdul Dakkak
-                    Impact Group
+Developed by: 	Abdul Dakkak
+                    IMPACT Group
                     University of Illinois, Urbana-Champaign
                     impact.crhc.illinois.edu
 
