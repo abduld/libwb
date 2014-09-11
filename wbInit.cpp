@@ -2,10 +2,9 @@
 #include <wb.h>
 #include <wbCUDA.h>
 
-#ifndef WB_DEFAULT_HEAP_SIZE
 #define MB (1 << 20)
-const size_t WB_DEFAULT_HEAP_SIZE = (50 * MB);
-#undef MB
+#ifndef WB_DEFAULT_HEAP_SIZE
+const size_t WB_DEFAULT_HEAP_SIZE = (256 * MB);
 #endif /* WB_DEFAULT_HEAP_SIZE */
 
 static bool _initializedQ = wbFalse;
@@ -30,6 +29,11 @@ __attribute__((__constructor__))
     srand(time(NULL));
     cudaSetDevice(rand() % deviceCount);
   }
+
+  cudaDeviceSetLimit(cudaLimitPrintfFifoSize, 1*MB);
+  cudaDeviceSetLimit(cudaLimitMallocHeapSize, WB_DEFAULT_HEAP_SIZE);
+
+  cudaDeviceSynchronize();
 
 #endif /* WB_USE_CUDA */
 

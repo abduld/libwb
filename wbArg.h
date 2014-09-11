@@ -26,8 +26,8 @@ struct st_wbArg_t {
   (wbArg_getExpectedOutputFile(wa) = val)
 #define wbArg_setType(wa, val) (wbArg_getType(wa) = val)
 
-wbArg_t wbArg_new(void);
-void wbArg_delete(wbArg_t arg);
-wbArg_t wbArg_read(int argc, char **argv);
+EXTERN_C wbArg_t wbArg_new(void);
+EXTERN_C void wbArg_delete(wbArg_t arg);
+EXTERN_C wbArg_t wbArg_read(int argc, char **argv);
 
 #endif /* __WB_ARG_H__ */

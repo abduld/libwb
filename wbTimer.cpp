@@ -14,21 +14,21 @@ static uint64_t o_timestart = 0;
 #endif /* __APPLE__ */
 
 uint64_t _hrtime(void) {
-#define NANOSEC ((uint64_t) 1e9)
+#define NANOSEC (( uint64_t )1e9)
 #ifdef _MSC_VER
   LARGE_INTEGER counter;
   if (!QueryPerformanceCounter(&counter)) {
     return 0;
   }
-  return ((uint64_t) counter.LowPart * NANOSEC / _hrtime_frequency) +
-         (((uint64_t) counter.HighPart * NANOSEC / _hrtime_frequency) << 32);
+  return (( uint64_t )counter.LowPart * NANOSEC / _hrtime_frequency) +
+         ((( uint64_t )counter.HighPart * NANOSEC / _hrtime_frequency) << 32);
 #else
   struct timespec ts;
 #ifdef __APPLE__
 #define O_NANOSEC (+1.0E-9)
 #define O_GIGA UINT64_C(1000000000)
   if (!o_timestart) {
-    mach_timebase_info_data_t tb = { 0 };
+    mach_timebase_info_data_t tb = {0};
     mach_timebase_info(&tb);
     o_timebase = tb.numer;
     o_timebase /= tb.denom;
@@ -39,25 +39,24 @@ uint64_t _hrtime(void) {
   ts.tv_nsec = diff - (ts.tv_sec * O_GIGA);
 #undef O_NANOSEC
 #undef O_GIGA
-#else /* __APPLE__ */
+#else  /* __APPLE__ */
   clock_gettime(CLOCK_MONOTONIC, &ts);
 #endif /* __APPLE__ */
-  return (((uint64_t) ts.tv_sec) * NANOSEC + ts.tv_nsec);
+  return ((( uint64_t )ts.tv_sec) * NANOSEC + ts.tv_nsec);
 #endif /* _MSC_VER */
 #undef NANOSEC
 }
 
 static inline uint64_t getTime(void) {
 #ifdef WB_USE_CUDA
-  cudaThreadSynchronize();
+  cudaDeviceSynchronize();
 #endif /* WB_USE_CUDA */
-
   return _hrtime();
 }
 
-static inline wbTimerNode_t
-wbTimerNode_new(int id, wbTimerKind_t kind, const char *file, const char *fun,
-                int startLine) {
+static inline wbTimerNode_t wbTimerNode_new(int id, wbTimerKind_t kind,
+                                            const char *file, const char *fun,
+                                            int startLine) {
   wbTimerNode_t node = wbNew(struct st_wbTimerNode_t);
   wbTimerNode_setId(node, id);
   wbTimerNode_setLevel(node, 0);
@@ -246,8 +245,8 @@ string wbTimer_toJSON(wbTimer_t timer) {
          iter = wbTimerNode_getNext(iter)) {
       if (!wbTimerNode_stoppedQ(iter)) {
         wbTimerNode_setEndTime(iter, currentTime);
-        wbTimerNode_setElapsedTime(
-            iter, currentTime - wbTimerNode_getStartTime(iter));
+        wbTimerNode_setElapsedTime(iter, currentTime -
+                                             wbTimerNode_getStartTime(iter));
       }
       ss << wbTimerNode_toJSON(iter);
       if (wbTimerNode_getNext(iter) != NULL) {
@@ -261,7 +260,9 @@ string wbTimer_toJSON(wbTimer_t timer) {
   }
 }
 
-string wbTimer_toJSON() { return wbTimer_toJSON(_timer); }
+string wbTimer_toJSON() {
+  return wbTimer_toJSON(_timer);
+}
 
 string wbTimer_toXML(wbTimer_t timer) {
   if (timer == NULL) {
@@ -286,8 +287,8 @@ string wbTimer_toXML(wbTimer_t timer) {
          iter = wbTimerNode_getNext(iter)) {
       if (!wbTimerNode_stoppedQ(iter)) {
         wbTimerNode_setEndTime(iter, currentTime);
-        wbTimerNode_setElapsedTime(
-            iter, currentTime - wbTimerNode_getStartTime(iter));
+        wbTimerNode_setElapsedTime(iter, currentTime -
+                                             wbTimerNode_getStartTime(iter));
       }
       ss << wbTimerNode_toXML(iter);
     }
@@ -298,7 +299,9 @@ string wbTimer_toXML(wbTimer_t timer) {
   }
 }
 
-string wbTimer_toXML() { return wbTimer_toXML(_timer); }
+string wbTimer_toXML() {
+  return wbTimer_toXML(_timer);
+}
 
 wbTimer_t wbTimer_new(void) {
   wbTimer_t timer = wbNew(struct st_wbTimer_t);
@@ -337,8 +340,8 @@ static inline void _insertIntoList(wbTimer_t timer, wbTimerNode_t node) {
   wbTimer_incrementLength(timer);
 }
 
-wbTimerNode_t
-wbTimer_start(wbTimerKind_t kind, const char *file, const char *fun, int line) {
+wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
+                            const char *fun, int line) {
   int id;
   uint64_t currentTime;
   wbTimerNode_t node;
@@ -371,8 +374,8 @@ wbTimerNode_t wbTimer_start(wbTimerKind_t kind, string msg, const char *file,
   return node;
 }
 
-static inline wbTimerNode_t
-_findNode(wbTimer_t timer, wbTimerKind_t kind, string msg) {
+static inline wbTimerNode_t _findNode(wbTimer_t timer, wbTimerKind_t kind,
+                                      string msg) {
   wbTimerNode_t iter;
 
   for (iter = wbTimer_getTail(timer); iter != NULL;

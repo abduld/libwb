@@ -29,7 +29,7 @@ typedef struct st_wbSolution_t {
 wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
                   void *data, int rows, int columns);
 wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns);
-wbBool wbSolution(wbArg_t arg, void *data, int rows);
+EXTERN_C wbBool wbSolution(wbArg_t arg, void *data, int rows);
 wbBool wbSolution(wbArg_t arg, wbImage_t img);
 
 #endif /* __WB_SOLUTION_H__ */

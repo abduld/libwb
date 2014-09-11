@@ -91,6 +91,7 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
   int ii = 0;
   int *data;
   char *line;
+  int var;
   char seperator[2];
 
   if (file == NULL) {
@@ -106,14 +107,19 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
   }
   seperator[1] = '\0';
 
-  while ((line = wbFile_readLine(file)) != NULL) {
-    char *token = strtok(line, seperator);
-    while (token != NULL) {
-      int var;
-
-      sscanf(token, "%d", &var);
-      token = strtok(NULL, seperator);
+  if (columns == 1) {
+    while ((line = wbFile_readLine(file)) != NULL) {
+      sscanf(line, "%d", &var);
       data[ii++] = var;
+    }
+  } else {
+    while ((line = wbFile_readLine(file)) != NULL) {
+      char *token = strtok(line, seperator);
+      while (token != NULL) {
+        sscanf(token, "%d", &var);
+        token = strtok(NULL, seperator);
+        data[ii++] = var;
+      }
     }
   }
 
@@ -531,6 +537,11 @@ void * wbImport(const char *file, int *resRows, int *resColumns, const char *typ
     columns = wbImportRaw_getColumnCount(wbImport_getRaw(imp));
   }
 
+  if (rows == 1 && columns > 0) {
+    rows = columns;
+    columns = 1;
+  }
+
   if (resRows != NULL) {
     *resRows = rows;
   }
@@ -551,12 +562,18 @@ void *wbImport(const char *file, int *rows, int *columns) {
   return wbImport(file, rows, columns, "Real");
 }
 
-void *wbImport(const char *file, int *rows) {
+EXTERN_C void *wbImport(const char *file, int *rows) {
   return wbImport(file, rows, NULL, "Real");
 }
 
-void *wbImport(const char *file, int *rows, const char * type) {
-  return wbImport(file, rows, NULL, type);
+void *wbImport(const char *file, int *res_rows, const char * type) {
+  int cols, rows;
+  void * res = wbImport(file, &rows, &cols, type);
+  if (rows == 1 && cols > 1) {
+    rows = cols;
+  }
+  *res_rows = rows;
+  return res;
 }
 
 wbImage_t wbImport(const char *file) {

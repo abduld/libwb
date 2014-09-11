@@ -2,9 +2,13 @@
 
 #include <wb.h>
 
-static inline float _min(float x, float y) { return x < y ? x : y; }
+static inline float _min(float x, float y) {
+  return x < y ? x : y;
+}
 
-static inline float _max(float x, float y) { return x > y ? x : y; }
+static inline float _max(float x, float y) {
+  return x > y ? x : y;
+}
 
 static inline float _clamp(float x, float start, float end) {
   return _min(_max(x, start), end);
@@ -21,7 +25,7 @@ wbImage_t wbImage_new(int width, int height, int channels) {
   wbImage_setChannels(img, channels);
   wbImage_setPitch(img, width * channels);
 
-  data = wbNewArray(float, width * height * channels);
+  data = wbNewArray(float, width *height *channels);
 
   wbImage_setData(img, data);
   return img;
@@ -59,8 +63,8 @@ static inline float wbImage_getPixel(wbImage_t img, int x, int y, int c) {
   return data[y * pitch + x * channels + c];
 }
 
-wbBool
-wbImage_sameQ(wbImage_t a, wbImage_t b, wbImage_onSameFunction_t onUnSame) {
+wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
+                     wbImage_onSameFunction_t onUnSame) {
   if (a == NULL || b == NULL) {
     wbLog(ERROR, "Comparing null images.");
     return wbFalse;
@@ -93,8 +97,14 @@ wbImage_sameQ(wbImage_t a, wbImage_t b, wbImage_onSameFunction_t onUnSame) {
     for (ii = 0; ii < height; ii++) {
       for (jj = 0; jj < width; jj++) {
         for (kk = 0; kk < channels; kk++) {
-          float x = _clamp(*aData++, 0, 1);
-          float y = _clamp(*bData++, 0, 1);
+          float x, y;
+          if (channels <= 3) {
+            x = _clamp(*aData++, 0, 1);
+            y = _clamp(*bData++, 0, 1);
+          } else {
+            x = *aData++;
+            y = *bData++;
+          }
           if (wbUnequalQ(x, y)) {
             if (onUnSame != NULL) {
               string str = wbString("Image pixels do not match at position (",
@@ -111,7 +121,9 @@ wbImage_sameQ(wbImage_t a, wbImage_t b, wbImage_onSameFunction_t onUnSame) {
   }
 }
 
-static void wbImage_onUnsameFunction(string str) { wbLog(ERROR, str); }
+static void wbImage_onUnsameFunction(string str) {
+  wbLog(ERROR, str);
+}
 
 wbBool wbImage_sameQ(wbImage_t a, wbImage_t b) {
   return wbImage_sameQ(a, b, wbImage_onUnsameFunction);

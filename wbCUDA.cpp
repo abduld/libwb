@@ -16,7 +16,6 @@ char * wbRandom_list(size_t sz) {
   for (ii = 0; ii < sz/sizeof(int); ii++) {
     irands[ii] = rand();
   }
-  ii = sizeof(int)*(sz/sizeof(int));
   while (ii < sz) {
     rands[ii] = (char) (rand() % 255);
     ii++;

@@ -2,9 +2,13 @@
 #include <wb.h>
 #include <math.h>
 
-static inline float _min(float x, float y) { return x < y ? x : y; }
+static inline float _min(float x, float y) {
+  return x < y ? x : y;
+}
 
-static inline float _max(float x, float y) { return x > y ? x : y; }
+static inline float _max(float x, float y) {
+  return x > y ? x : y;
+}
 
 static inline float _clamp(float x, float start, float end) {
   return _min(_max(x, start), end);
@@ -37,6 +41,12 @@ static wbBool isComment(const char *line) {
 static void parseDimensions(const char *line0, int *width, int *height) {
   const char *line = skipSpaces(line0);
   sscanf(line, "%d %d", width, height);
+}
+
+static void parseDimensions(const char *line0, int *width, int *height,
+                            int *channels) {
+  const char *line = skipSpaces(line0);
+  sscanf(line, "%d %d %d", width, height, channels);
 }
 
 static void parseDepth(const char *line0, int *depth) {
@@ -77,7 +87,8 @@ wbImage_t wbPPM_import(const char *filename) {
   if (header == NULL) {
     printf("Could not read from %s\n", filename);
     goto cleanup;
-  } else if (strcmp(header, "P6") != 0 && strcmp(header, "P6\n") != 0) {
+  } else if (strcmp(header, "P6") != 0 && strcmp(header, "P6\n") != 0 &&
+             strcmp(header, "S6") != 0 && strcmp(header, "S6\n") != 0) {
     printf("Could find magic number for %s\n", filename);
     goto cleanup;
   }
@@ -85,14 +96,18 @@ wbImage_t wbPPM_import(const char *filename) {
   // the line now contains the dimension information
   channels = 3;
   line = nextLine(file);
-  parseDimensions(line, &width, &height);
+  if (strcmp(header, "S6") != 0 && strcmp(header, "S6\n") != 0) {
+    parseDimensions(line, &width, &height, &channels);
+  } else {
+    parseDimensions(line, &width, &height);
+  }
 
   // the line now contains the depth information
   line = nextLine(file);
   parseDepth(line, &depth);
 
   // the rest of the lines contain the data in binary format
-  charData = (unsigned char *)wbFile_read(
+  charData = ( unsigned char * )wbFile_read(
       file, width * channels * sizeof(unsigned char), height);
 
   img = wbImage_new(width, height, channels);
@@ -102,12 +117,12 @@ wbImage_t wbPPM_import(const char *filename) {
   charIter = charData;
   floatIter = imgData;
 
-  scale = 1.0f / ((float) depth);
+  scale = 1.0f / (( float )depth);
 
   for (ii = 0; ii < height; ii++) {
     for (jj = 0; jj < width; jj++) {
       for (kk = 0; kk < channels; kk++) {
-        *floatIter = ((float) * charIter) * scale;
+        *floatIter = (( float )*charIter) * scale;
         floatIter++;
         charIter++;
       }
@@ -148,7 +163,7 @@ void wbPPM_export(const char *filename, wbImage_t img) {
   wbFile_writeLine(file, wbString(width, " ", height));
   wbFile_writeLine(file, wbString(depth));
 
-  charData = wbNewArray(unsigned char, width * height * channels);
+  charData = wbNewArray(unsigned char, width *height *channels);
 
   charIter = charData;
   floatIter = wbImage_getData(img);
@@ -156,7 +171,7 @@ void wbPPM_export(const char *filename, wbImage_t img) {
   for (ii = 0; ii < height; ii++) {
     for (jj = 0; jj < width; jj++) {
       for (kk = 0; kk < channels; kk++) {
-        *charIter = (unsigned char) ceil(_clamp(*floatIter, 0, 1) * depth);
+        *charIter = ( unsigned char )ceil(_clamp(*floatIter, 0, 1) * depth);
         floatIter++;
         charIter++;
       }

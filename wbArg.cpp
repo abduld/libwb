@@ -1,7 +1,7 @@
 
 #include <wb.h>
 
-wbArg_t wbArg_new(void) {
+EXTERN_C wbArg_t wbArg_new(void) {
   wbArg_t arg;
 
   wb_init();
@@ -14,7 +14,7 @@ wbArg_t wbArg_new(void) {
   return arg;
 }
 
-void wbArg_delete(wbArg_t arg) {
+EXTERN_C void wbArg_delete(wbArg_t arg) {
   if (wbArg_getInputCount(arg) > 0 && wbArg_getInputFiles(arg) != NULL) {
     int ii;
     for (ii = 0; ii < wbArg_getInputCount(arg); ii++) {
@@ -71,7 +71,7 @@ static char **parseInputFiles(char *arg, int *resCount) {
 
 static char *parseString(char *arg) { return wbString_duplicate(arg); }
 
-wbArg_t wbArg_read(int argc, char **argv) {
+EXTERN_C wbArg_t wbArg_read(int argc, char **argv) {
   int ii;
   wbArg_t arg;
 

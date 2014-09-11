@@ -3,6 +3,9 @@
 #define __WB_CUDA_H__
 
 #ifdef WB_USE_CUDA
+#ifdef __PGI
+#define __GNUC__ 4
+#endif /* __PGI */
 #include "cuda.h"
 #include "cuda_runtime.h"
 #include "time.h"

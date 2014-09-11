@@ -79,7 +79,7 @@ typedef struct st_wbImport_t {
 #define wbImport_setImage(imp, val) (wbImport_getImage(imp) = val)
 
 
-void *wbImport(const char *file, int *rows);
+EXTERN_C void *wbImport(const char *file, int *rows);
 void *wbImport(const char *file, int *rows, int *columns);
 void *wbImport(const char *file, int *rows, const char * type);
 void * wbImport(const char *file, int *resRows, int *resColumns, const char *type);
