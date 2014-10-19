@@ -86,8 +86,8 @@ wbImportCSV_findDimensions(wbImportCSV_t csv, int *resRows, int *resColumns) {
   return csv;
 }
 
-static inline int *
-csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
+static inline int *csv_readAsInteger(wbFile_t file, char sep, int rows,
+                                     int columns) {
   int ii = 0;
   int *data;
   char *line;
@@ -98,7 +98,7 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
     return NULL;
   }
 
-  data = wbNewArray(int, rows * columns);
+  data = wbNewArray(int, rows *columns);
 
   if (sep == '\0') {
     seperator[0] = ',';
@@ -107,9 +107,11 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
   }
   seperator[1] = '\0';
 
+//printf("cols = %d rows = %d\n", columns, rows);
   if (columns == 1) {
     while ((line = wbFile_readLine(file)) != NULL) {
       sscanf(line, "%d", &var);
+//printf("reading %d\n", var);
       data[ii++] = var;
     }
   } else {
@@ -126,8 +128,8 @@ csv_readAsInteger(wbFile_t file, char sep, int rows, int columns) {
   return data;
 }
 
-static inline wbReal_t *
-csv_readAsReal(wbFile_t file, char sep, int rows, int columns) {
+static inline wbReal_t *csv_readAsReal(wbFile_t file, char sep, int rows,
+                                       int columns) {
   int ii = 0;
   wbReal_t *data;
   char *line;
@@ -166,8 +168,7 @@ csv_readAsReal(wbFile_t file, char sep, int rows, int columns) {
   return data;
 }
 
-static inline wbImportCSV_t
-wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
+static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
   void *data;
   wbFile_t file;
   char seperator;
@@ -198,6 +199,7 @@ wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
   }
 
   if (type == wbType_integer) {
+//printf("ReadXXXing as integer...\n");
     data = csv_readAsInteger(file, seperator, rows, columns);
   } else {
     data = csv_readAsReal(file, seperator, rows, columns);
@@ -315,8 +317,7 @@ static inline wbBool wbImportRaw_findDimensions(wbImportRaw_t raw) {
   return wbTrue;
 }
 
-static inline wbImportRaw_t
-wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
+static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
   void *data;
   wbFile_t file;
   char seperator;
@@ -345,6 +346,7 @@ wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
   }
 
   if (type == wbType_integer) {
+//printf("Rdin gas integer...\n");
     data = csv_readAsInteger(file, seperator, rows, columns);
   } else {
     data = csv_readAsReal(file, seperator, rows, columns);
@@ -504,7 +506,8 @@ static wbImportKind_t _parseImportExtension(const char *file) {
   return kind;
 }
 
-void * wbImport(const char *file, int *resRows, int *resColumns, const char *type) {
+void *wbImport(const char *file, int *resRows, int *resColumns,
+               const char *type) {
   void *data, *res;
   wbImport_t imp;
   size_t sz;
@@ -525,6 +528,7 @@ void * wbImport(const char *file, int *resRows, int *resColumns, const char *typ
     data = wbImport_readAsReal(imp);
     sz = sizeof(wbReal_t);
   } else {
+//printf("Reading as integer..d\n");
     data = wbImport_readAsInteger(imp);
     sz = sizeof(int);
   }
@@ -566,9 +570,9 @@ EXTERN_C void *wbImport(const char *file, int *rows) {
   return wbImport(file, rows, NULL, "Real");
 }
 
-void *wbImport(const char *file, int *res_rows, const char * type) {
+void *wbImport(const char *file, int *res_rows, const char *type) {
   int cols, rows;
-  void * res = wbImport(file, &rows, &cols, type);
+  void *res = wbImport(file, &rows, &cols, type);
   if (rows == 1 && cols > 1) {
     rows = cols;
   }
@@ -596,3 +600,13 @@ wbImage_t wbImport(const char *file) {
 
   return img;
 }
+
+int wbImport_flag(const char *file) {
+    int res;
+    wbFile_t fh = wbFile_open(file, "r");
+    const char * line = wbFile_readLine(fh);
+    sscanf(line, "%d", &res);
+    wbFile_close(fh);
+    return res;
+}
+
