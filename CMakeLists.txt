@@ -36,7 +36,7 @@ if (UNIX AND NOT APPLE)
     if(NOT HAVE_CLOCK_GETTIME)
         message(FATAL_ERROR "clock_gettime not found")
     endif(NOT HAVE_CLOCK_GETTIME)
-endif(UNIX)
+endif(UNIX AND NOT APPLE)
  
 file( GLOB  wbhdr *.hpp *.h )
 file( GLOB  wbsrc *.cpp *.c )
