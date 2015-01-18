@@ -30,7 +30,7 @@ else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
 endif()
  
-if (UNIX)
+if (UNIX AND NOT APPLE)
     include(CheckLibraryExists)
     check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME )
     if(NOT HAVE_CLOCK_GETTIME)
