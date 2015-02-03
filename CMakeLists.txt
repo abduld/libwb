@@ -17,8 +17,6 @@ endif ()
 
 # add debugging to CUDA NVCC flags.  For NVidia's NSight tools.
 set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG} "-G")
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CUDA_INCLUDE_DIRS})
 
 if (UNIX)
     include(CheckLibraryExists)
@@ -31,9 +29,6 @@ endif(UNIX)
 # Collect source files
 file(GLOB  wbhdr *.hpp *.h)
 file(GLOB  wbsrc *.cpp *.c)
-
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CUDA_INCLUDE_DIRS})
 
 # Simple macro to ease creation of MP executables.
 macro (add_mp_executable name sources)
