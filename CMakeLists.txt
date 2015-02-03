@@ -4,10 +4,9 @@
 # <author>  Tran Minh Quan. edit by Johannes Kast, Michael Sarahan      </author>
 # <email>   quantm@unist.ac.kr  kast.jo@googlemail.com msarahan@gmail.com </email>
 ############################################################################################
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(libwb)
 find_package(CUDA REQUIRED)
-# collect source files
 
 if(CUDA_FOUND)
     # compared to class settings, we let NVidia's FindCUDA CMake detect
@@ -38,8 +37,9 @@ if (UNIX)
     endif(NOT HAVE_CLOCK_GETTIME)
 endif(UNIX)
 
-file( GLOB  wbhdr *.hpp *.h )
-file( GLOB  wbsrc *.cpp *.c )
+# Collect source files
+file(GLOB  wbhdr *.hpp *.h)
+file(GLOB  wbsrc *.cpp *.c)
 
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CUDA_INCLUDE_DIRS})
