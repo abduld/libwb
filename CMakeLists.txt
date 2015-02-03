@@ -8,11 +8,10 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(libwb)
 find_package(CUDA REQUIRED)
 
-# add -Wextra compiler flag for gcc compilations
+# Set warning levels for host compilation
 if (UNIX)
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} "-Xcompiler -Wall;")
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} "-Xcompiler -Wextra")
-endif (UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+endif ()
 
 # add debugging to CUDA NVCC flags.  For NVidia's NSight tools.
 set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG} "-G")
