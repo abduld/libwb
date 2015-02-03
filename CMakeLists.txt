@@ -8,12 +8,6 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(libwb)
 find_package(CUDA REQUIRED)
 
-# compared to class settings, we let NVidia's FindCUDA CMake detect
-# whether to build x64.  We tell it to support most devices, though,
-# to make sure more people can easily run class code without knowing
-# about this compiler argument
-set(CUDA_NVCC_FLAGS "")
-
 # add -Wextra compiler flag for gcc compilations
 if (UNIX)
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} "-Xcompiler -Wall;")
