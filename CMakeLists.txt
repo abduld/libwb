@@ -15,7 +15,27 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif ()
 
-# add debugging to CUDA NVCC flags.  For NVidia's NSight tools.
+# Select the correct host compiler on OS X
+if (APPLE)
+    if (${CMAKE_SYSTEM_VERSION} LESS 12.0)
+        # OS X 10.7 or less
+        find_program(GCC_EXECUTABLE NAMES g++ PATHS ENV PATH)
+        if (NOT GCC_EXECUTABLE)
+            message(FATAL_ERROR "Could not find host compiler 'g++'")
+        endif()
+        set(CUDA_HOST_COMPILER ${GCC_EXECUTABLE})
+    else ()
+        # OS X 10.8+
+        find_program(CLANG_EXECUTABLE NAMES clang++ PATHS ENV PATH)
+        if (NOT CLANG_EXECUTABLE)
+            message(FATAL_ERROR "Could not find host compiler 'clang++'")
+        endif ()
+        set(CUDA_HOST_COMPILER ${CLANG_EXECUTABLE})
+        set(CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} -stdlib=libstdc++ -isystem ${CUDA_INCLUDE_DIRS}")
+    endif ()
+endif ()
+
+# Add debugging to CUDA NVCC flags (for NVidia's NSight tools)
 set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG} "-G")
 
 if (UNIX)
