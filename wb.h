@@ -85,11 +85,13 @@ extern char *solutionJSON;
 /***********************************************************/
 /***********************************************************/
 
+#ifndef __CUDACC__
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
 #include <CL/cl.h>
-#endif
+#endif /* __APPLE__ */
+#endif /* __CUDACC__ */
 
 #include <wbTypes.h>
 #include <wbAssert.h>
