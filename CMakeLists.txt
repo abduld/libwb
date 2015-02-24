@@ -8,7 +8,12 @@ project(libwb)
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 find_package(CUDA REQUIRED)
 # collect source files
- 
+
+if (APPLE) 
+set (CMAKE_CXX_FLAGS "-stdlib=libstdc++")
+set (CMAKE_EXE_LINKER_FLAGS "-stdlib=libstdc++")
+endif()
+
 if(CUDA_FOUND)
     # compared to class settings, we let NVidia's FindCUDA CMake detect 
     # whether to build x64.  We tell it to support most devices, though, 
@@ -30,13 +35,13 @@ else(CUDA_FOUND)
     message("CUDA is not installed on this system.")
 endif()
  
-if (UNIX)
+if (UNIX AND NOT APPLE)
     include(CheckLibraryExists)
     check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME )
     if(NOT HAVE_CLOCK_GETTIME)
         message(FATAL_ERROR "clock_gettime not found")
     endif(NOT HAVE_CLOCK_GETTIME)
-endif(UNIX)
+endif()
  
 file( GLOB  wbhdr *.hpp *.h )
 file( GLOB  wbsrc *.cpp *.c )
