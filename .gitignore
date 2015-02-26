@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# cmake
+CMakeCache.txt
+CmakeFiles/
+cmake_install.cmake
+
+# executables generated on linux/osx
+/MP[0-9]
+/MP[0-9][0-9]
