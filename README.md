@@ -67,6 +67,3 @@ Best regards,
 
 P/s1: Sorry about the name of project, it should be hetero14 but I forget that we are already in the new year. My appologize :-P 
 
-P/s2: If you are using MAC, please consider reading this link and modify your CMakeLists.txt
-[https://class.coursera.org/hetero-002/forum/thread?thread\_id=83](https://class.coursera.org/hetero-002/forum/thread?thread_id=83)
-
