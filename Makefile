@@ -6,8 +6,8 @@
 CXX=g++
 DEFINES=-DWB_USE_CUDA
 CUDA_INCLUDE_FLAGS=-I /usr/local/cuda/include -I /usr/local/cuda-6.5/include -I /usr/local/cuda-5.5/include
-CXX_FLAGS=-fPIC -x c++ -O0 -g -I . -I $(HOME)/usr/include $(CUDA_INCLUDE_FLAGS) -L $(HOME)/usr/lib -Wall $(DEFINES)
-LIBS=-lm -lstdc++ -lrt -lcuda -L$(HOME)/usr/lib
+CXX_FLAGS=-fPIC -Wno-unused-function -x c++ -O0 -g -I . -I $(HOME)/usr/include $(CUDA_INCLUDE_FLAGS) $(DEFINES)
+LIBS=-lm -lstdc++ -lrt -lcuda # -L$(HOME)/usr/lib 
 ARCH=$(shell uname -s)-$(shell uname -i)
 
 ##########################################
