@@ -18,6 +18,7 @@ SOURCES :=  wbArg.cpp              \
 			wbExport.cpp           \
 			wbFile.cpp             \
 			wbImage.cpp            \
+			wbMPI.cpp            \
 			wbImport.cpp           \
 			wbInit.cpp             \
 			wbLogger.cpp           \
