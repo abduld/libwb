@@ -4,30 +4,24 @@
 char *solutionJSON = NULL;
 static string _solution_correctQ("");
 
-static void _onUnsameImageFunction(string str) {
-  _solution_correctQ = str;
-}
+static void _onUnsameImageFunction(string str) { _solution_correctQ = str; }
 
 template <typename T>
-static wbBool wbSolution_listCorrectQ(const char * expectedOutputFile,
-                                      wbSolution_t sol,
-                                      const char * type) {
+static wbBool wbSolution_listCorrectQ(const char *expectedOutputFile,
+                                      wbSolution_t sol, const char *type) {
   wbBool res;
   T *expectedData;
   int expectedRows, expectedColumns;
 
-  expectedData = (T *)wbImport(expectedOutputFile,
-                               &expectedRows,
-                               &expectedColumns,
-                               type);
+  expectedData =
+      (T *)wbImport(expectedOutputFile, &expectedRows, &expectedColumns, type);
 
   if (expectedData == NULL) {
     _solution_correctQ = "Failed to open expected output file.";
     res = wbFalse;
   } else if (expectedRows != wbSolution_getRows(sol)) {
-    wbLog(TRACE, "Number of rows in the solution is ",
-          wbSolution_getRows(sol), ". Expected number of rows is ",
-          expectedRows, ".");
+    wbLog(TRACE, "Number of rows in the solution is ", wbSolution_getRows(sol),
+          ". Expected number of rows is ", expectedRows, ".");
     _solution_correctQ = "The number of rows in the solution did not match "
                          "that of the expected results.";
     res = wbFalse;
@@ -59,7 +53,6 @@ static wbBool wbSolution_listCorrectQ(const char * expectedOutputFile,
                 "The solution did not match the expected results at column ",
                 jj, " and row ", ii, ". Expecting ", expectedData[idx],
                 " but got ", solutionData[idx], ".");
-
           }
           _solution_correctQ = str;
           res = wbFalse;
@@ -69,8 +62,8 @@ static wbBool wbSolution_listCorrectQ(const char * expectedOutputFile,
     }
 
     res = wbTrue;
-matrixCleanup:
-  if (expectedData != NULL) {
+  matrixCleanup:
+    if (expectedData != NULL) {
       wbFree(expectedData);
     }
   }
@@ -102,7 +95,7 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile, wbSolution_t sol) {
       res = wbFalse;
     } else {
 
-      solutionImage = (wbImage_t) wbSolution_getData(sol);
+      solutionImage = (wbImage_t)wbSolution_getData(sol);
       wbAssert(solutionImage != NULL);
 
       res = wbImage_sameQ(solutionImage, expectedImage, _onUnsameImageFunction);
@@ -112,7 +105,8 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile, wbSolution_t sol) {
     }
     return res;
   } else if (wbString_sameQ(wbSolution_getType(sol), "histogram")) {
-    return wbSolution_listCorrectQ<unsigned char>(expectedOutputFile, sol, "Integer");
+    return wbSolution_listCorrectQ<unsigned char>(expectedOutputFile, sol,
+                                                  "Integer");
   } else if (wbString_sameQ(wbSolution_getType(sol), "integral_vector")) {
     return wbSolution_listCorrectQ<int>(expectedOutputFile, sol, "Integer");
   } else if (wbString_sameQ(wbSolution_getType(sol), "vector") ||
@@ -122,7 +116,6 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile, wbSolution_t sol) {
     wbAssert(wbFalse);
     return wbFalse;
   }
-
 }
 
 wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
@@ -156,18 +149,17 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
       wbImage_t img = wbImage_new(wbImage_getWidth(inputImage),
                                   wbImage_getHeight(inputImage),
                                   wbImage_getChannels(inputImage));
-      memcpy(wbImage_getData(img),
-             wbImage_getData(inputImage),
-             rows*columns*wbImage_channels*sizeof(wbReal_t));
+      memcpy(wbImage_getData(img), wbImage_getData(inputImage),
+             rows * columns * wbImage_channels * sizeof(wbReal_t));
       wbExport(outputFile, img);
       wbImage_delete(img);
     } else if (wbString_sameQ(type, "integral_vector")) {
-      wbExport(outputFile, (int *) data, rows, columns);
+      wbExport(outputFile, (int *)data, rows, columns);
     } else if (wbString_sameQ(type, "vector") ||
                wbString_sameQ(type, "matrix")) {
-      wbExport(outputFile, (wbReal_t *) data, rows, columns);
+      wbExport(outputFile, (wbReal_t *)data, rows, columns);
     } else if (wbString_sameQ(type, "histogram")) {
-      wbExport(outputFile, (unsigned char *) data, rows, columns);
+      wbExport(outputFile, (unsigned char *)data, rows, columns);
     }
   }
 

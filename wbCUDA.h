@@ -21,13 +21,13 @@ extern size_t _cudaMallocSize;
 extern wbCUDAMemory_t _cudaMemoryList[];
 extern int _cudaMemoryListIdx;
 
-char * wbRandom_list(size_t sz);
+char *wbRandom_list(size_t sz);
 
 static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
   int idx = _cudaMemoryListIdx;
-  
+
   cudaError_t err = cudaMalloc(devPtr, sz);
-  
+
   if (idx == 0) {
     srand(time(NULL));
     memset(_cudaMemoryList, 0, sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);

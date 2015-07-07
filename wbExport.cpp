@@ -81,7 +81,6 @@ static inline void wbExportRaw_write(wbExportRaw_t raw, void *data, int rows,
   }
 
   return;
-
 }
 
 static inline void wbExportCSV_setFile(wbExportCSV_t csv, const char *path) {
@@ -166,7 +165,6 @@ static inline void wbExportCSV_write(wbExportCSV_t csv, void *data, int rows,
   }
 
   return;
-
 }
 
 static inline wbExport_t wbExport_open(const char *file, wbExportKind_t kind) {
@@ -311,8 +309,8 @@ static wbExportKind_t _parseExportExtension(const char *file) {
   return kind;
 }
 
-static
-void wbExport(const char *file, void *data, int rows, int columns, wbType_t type) {
+static void wbExport(const char *file, void *data, int rows, int columns,
+                     wbType_t type) {
   wbExportKind_t kind;
   wbExport_t exprt;
 

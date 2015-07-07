@@ -28,9 +28,9 @@ static inline wbLogEntry_t wbLogEntry_new() {
   return elem;
 }
 
-static inline wbLogEntry_t
-wbLogEntry_initialize(wbLogLevel_t level, string msg, const char *file,
-                      const char *fun, int line) {
+static inline wbLogEntry_t wbLogEntry_initialize(wbLogLevel_t level, string msg,
+                                                 const char *file,
+                                                 const char *fun, int line) {
   wbLogEntry_t elem;
 
   elem = wbLogEntry_new();

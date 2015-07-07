@@ -107,12 +107,12 @@ extern char *solutionJSON;
 #include <wbImage.h>
 #include <wbArg.h>
 #include <wbSolution.h>
+#include <wbSparse.h>
 #include <wbExit.h>
 #include <wbInit.h>
 #include <wbCUDA.h>
 #include <wbMD5.h>
 #include <wbMPI.h>
-
 
 /***********************************************************/
 /***********************************************************/

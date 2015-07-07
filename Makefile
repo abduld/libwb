@@ -22,6 +22,7 @@ SOURCES :=  wbArg.cpp              \
 			wbImport.cpp           \
 			wbInit.cpp             \
 			wbLogger.cpp           \
+			wbSparse.cpp           \
 			wbPPM.cpp              \
 			wbCUDA.cpp			   \
 			wbSolution.cpp         \

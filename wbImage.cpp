@@ -2,13 +2,9 @@
 
 #include <wb.h>
 
-static inline float _min(float x, float y) {
-  return x < y ? x : y;
-}
+static inline float _min(float x, float y) { return x < y ? x : y; }
 
-static inline float _max(float x, float y) {
-  return x > y ? x : y;
-}
+static inline float _max(float x, float y) { return x > y ? x : y; }
 
 static inline float _clamp(float x, float start, float end) {
   return _min(_max(x, start), end);
@@ -107,9 +103,10 @@ wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
           }
           if (wbUnequalQ(x, y)) {
             if (onUnSame != NULL) {
-              string str = wbString("Image pixels do not match at position (",
-                                    wbString("x=", ii, ", y=", jj, ", channel=", kk, "). "),
-                                    wbString("Got ", x, ", expected ", y));
+              string str = wbString(
+                  "Image pixels do not match at position (",
+                  wbString("x=", ii, ", y=", jj, ", channel=", kk, "). "),
+                  wbString("Got ", x, ", expected ", y));
               onUnSame(str);
             }
             return wbFalse;
@@ -121,9 +118,7 @@ wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
   }
 }
 
-static void wbImage_onUnsameFunction(string str) {
-  wbLog(ERROR, str);
-}
+static void wbImage_onUnsameFunction(string str) { wbLog(ERROR, str); }
 
 wbBool wbImage_sameQ(wbImage_t a, wbImage_t b) {
   return wbImage_sameQ(a, b, wbImage_onUnsameFunction);

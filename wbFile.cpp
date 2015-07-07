@@ -161,7 +161,7 @@ void wbFile_rewind(wbFile_t file) {
     rewind(handle);
   }
 #ifndef LAZY_FILE_LOAD
-      else {
+  else {
     wbFile_setDataOffset(file, 0);
   }
 #endif
@@ -230,7 +230,8 @@ char *wbFile_readLine(wbFile_t file) {
   if (fgets(buffer, MAX_CHARS_PER_LINE - 1, handle)) {
     return buffer;
   } else {
-    //wbLog(ERROR, "Was not able to read line from ", wbFile_getFileName(file));
+    // wbLog(ERROR, "Was not able to read line from ",
+    // wbFile_getFileName(file));
     return NULL;
   }
 #else

@@ -15,7 +15,7 @@ static inline void *_malloc(size_t size) THROW {
     return NULL;
   } else {
     int err;
-    void *res = memmgr_alloc((ulong) size, &err);
+    void *res = memmgr_alloc((ulong)size, &err);
     if (err) {
       fprintf(stderr, "<<MEMORY>>:: Memory allocation failed\n");
       exit(1);
@@ -33,7 +33,7 @@ static inline void *_malloc(size_t size) THROW {
 static inline void _free(void *ptr) THROW {
   if (ptr != NULL) {
     // the memory free has a bug...
-    //memmgr_free(ptr);
+    // memmgr_free(ptr);
   }
 }
 
@@ -58,7 +58,7 @@ static inline void *_realloc(void *ptr, size_t size) THROW {
 
     if (buf != 0) {
       // Find original allocation size
-      alloc_size = (size_t) memmgr_get_block_size(ptr);
+      alloc_size = (size_t)memmgr_get_block_size(ptr);
       to_copy = alloc_size;
       if (to_copy > size) {
         to_copy = size;

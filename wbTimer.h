@@ -115,8 +115,8 @@ string wbTimer_toJSON();
 string wbTimer_toXML(wbTimer_t timer);
 string wbTimer_toXML();
 
-wbTimerNode_t
-wbTimer_start(wbTimerKind_t kind, const char *file, const char *fun, int line);
+wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
+                            const char *fun, int line);
 wbTimerNode_t wbTimer_start(wbTimerKind_t kind, string msg, const char *file,
                             const char *fun, int line);
 void wbTimer_stop(wbTimerKind_t kind, string msg, const char *file,

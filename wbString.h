@@ -69,8 +69,7 @@ template <typename T> static inline string wbString(const T &x) {
     stringstream ss;
     ss << x;
     return ss.str();
-  }
-  catch (exception & e) {
+  } catch (exception &e) {
     return string();
   }
 }
@@ -137,8 +136,8 @@ static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2) {
 }
 
 template <typename T0, typename T1, typename T2, typename T3>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3);
 
@@ -146,8 +145,8 @@ wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3) {
 }
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3, const T4 &x4) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4);
@@ -168,9 +167,9 @@ static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4,
           typename T5, typename T6>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
-         const T5 &x5, const T6 &x6) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3, const T4 &x4, const T5 &x5,
+                              const T6 &x6) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4) << wbString(x5) << wbString(x6);
@@ -180,9 +179,9 @@ wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4,
           typename T5, typename T6, typename T7>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
-         const T5 &x5, const T6 &x6, const T7 &x7) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3, const T4 &x4, const T5 &x5,
+                              const T6 &x6, const T7 &x7) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4) << wbString(x5) << wbString(x6) << wbString(x7);
@@ -192,9 +191,9 @@ wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4,
           typename T5, typename T6, typename T7, typename T8>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
-         const T5 &x5, const T6 &x6, const T7 &x7, const T8 &x8) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3, const T4 &x4, const T5 &x5,
+                              const T6 &x6, const T7 &x7, const T8 &x8) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4) << wbString(x5) << wbString(x6) << wbString(x7)
@@ -219,10 +218,10 @@ wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
 template <typename T0, typename T1, typename T2, typename T3, typename T4,
           typename T5, typename T6, typename T7, typename T8, typename T9,
           typename T10>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
-         const T5 &x5, const T6 &x6, const T7 &x7, const T8 &x8, const T9 &x9,
-         const T10 &x10) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3, const T4 &x4, const T5 &x5,
+                              const T6 &x6, const T7 &x7, const T8 &x8,
+                              const T9 &x9, const T10 &x10) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4) << wbString(x5) << wbString(x6) << wbString(x7)
@@ -234,10 +233,10 @@ wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
 template <typename T0, typename T1, typename T2, typename T3, typename T4,
           typename T5, typename T6, typename T7, typename T8, typename T9,
           typename T10, typename T11>
-static inline string
-wbString(const T0 &x0, const T1 &x1, const T2 &x2, const T3 &x3, const T4 &x4,
-         const T5 &x5, const T6 &x6, const T7 &x7, const T8 &x8, const T9 &x9,
-         const T10 &x10, const T11 &x11) {
+static inline string wbString(const T0 &x0, const T1 &x1, const T2 &x2,
+                              const T3 &x3, const T4 &x4, const T5 &x5,
+                              const T6 &x6, const T7 &x7, const T8 &x8,
+                              const T9 &x9, const T10 &x10, const T11 &x11) {
   stringstream ss;
   ss << wbString(x0) << wbString(x1) << wbString(x2) << wbString(x3)
      << wbString(x4) << wbString(x5) << wbString(x6) << wbString(x7)

@@ -8,7 +8,7 @@ static inline void wbCast(X &x, const Y &y, size_t len) {
   size_t ii;
 
   for (ii = 0; ii < len; ii++) {
-    x[ii] = (X) y[ii];
+    x[ii] = (X)y[ii];
   }
 
   return;
@@ -20,7 +20,7 @@ static inline X *wbCast(const Y &y, size_t len) {
   X *x = wbNewArray(X, len);
 
   for (ii = 0; ii < len; ii++) {
-    x[ii] = (X) y[ii];
+    x[ii] = (X)y[ii];
   }
 
   return x;

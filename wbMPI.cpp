@@ -22,7 +22,8 @@ const char *wbMPI_getStringFromRank(int rank, int tag) {
   if (isMasterQ) {
     char *buf;
     int bufSize;
-    MPI_Recv(&bufSize, 1, MPI_INT, rank, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&bufSize, 1, MPI_INT, rank, tag, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
     buf = (char *)calloc(bufSize, sizeof(char));
     MPI_Recv(buf, bufSize, MPI_CHAR, rank, tag, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
@@ -64,6 +65,5 @@ extern "C" void wbMPI_Exit(void) {
   wbMPI_Finalize();
   return;
 }
-
 
 #endif /* WB_USE_MPI */

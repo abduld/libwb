@@ -14,14 +14,14 @@ static uint64_t o_timestart = 0;
 #endif /* __APPLE__ */
 
 uint64_t _hrtime(void) {
-#define NANOSEC (( uint64_t )1e9)
+#define NANOSEC ((uint64_t)1e9)
 #ifdef _MSC_VER
   LARGE_INTEGER counter;
   if (!QueryPerformanceCounter(&counter)) {
     return 0;
   }
-  return (( uint64_t )counter.LowPart * NANOSEC / _hrtime_frequency) +
-         ((( uint64_t )counter.HighPart * NANOSEC / _hrtime_frequency) << 32);
+  return ((uint64_t)counter.LowPart * NANOSEC / _hrtime_frequency) +
+         (((uint64_t)counter.HighPart * NANOSEC / _hrtime_frequency) << 32);
 #else
   struct timespec ts;
 #ifdef __APPLE__
@@ -42,7 +42,7 @@ uint64_t _hrtime(void) {
 #else  /* __APPLE__ */
   clock_gettime(CLOCK_MONOTONIC, &ts);
 #endif /* __APPLE__ */
-  return ((( uint64_t )ts.tv_sec) * NANOSEC + ts.tv_nsec);
+  return (((uint64_t)ts.tv_sec) * NANOSEC + ts.tv_nsec);
 #endif /* _MSC_VER */
 #undef NANOSEC
 }
@@ -260,9 +260,7 @@ string wbTimer_toJSON(wbTimer_t timer) {
   }
 }
 
-string wbTimer_toJSON() {
-  return wbTimer_toJSON(_timer);
-}
+string wbTimer_toJSON() { return wbTimer_toJSON(_timer); }
 
 string wbTimer_toXML(wbTimer_t timer) {
   if (timer == NULL) {
@@ -299,9 +297,7 @@ string wbTimer_toXML(wbTimer_t timer) {
   }
 }
 
-string wbTimer_toXML() {
-  return wbTimer_toXML(_timer);
-}
+string wbTimer_toXML() { return wbTimer_toXML(_timer); }
 
 wbTimer_t wbTimer_new(void) {
   wbTimer_t timer = wbNew(struct st_wbTimer_t);

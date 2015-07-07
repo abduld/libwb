@@ -107,11 +107,11 @@ static inline int *csv_readAsInteger(wbFile_t file, char sep, int rows,
   }
   seperator[1] = '\0';
 
-//printf("cols = %d rows = %d\n", columns, rows);
+  // printf("cols = %d rows = %d\n", columns, rows);
   if (columns == 1) {
     while ((line = wbFile_readLine(file)) != NULL) {
       sscanf(line, "%d", &var);
-//printf("reading %d\n", var);
+      // printf("reading %d\n", var);
       data[ii++] = var;
     }
   } else {
@@ -199,7 +199,7 @@ static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
   }
 
   if (type == wbType_integer) {
-//printf("ReadXXXing as integer...\n");
+    // printf("ReadXXXing as integer...\n");
     data = csv_readAsInteger(file, seperator, rows, columns);
   } else {
     data = csv_readAsReal(file, seperator, rows, columns);
@@ -346,7 +346,7 @@ static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
   }
 
   if (type == wbType_integer) {
-//printf("Rdin gas integer...\n");
+    // printf("Rdin gas integer...\n");
     data = csv_readAsInteger(file, seperator, rows, columns);
   } else {
     data = csv_readAsReal(file, seperator, rows, columns);
@@ -528,7 +528,7 @@ void *wbImport(const char *file, int *resRows, int *resColumns,
     data = wbImport_readAsReal(imp);
     sz = sizeof(wbReal_t);
   } else {
-//printf("Reading as integer..d\n");
+    // printf("Reading as integer..d\n");
     data = wbImport_readAsInteger(imp);
     sz = sizeof(int);
   }
@@ -602,11 +602,10 @@ wbImage_t wbImport(const char *file) {
 }
 
 int wbImport_flag(const char *file) {
-    int res;
-    wbFile_t fh = wbFile_open(file, "r");
-    const char * line = wbFile_readLine(fh);
-    sscanf(line, "%d", &res);
-    wbFile_close(fh);
-    return res;
+  int res;
+  wbFile_t fh = wbFile_open(file, "r");
+  const char *line = wbFile_readLine(fh);
+  sscanf(line, "%d", &res);
+  wbFile_close(fh);
+  return res;
 }
-

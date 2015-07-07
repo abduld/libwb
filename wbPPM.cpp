@@ -2,13 +2,9 @@
 #include <wb.h>
 #include <math.h>
 
-static inline float _min(float x, float y) {
-  return x < y ? x : y;
-}
+static inline float _min(float x, float y) { return x < y ? x : y; }
 
-static inline float _max(float x, float y) {
-  return x > y ? x : y;
-}
+static inline float _max(float x, float y) { return x > y ? x : y; }
 
 static inline float _clamp(float x, float start, float end) {
   return _min(_max(x, start), end);
@@ -107,7 +103,7 @@ wbImage_t wbPPM_import(const char *filename) {
   parseDepth(line, &depth);
 
   // the rest of the lines contain the data in binary format
-  charData = ( unsigned char * )wbFile_read(
+  charData = (unsigned char *)wbFile_read(
       file, width * channels * sizeof(unsigned char), height);
 
   img = wbImage_new(width, height, channels);
@@ -117,12 +113,12 @@ wbImage_t wbPPM_import(const char *filename) {
   charIter = charData;
   floatIter = imgData;
 
-  scale = 1.0f / (( float )depth);
+  scale = 1.0f / ((float)depth);
 
   for (ii = 0; ii < height; ii++) {
     for (jj = 0; jj < width; jj++) {
       for (kk = 0; kk < channels; kk++) {
-        *floatIter = (( float )*charIter) * scale;
+        *floatIter = ((float)*charIter) * scale;
         floatIter++;
         charIter++;
       }
@@ -171,7 +167,7 @@ void wbPPM_export(const char *filename, wbImage_t img) {
   for (ii = 0; ii < height; ii++) {
     for (jj = 0; jj < width; jj++) {
       for (kk = 0; kk < channels; kk++) {
-        *charIter = ( unsigned char )ceil(_clamp(*floatIter, 0, 1) * depth);
+        *charIter = (unsigned char)ceil(_clamp(*floatIter, 0, 1) * depth);
         floatIter++;
         charIter++;
       }
