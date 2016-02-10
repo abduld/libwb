@@ -28,7 +28,7 @@ uint64_t _hrtime(void) {
 #define O_NANOSEC (+1.0E-9)
 #define O_GIGA UINT64_C(1000000000)
   if (!o_timestart) {
-    mach_timebase_info_data_t tb{};
+    mach_timebase_info_data_t tb;
     mach_timebase_info(&tb);
     o_timebase = tb.numer;
     o_timebase /= tb.denom;

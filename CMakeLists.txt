@@ -46,33 +46,13 @@ endif ()
 # Add debugging to CUDA NVCC flags (for NVidia's NSight tools)
 set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG} "-G")
 
-# Set the correct linker options on UNIX platforms
-if (UNIX)
-    set(LINK_LIBRARIES "-lm")
-    if (APPLE)
-        find_library(CUDA_LIBRARY NAMES CUDA)
-        get_filename_component(FRAMEWORK_DIRECTORY ${CUDA_LIBRARY} DIRECTORY)
-        set(LINK_LIBRARIES "${LINK_LIBRARIES} -F${FRAMEWORK_DIRECTORY} -framework CUDA")
-    else ()
-        include(CheckLibraryExists)
-        check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
-        if (HAVE_CLOCK_GETTIME)
-            set(LINK_LIBRARIES "${LINK_LIBRARIES} -lrt")
-        else ()
-            message(FATAL_ERROR "clock_gettime() not found")
-        endif ()
-    endif ()
-endif ()
+set(LINK_LIBRARIES "-lm")
 
 # Collect source files
 file(GLOB WBHDR *.hpp *.h)
 file(GLOB WBSRC *.cpp *.c)
 
-set(EXECUTABLES mp0 mp1 mp2 mp3 mp4 mp5 mp6 mp11 mp12)
-foreach (EXECUTABLE ${EXECUTABLES})
-    string(TOUPPER "${EXECUTABLE}" LABEL)
-    CUDA_ADD_EXECUTABLE(${LABEL} skel/${EXECUTABLE}.cu ${WBHDR} ${WBSRC})
-    if (UNIX)
-        target_link_libraries(${LABEL} ${LINK_LIBRARIES})
-    endif ()
-endforeach ()
+SET(WBLIB "wb")
+
+CUDA_ADD_LIBRARY(${WBLIB} ${WBSRC} SHARED)
+

@@ -93,10 +93,8 @@ extern char *solutionJSON;
 #include <wbTypes.h>
 #include <wbMPI.h>
 #include <wbAssert.h>
-#include <wbMemoryManager.h>
 #include <wbMalloc.h>
 #include <wbString.h>
-#include <wbSandbox.h>
 #include <wbTimer.h>
 #include <wbLogger.h>
 #include <wbComparator.h>
