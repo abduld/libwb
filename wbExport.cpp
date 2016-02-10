@@ -101,7 +101,7 @@ static inline void wbExportCSV_setFile(wbExportCSV_t csv, const char *path) {
 static inline wbExportCSV_t wbExportCSV_new(void) {
   wbExportCSV_t csv;
 
-  csv = wbNew(struct st_wbExportCVS_t);
+  csv = wbNew(struct st_wbExportCSV_t);
 
   wbExportCSV_getFile(csv) = NULL;
   wbExportCSV_setColumnCount(csv, -1);
@@ -208,13 +208,13 @@ static inline wbExport_t wbExport_open(const char *file, const char *type0) {
 
   type = wbString_toLower(type0);
 
-  if (wbString_sameQ(type, "cvs")) {
+  if (wbString_sameQ(type, "csv")) {
     kind = wbExportKind_csv;
   } else if (wbString_sameQ(type, "tsv")) {
     kind = wbExportKind_tsv;
   } else if (wbString_sameQ(type, "raw") || wbString_sameQ(type, "dat")) {
     kind = wbExportKind_raw;
-  } else if (wbString_sameQ(type, "ppm")) {
+  } else if (wbString_sameQ(type, "ppm") || wbString_sameQ(type, "pbm")) {
     kind = wbExportKind_ppm;
   } else {
     wbLog(ERROR, "Invalid export type ", type0);

@@ -15,6 +15,7 @@ typedef enum en_wbLogLevel_t {
 
 struct st_wbLogEntry_t {
   int line;
+  int mpiRank;
   char *msg;
   uint64_t time;
   const char *fun;
@@ -30,6 +31,7 @@ struct st_wbLogger_t {
 };
 
 #define wbLogEntry_getMessage(elem) ((elem)->msg)
+#define wbLogEntry_getMPIRank(elem) ((elem)->mpiRank)
 #define wbLogEntry_getTime(elem) ((elem)->time)
 #define wbLogEntry_getLevel(elem) ((elem)->level)
 #define wbLogEntry_getNext(elem) ((elem)->next)
@@ -38,6 +40,7 @@ struct st_wbLogger_t {
 #define wbLogEntry_getFile(elem) ((elem)->file)
 
 #define wbLogEntry_setMessage(elem, val) (wbLogEntry_getMessage(elem) = val)
+#define wbLogEntry_setMPIRank(elem, val) (wbLogEntry_getMPIRank(elem) = val)
 #define wbLogEntry_setTime(elem, val) (wbLogEntry_getTime(elem) = val)
 #define wbLogEntry_setLevel(elem, val) (wbLogEntry_getLevel(elem) = val)
 #define wbLogEntry_setNext(elem, val) (wbLogEntry_getNext(elem) = val)

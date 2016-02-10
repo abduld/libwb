@@ -8,8 +8,7 @@
 #include <cstring>
 #include <mpi/mpi.h>
 
-#define mpiRank wbMPI_getRank()
-#define isMasterQ ((mpiRank) == 0)
+#define isMasterQ ((wbMPI_getRank()) == 0)
 
 extern int wbMPI_getRank();
 
@@ -18,7 +17,7 @@ extern int rankCount();
 extern const char *wbMPI_getStringFromRank(int rank, int tag);
 extern void wbMPI_sendStringToMaster(const char *str, int tag);
 
-extern int wbMPI_Init();
+extern int wbMPI_Init(int *argc, char ***argv);
 
 extern bool finalizedQ;
 
@@ -29,5 +28,6 @@ extern "C" void wbMPI_Exit(void);
 
 #else  /* WB_USE_MPI */
 static inline int rankCount() { return 1; }
+static inline int wbMPI_getRank() { return 0; }
 #endif /* WB_USE_MPI */
 #endif /* __WB_MPI_H__ */

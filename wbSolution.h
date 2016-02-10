@@ -9,6 +9,7 @@ typedef struct st_wbSolution_t {
   void *data;
   int rows;
   int columns;
+  int depth;
 } wbSolution_t;
 
 #define wbSolution_getType(sol) ((sol).type)
@@ -16,15 +17,18 @@ typedef struct st_wbSolution_t {
 #define wbSolution_getData(sol) ((sol).data)
 #define wbSolution_getRows(sol) ((sol).rows)
 #define wbSolution_getColumns(sol) ((sol).columns)
+#define wbSolution_getDepth(sol) ((sol).depth)
 
 #define wbSolution_getHeight wbSolution_getRows
 #define wbSolution_getWidth wbSolution_getColumns
+#define wbSolution_getChannels wbSolution_getDepth
 
 #define wbSolution_setType(sol, val) (wbSolution_getType(sol) = val)
 #define wbSolution_setOutputFile(sol, val) (wbSolution_getOutputFile(sol) = val)
 #define wbSolution_setData(sol, val) (wbSolution_getData(sol) = val)
 #define wbSolution_setRows(sol, val) (wbSolution_getRows(sol) = val)
 #define wbSolution_setColumns(sol, val) (wbSolution_getColumns(sol) = val)
+#define wbSolution_setDepth(sol, val) (wbSolution_getDepth(sol) = val)
 
 wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
                   void *data, int rows, int columns);

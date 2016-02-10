@@ -20,10 +20,6 @@
 #endif /* _CRT_SECURE_NO_WARNINGS */
 #define _CRT_SECURE_NO_DEPRECATE 1
 #define _CRT_NONSTDC_NO_DEPRECATE 1
-
-// The includes have to go below the #defines, since the #defines
-// affect them
-
 #include <windows.h>
 #include <direct.h>
 #include <io.h>
@@ -48,6 +44,7 @@
 
 #ifdef WB_USE_COURSERA
 #define wbLogger_printOnExit 1
+//#define WB_USE_SANDBOX
 #else /* WB_USE_COURSERA */
 #define wbLogger_printOnLog 1
 #endif /* WB_USE_COURSERA */
@@ -85,18 +82,21 @@ extern char *solutionJSON;
 /***********************************************************/
 /***********************************************************/
 
-#ifndef __CUDACC__
+#ifdef WB_USE_OPENCL
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
 #include <CL/cl.h>
 #endif /* __APPLE__ */
-#endif /* __CUDACC__ */
+#endif /* WB_USE_OPENCL */
 
 #include <wbTypes.h>
+#include <wbMPI.h>
 #include <wbAssert.h>
+#include <wbMemoryManager.h>
 #include <wbMalloc.h>
 #include <wbString.h>
+#include <wbSandbox.h>
 #include <wbTimer.h>
 #include <wbLogger.h>
 #include <wbComparator.h>
@@ -107,12 +107,11 @@ extern char *solutionJSON;
 #include <wbImage.h>
 #include <wbArg.h>
 #include <wbSolution.h>
-#include <wbSparse.h>
 #include <wbExit.h>
 #include <wbInit.h>
 #include <wbCUDA.h>
+#include <wbSparse.h>
 #include <wbMD5.h>
-#include <wbMPI.h>
 
 /***********************************************************/
 /***********************************************************/

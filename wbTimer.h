@@ -30,6 +30,7 @@ typedef enum en_wbTimerKind_t {
 
 struct st_wbTimerNode_t {
   int id;
+  int mpiRank;
   int level;
   wbBool stoppedQ;
   wbTimerKind_t kind;
@@ -58,6 +59,7 @@ struct st_wbTimer_t {
 };
 
 #define wbTimerNode_getId(node) ((node)->id)
+#define wbTimerNode_getMPIRank(node) ((node)->mpiRank)
 #define wbTimerNode_getLevel(node) ((node)->level)
 #define wbTimerNode_getStoppedQ(node) ((node)->stoppedQ)
 #define wbTimerNode_getKind(node) ((node)->kind)
@@ -76,6 +78,7 @@ struct st_wbTimer_t {
 #define wbTimerNode_getMessage(node) ((node)->msg)
 
 #define wbTimerNode_setId(node, val) (wbTimerNode_getId(node) = val)
+#define wbTimerNode_setMPIRank(node, val) (wbTimerNode_getMPIRank(node) = val)
 #define wbTimerNode_setLevel(node, val) (wbTimerNode_getLevel(node) = val)
 #define wbTimerNode_setStoppedQ(node, val) (wbTimerNode_getStoppedQ(node) = val)
 #define wbTimerNode_setKind(node, val) (wbTimerNode_getKind(node) = val)

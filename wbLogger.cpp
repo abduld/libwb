@@ -13,6 +13,7 @@ static inline wbLogEntry_t wbLogEntry_new() {
   elem = wbNew(struct st_wbLogEntry_t);
 
   wbLogEntry_setMessage(elem, NULL);
+  wbLogEntry_setMPIRank(elem, wbMPI_getRank());
   wbLogEntry_setTime(elem, _hrtime());
 #ifndef NDEBUG
   wbLogEntry_setLevel(elem, wbLogLevel_TRACE);
@@ -83,6 +84,8 @@ static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
     stringstream ss;
 
     ss << "{\n";
+    ss << wbString_quote("mpi_rank") << ":"
+       << wbString(wbLogEntry_getMPIRank(elem)) << ",\n";
     ss << wbString_quote("level") << ":"
        << wbString_quote(getLevelName(wbLogEntry_getLevel(elem))) << ",\n";
     ss << wbString_quote("message") << ":"
@@ -142,7 +145,6 @@ static inline void _wbLogger_setLevel(wbLogger_t logger, wbLogLevel_t level) {
 }
 
 static inline void _wbLogger_setLevel(wbLogLevel_t level) {
-  wb_init();
   _wbLogger_setLevel(_logger, level);
 }
 
@@ -177,8 +179,6 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
                      const char *fun, int line) {
   wbLogEntry_t elem;
   wbLogger_t logger;
-
-  wb_init();
 
   logger = _logger;
 
@@ -221,8 +221,6 @@ string wbLogger_toJSON(wbLogger_t logger) {
     wbLogEntry_t iter;
     stringstream ss;
 
-    ss << "{\n";
-    ss << wbString_quote("elements") << ":[\n";
     for (iter = wbLogger_getHead(logger); iter != NULL;
          iter = wbLogEntry_getNext(iter)) {
       ss << wbLogEntry_toJSON(iter);
@@ -230,8 +228,6 @@ string wbLogger_toJSON(wbLogger_t logger) {
         ss << ",\n";
       }
     }
-    ss << "]\n";
-    ss << "}\n";
 
     return ss.str();
   }

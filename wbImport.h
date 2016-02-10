@@ -27,7 +27,7 @@ typedef struct st_wbImportCSV_t {
   void *data;
   wbFile_t file;
   char seperator;
-} *wbImportCSV_t;
+} * wbImportCSV_t;
 
 #define wbImportCSV_getRowCount(csv) ((csv)->rows)
 #define wbImportCSV_getColumnCount(csv) ((csv)->columns)
@@ -46,7 +46,7 @@ typedef struct st_wbImportRaw_t {
   int columns;
   void *data;
   wbFile_t file;
-} *wbImportRaw_t;
+} * wbImportRaw_t;
 
 #define wbImportRaw_getRowCount(raw) ((raw)->rows)
 #define wbImportRaw_getColumnCount(raw) ((raw)->columns)

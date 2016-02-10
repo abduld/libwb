@@ -11,7 +11,7 @@ typedef struct st_wbFile_t {
   FILE *handle;
   size_t len;
   size_t offset;
-} *wbFile_t;
+} * wbFile_t;
 
 #define wbFile_getIndex(file) ((file)->index)
 #define wbFile_getFileName(file) ((file)->file)

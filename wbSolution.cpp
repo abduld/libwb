@@ -93,11 +93,14 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile, wbSolution_t sol) {
       _solution_correctQ = "The image height of the expected image does not "
                            "match that of the solution.";
       res = wbFalse;
+    } else if (wbImage_getChannels(expectedImage) !=
+               wbSolution_getChannels(sol)) {
+      _solution_correctQ = "The image channels of the expected image does not "
+                           "match that of the solution.";
+      res = wbFalse;
     } else {
-
       solutionImage = (wbImage_t)wbSolution_getData(sol);
       wbAssert(solutionImage != NULL);
-
       res = wbImage_sameQ(solutionImage, expectedImage, _onUnsameImageFunction);
     }
     if (expectedImage != NULL) {
@@ -119,7 +122,7 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile, wbSolution_t sol) {
 }
 
 wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
-                  void *data, int rows, int columns) {
+                  void *data, int rows, int columns, int depth) {
   char *type;
   wbBool res;
   wbSolution_t sol;
@@ -140,6 +143,7 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
   wbSolution_setData(sol, data);
   wbSolution_setRows(sol, rows);
   wbSolution_setColumns(sol, columns);
+  wbSolution_setDepth(sol, depth);
 
   res = wbSolution_correctQ(expectedOutputFile, sol);
 
@@ -168,7 +172,13 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
   return res;
 }
 
-wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns) {
+wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
+                  void *data, int rows, int columns) {
+  return wbSolution(expectedOutputFile, outputFile, type0, data, rows, columns,
+                    1);
+}
+
+wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns, int depth) {
   char *type;
   wbBool res;
   char *expectedOutputFile;
@@ -183,7 +193,8 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns) {
   wbAssert(expectedOutputFile != NULL);
   wbAssert(outputFile != NULL);
 
-  res = wbSolution(expectedOutputFile, outputFile, type, data, rows, columns);
+  res = wbSolution(expectedOutputFile, outputFile, type, data, rows, columns,
+                   depth);
 
   if (res) {
     ss << "{\n";
@@ -204,10 +215,15 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns) {
   return res;
 }
 
+wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns) {
+  return wbSolution(arg, data, rows, columns, 1);
+}
+
 EXTERN_C wbBool wbSolution(wbArg_t arg, void *data, int rows) {
   return wbSolution(arg, data, rows, 1);
 }
 
 wbBool wbSolution(wbArg_t arg, wbImage_t img) {
-  return wbSolution(arg, img, wbImage_getHeight(img), wbImage_getWidth(img));
+  return wbSolution(arg, img, wbImage_getHeight(img), wbImage_getWidth(img),
+                    wbImage_getChannels(img));
 }

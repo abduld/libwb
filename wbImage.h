@@ -9,7 +9,7 @@ typedef struct st_wbImage_t {
   int channels;
   int pitch;
   float *data;
-} *wbImage_t;
+} * wbImage_t;
 
 #define wbImage_channels 3
 

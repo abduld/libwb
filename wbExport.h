@@ -19,7 +19,7 @@ typedef struct st_wbExportRaw_t {
   int rows;
   int columns;
   wbFile_t file;
-} *wbExportRaw_t;
+} * wbExportRaw_t;
 
 #define wbExportRaw_getColumnCount(raw) ((raw)->columns)
 #define wbExportRaw_getRowCount(raw) ((raw)->rows)
@@ -29,12 +29,12 @@ typedef struct st_wbExportRaw_t {
 #define wbExportRaw_setColumnCount(raw, val)                                   \
   (wbExportRaw_getColumnCount(raw) = val)
 
-typedef struct st_wbExportCVS_t {
+typedef struct st_wbExportCSV_t {
   int rows;
   int columns;
   wbFile_t file;
   char seperator;
-} *wbExportCSV_t;
+} * wbExportCSV_t;
 
 #define wbExportCSV_getRowCount(csv) ((csv)->rows)
 #define wbExportCSV_getColumnCount(csv) ((csv)->columns)

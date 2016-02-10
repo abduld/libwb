@@ -67,7 +67,7 @@ static inline cudaError_t wbCUDAFree(void *mem) {
   return cudaErrorMemoryAllocation;
 }
 
-#define cudaMalloc wbCUDAMalloc
+#define cudaMalloc(elem, err) wbCUDAMalloc((void **)elem, err)
 #define cudaFree wbCUDAFree
 
 #endif /* WB_USE_CUDA */

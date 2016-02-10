@@ -1,27 +1,53 @@
 
 #include <wb.h>
+#include <wbMPI.h>
 #include <wbCUDA.h>
 
 #define MB (1 << 20)
 #ifndef WB_DEFAULT_HEAP_SIZE
-const size_t WB_DEFAULT_HEAP_SIZE = (256 * MB);
+#define WB_DEFAULT_HEAP_SIZE (1024 * MB)
 #endif /* WB_DEFAULT_HEAP_SIZE */
 
 static bool _initializedQ = wbFalse;
 
-#ifndef _MSC_VER
+#if 0 // ndef _MSC_VER
 __attribute__((__constructor__))
 #endif /* _MSC_VER */
-void wb_init(void) {
+void wb_init(int *
+#ifdef WB_USE_MPI
+argc
+#endif /* WB_USE_MPI */
+, char ***
+#ifdef WB_USE_MPI
+argv
+#endif /* WB_USE_MPI */
+) {
   if (_initializedQ == wbTrue) {
     return;
   }
+#ifdef WB_USE_MPI
+  wbMPI_Init(argc, argv);
+#endif /* WB_USE_MPI */
 
 #ifdef WB_USE_CUDA
-  cuInit(0);
+  CUresult err = cuInit(0);
 
-  /* Select a random GPU */
+/* Select a random GPU */
 
+#ifdef WB_USE_MPI
+  if (rankCount() > 1) {
+    int deviceCount;
+    cudaGetDeviceCount(&deviceCount);
+    srand(time(NULL));
+    cudaSetDevice(wbMPI_getRank() % deviceCount);
+  } else {
+    int deviceCount;
+    cudaGetDeviceCount(&deviceCount);
+
+    srand(time(NULL));
+    cudaSetDevice(rand() % deviceCount);
+  }
+#else
   {
     int deviceCount;
     cudaGetDeviceCount(&deviceCount);
@@ -29,6 +55,7 @@ void wb_init(void) {
     srand(time(NULL));
     cudaSetDevice(rand() % deviceCount);
   }
+#endif /* WB_USE_MPI */
 
   cudaDeviceSetLimit(cudaLimitPrintfFifoSize, 1 * MB);
   cudaDeviceSetLimit(cudaLimitMallocHeapSize, WB_DEFAULT_HEAP_SIZE);
@@ -59,5 +86,9 @@ void wb_init(void) {
 
   solutionJSON = NULL;
 
+#ifdef WB_USE_MPI
+  atexit(wbMPI_Exit);
+#else  /* WB_USE_MPI */
   atexit(wb_atExit);
+#endif /* WB_USE_MPI */
 }
