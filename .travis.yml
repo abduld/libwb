@@ -3,9 +3,6 @@ sudo: required
 dist: precise
 language: cpp
 
-compiler:
-  - clang
-  - gcc
 
 matrix:
   include:
