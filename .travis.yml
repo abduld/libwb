@@ -57,6 +57,8 @@ matrix:
             - clang-3.8
       env: CXX=clang++-3.8
 
+before_install:
+  - sudo apt-get update -qq
 script: 
   - echo `$CXX --version`
   - make test
