@@ -1,6 +1,6 @@
 
 #include <math.h>
-#include <wb.h>
+#include "wb.h"
 
 static inline float _min(float x, float y) {
   return x < y ? x : y;

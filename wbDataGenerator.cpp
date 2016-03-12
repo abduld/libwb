@@ -50,7 +50,7 @@ static inline void genRandom(void *trgt, wbType_t type, int minVal,
 
 static inline void *genRandomList(wbType_t type, size_t len, int minVal,
                                   int maxVal) {
-  int ii;
+  size_t ii;
   void *data = wbNewArray(char, wbType_size(type) * len);
   switch (type) {
     case wbType_ascii:

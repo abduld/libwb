@@ -1,5 +1,5 @@
 
-#include <wb.h>
+#include "wb.h"
 
 enum {
   wbMPI_timerTag          = 2,

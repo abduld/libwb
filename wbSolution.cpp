@@ -1,5 +1,5 @@
 
-#include <wb.h>
+#include "wb.h"
 
 char *solutionJSON = NULL;
 static string _solution_correctQ("");

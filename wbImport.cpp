@@ -1,6 +1,6 @@
 
 
-#include <wb.h>
+#include "wb.h"
 
 static inline void wbImportCSV_setFile(wbImportCSV_t csv,
                                        const char *path) {

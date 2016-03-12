@@ -4,7 +4,7 @@
 #include <cstring>
 #include <mpich/mpi.h>
 #include <string>
-#include <wb.h>
+#include "wb.h"
 
 static int rank = -1;
 

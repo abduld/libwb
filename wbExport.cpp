@@ -1,5 +1,5 @@
 
-#include <wb.h>
+#include "wb.h"
 
 static inline void wbExportText_setFile(wbExportText_t text,
                                         const char *path) {

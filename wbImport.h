@@ -2,7 +2,7 @@
 #ifndef __WB_IMPORT_H__
 #define __WB_IMPORT_H__
 
-#include <wbImage.h>
+#include "wbImage.h"
 
 typedef enum en_wbImportKind_t {
   wbImportKind_unknown = -1,

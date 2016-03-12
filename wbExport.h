@@ -3,9 +3,9 @@
 #ifndef __WB_EXPORT_H__
 #define __WB_EXPORT_H__
 
-#include <wb.h>
-#include <wbFile.h>
-#include <wbPPM.h>
+#include "wb.h"
+#include "wbFile.h"
+#include "wbPPM.h"
 
 typedef enum en_wbExportKind_t {
   wbExportKind_unknown = -1,

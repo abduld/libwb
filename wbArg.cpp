@@ -1,5 +1,5 @@
 
-#include <wb.h>
+#include "wb.h"
 
 EXTERN_C wbArg_t wbArg_new(int *argc, char ***argv) {
   wbArg_t arg;

@@ -1,7 +1,7 @@
 
 
-#include <time.h>
-#include <wb.h>
+
+#include "wb.h"
 
 #ifdef WB_USE_WINDOWS
 uint64_t _hrtime_frequency = 0;

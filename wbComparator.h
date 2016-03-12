@@ -3,7 +3,7 @@
 #ifndef __WB_COMPARATOR_H__
 #define __WB_COMPARATOR_H__
 
-#include <wb.h>
+#include "wb.h"
 
 template <typename T>
 static inline T _abs(const T &a) {

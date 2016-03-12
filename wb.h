@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <time.h>
 
 #ifdef _MSC_VER
 #define __func__ __FUNCTION__
@@ -29,7 +30,6 @@
 #include <cstdint>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <time.h>
 #define WB_USE_UNIX
 #ifdef __APPLE__
 #include <mach/mach_time.h>
@@ -103,33 +103,33 @@ extern char *solutionJSON;
 #endif /* WB_USE_DARWIN */
 #endif /* WB_USE_OPENCL */
 
-#include <wbTypes.h>
+#include "wbTypes.h"
 
-#include <wbAssert.h>
-#include <wbMalloc.h>
-#include <wbString.h>
-#include <wbUtils.h>
+#include "wbAssert.h"
+#include "wbMalloc.h"
+#include "wbString.h"
+#include "wbUtils.h"
 
-#include <wbArg.h>
-#include <wbCUDA.h>
-#include <wbCast.h>
-#include <wbComparator.h>
-#include <wbDirectory.h>
-#include <wbExit.h>
-#include <wbExport.h>
-#include <wbFile.h>
-#include <wbImage.h>
-#include <wbImport.h>
-#include <wbInit.h>
-#include <wbLogger.h>
-#include <wbMD5.h>
-#include <wbMPI.h>
-#include <wbSolution.h>
-#include <wbSparse.h>
-#include <wbThrust.h>
-#include <wbTimer.h>
+#include "wbArg.h"
+#include "wbCUDA.h"
+#include "wbCast.h"
+#include "wbComparator.h"
+#include "wbDirectory.h"
+#include "wbExit.h"
+#include "wbExport.h"
+#include "wbFile.h"
+#include "wbImage.h"
+#include "wbImport.h"
+#include "wbInit.h"
+#include "wbLogger.h"
+#include "wbMD5.h"
+#include "wbMPI.h"
+#include "wbSolution.h"
+#include "wbSparse.h"
+#include "wbThrust.h"
+#include "wbTimer.h"
 
-#include <wbDataGenerator.h>
+#include "wbDataGenerator.h"
 
 /***********************************************************/
 /***********************************************************/

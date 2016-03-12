@@ -1,5 +1,5 @@
 
-#include <wb.h>
+#include "wb.h"
 
 #define MB (1 << 20)
 #ifndef WB_DEFAULT_HEAP_SIZE
