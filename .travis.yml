@@ -3,6 +3,9 @@ sudo: required
 dist: precise
 language: cpp
 
+os:
+- linux
+- osx
 
 matrix:
   include:
@@ -60,6 +63,8 @@ matrix:
 
 before_install:
   - sudo apt-get update -qq
+install:
+  - make get-deps
 script: 
   - $COMPILER --version
   - CXX=$COMPILER make test
