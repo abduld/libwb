@@ -3,13 +3,13 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
-typedef struct st_wbImage_t {
+struct st_wbImage_t {
   int width;
   int height;
   int channels;
   int pitch;
   float *data;
-} *wbImage_t;
+};
 
 #define wbImage_channels 3
 
@@ -27,6 +27,7 @@ typedef struct st_wbImage_t {
 
 typedef void (*wbImage_onSameFunction_t)(string str);
 
+wbImage_t wbImage_new(int width, int height, int channels, float *data);
 wbImage_t wbImage_new(int width, int height, int channels);
 wbImage_t wbImage_new(int width, int height);
 void wbImage_delete(wbImage_t img);

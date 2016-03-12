@@ -2,7 +2,8 @@
 
 #include <wb.h>
 
-static inline void wbImportCSV_setFile(wbImportCSV_t csv, const char *path) {
+static inline void wbImportCSV_setFile(wbImportCSV_t csv,
+                                       const char *path) {
   if (csv != NULL) {
     if (wbImportCSV_getFile(csv) != NULL) {
       wbFile_delete(wbImportCSV_getFile(csv));
@@ -41,8 +42,9 @@ static inline void wbImportCSV_delete(wbImportCSV_t csv) {
   }
 }
 
-static inline wbImportCSV_t
-wbImportCSV_findDimensions(wbImportCSV_t csv, int *resRows, int *resColumns) {
+static inline wbImportCSV_t wbImportCSV_findDimensions(wbImportCSV_t csv,
+                                                       int *resRows,
+                                                       int *resColumns) {
   int rows = 0, columns = -1;
   char *line;
   wbFile_t file;
@@ -63,7 +65,7 @@ wbImportCSV_findDimensions(wbImportCSV_t csv, int *resRows, int *resColumns) {
 
   while ((line = wbFile_readLine(file)) != NULL) {
     int currColumn = 0;
-    char *token = strtok(line, seperator);
+    char *token    = strtok(line, seperator);
     while (token != NULL) {
       token = strtok(NULL, seperator);
       currColumn++;
@@ -80,7 +82,7 @@ wbImportCSV_findDimensions(wbImportCSV_t csv, int *resRows, int *resColumns) {
 
   wbFile_rewind(file);
 
-  *resRows = rows;
+  *resRows    = rows;
   *resColumns = columns;
 
   return csv;
@@ -119,7 +121,7 @@ static inline int *csv_readAsInteger(wbFile_t file, char sep, int rows,
       char *token = strtok(line, seperator);
       while (token != NULL) {
         sscanf(token, "%d", &var);
-        token = strtok(NULL, seperator);
+        token      = strtok(NULL, seperator);
         data[ii++] = var;
       }
     }
@@ -159,7 +161,7 @@ static inline wbReal_t *csv_readAsReal(wbFile_t file, char sep, int rows,
       char *token = strtok(line, seperator);
       while (token != NULL) {
         sscanf(token, "%f", &var);
-        token = strtok(NULL, seperator);
+        token      = strtok(NULL, seperator);
         data[ii++] = var;
       }
     }
@@ -168,7 +170,8 @@ static inline wbReal_t *csv_readAsReal(wbFile_t file, char sep, int rows,
   return data;
 }
 
-static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
+static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv,
+                                             wbType_t type) {
   void *data;
   wbFile_t file;
   char seperator;
@@ -188,10 +191,10 @@ static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv, wbType_t type) {
     wbImportCSV_setColumnCount(csv, columns);
   }
 
-  file = wbImportCSV_getFile(csv);
+  file      = wbImportCSV_getFile(csv);
   seperator = wbImportCSV_getSeperator(csv);
-  rows = wbImportCSV_getRowCount(csv);
-  columns = wbImportCSV_getColumnCount(csv);
+  rows      = wbImportCSV_getRowCount(csv);
+  columns   = wbImportCSV_getColumnCount(csv);
 
   if (wbImportCSV_getData(csv) != NULL) {
     wbDelete(wbImportCSV_getData(csv));
@@ -218,7 +221,8 @@ static inline wbImportCSV_t wbImportCSV_readAsReal(wbImportCSV_t csv) {
   return wbImportCSV_read(csv, wbType_real);
 }
 
-static inline void wbImportRaw_setFile(wbImportRaw_t raw, const char *path) {
+static inline void wbImportRaw_setFile(wbImportRaw_t raw,
+                                       const char *path) {
   if (raw != NULL) {
     if (wbImportRaw_getFile(raw) != NULL) {
       wbFile_delete(wbImportRaw_getFile(raw));
@@ -267,13 +271,13 @@ static inline wbBool lineHasSpace(const char *line) {
 }
 
 static inline char *lineStrip(const char *line) {
-  char *sl = wbString_duplicate(line);
-  char *iter = sl;
+  char *sl    = wbString_duplicate(line);
+  char *iter  = sl;
   size_t slen = strlen(line);
 
   iter += slen - 1;
-  while (*iter == '\0' || *iter == '\r' || *iter == '\t' || *iter == '\n' ||
-         *iter == ' ') {
+  while (*iter == '\0' || *iter == '\r' || *iter == '\t' ||
+         *iter == '\n' || *iter == ' ') {
     *iter-- = '\0';
   }
   return sl;
@@ -317,7 +321,8 @@ static inline wbBool wbImportRaw_findDimensions(wbImportRaw_t raw) {
   return wbTrue;
 }
 
-static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
+static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw,
+                                             wbType_t type) {
   void *data;
   wbFile_t file;
   char seperator;
@@ -335,10 +340,10 @@ static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw, wbType_t type) {
     }
   }
 
-  file = wbImportRaw_getFile(raw);
+  file      = wbImportRaw_getFile(raw);
   seperator = ' ';
-  rows = wbImportRaw_getRowCount(raw);
-  columns = wbImportRaw_getColumnCount(raw);
+  rows      = wbImportRaw_getRowCount(raw);
+  columns   = wbImportRaw_getColumnCount(raw);
 
   if (wbImportRaw_getData(raw) != NULL) {
     wbDelete(wbImportRaw_getData(raw));
@@ -365,7 +370,71 @@ static inline wbImportRaw_t wbImportRaw_readAsReal(wbImportRaw_t raw) {
   return wbImportRaw_read(raw, wbType_real);
 }
 
-static inline wbImport_t wbImport_open(const char *file, wbImportKind_t kind) {
+static inline wbImportText_t wbImportText_new(void) {
+  wbImportText_t text;
+
+  text = wbNew(struct st_wbImportText_t);
+
+  wbImportText_setLength(text, 0);
+  wbImportText_setData(text, NULL);
+  wbImportText_getFile(text) = NULL;
+
+  return text;
+}
+
+static inline void wbImportText_setFile(wbImportText_t text,
+                                        const char *path) {
+  if (text != NULL) {
+    if (wbImportText_getFile(text) != NULL) {
+      wbFile_delete(wbImportText_getFile(text));
+    }
+    if (path != NULL) {
+      wbImportText_getFile(text) = wbFile_open(path, "r");
+    } else {
+      wbImportText_getFile(text) = NULL;
+    }
+  }
+
+  return;
+}
+
+static inline void wbImportText_delete(wbImportText_t text) {
+  if (text != NULL) {
+    wbImportText_setFile(text, NULL);
+    if (wbImportText_getData(text)) {
+      wbDelete(wbImportText_getData(text));
+    }
+    wbDelete(text);
+  }
+}
+
+static inline wbImportText_t wbImportText_read(wbImportText_t text) {
+  char *data;
+  wbFile_t file;
+  int length;
+
+  if (text == NULL) {
+    return NULL;
+  }
+
+  file = wbImportText_getFile(text);
+
+  if (wbImportText_getData(text) != NULL) {
+    wbDelete(wbImportText_getData(text));
+    wbImportText_setData(text, NULL);
+  }
+
+  length = wbFile_size(file);
+  data   = wbFile_read(file, length);
+
+  wbImportText_setData(text, data);
+  wbImportText_setLength(text, length);
+
+  return text;
+}
+
+static inline wbImport_t wbImport_open(const char *file,
+                                       wbImportKind_t kind) {
   wbImport_t imp;
 
   if (file == NULL) {
@@ -393,6 +462,10 @@ static inline wbImport_t wbImport_open(const char *file, wbImportKind_t kind) {
     }
     wbImportCSV_setFile(csv, file);
     wbImport_setCSV(imp, csv);
+  } else if (kind == wbImportKind_text) {
+    wbImportText_t text = wbImportText_new();
+    wbImportText_setFile(text, file);
+    wbImport_setText(imp, text);
   } else if (kind == wbImportKind_ppm) {
     wbImage_t img = wbPPM_import(file);
     wbImport_setImage(imp, img);
@@ -404,14 +477,15 @@ static inline wbImport_t wbImport_open(const char *file, wbImportKind_t kind) {
   return imp;
 }
 
-static inline wbImport_t wbImport_open(const char *file, const char *type0) {
+static inline wbImport_t wbImport_open(const char *file,
+                                       const char *type0) {
   wbImport_t imp;
   wbImportKind_t kind;
   char *type;
 
   type = wbString_toLower(type0);
 
-  if (wbString_sameQ(type, "cvs")) {
+  if (wbString_sameQ(type, "csv")) {
     kind = wbImportKind_csv;
   } else if (wbString_sameQ(type, "tsv")) {
     kind = wbImportKind_tsv;
@@ -419,6 +493,8 @@ static inline wbImport_t wbImport_open(const char *file, const char *type0) {
     kind = wbImportKind_raw;
   } else if (wbString_sameQ(type, "ppm")) {
     kind = wbImportKind_ppm;
+  } else if (wbString_sameQ(type, "text") || wbString_sameQ(type, "txt")) {
+    kind = wbImportKind_text;
   } else {
     wbLog(ERROR, "Invalid import type ", type0);
     wbExit();
@@ -443,6 +519,10 @@ static inline void wbImport_close(wbImport_t imp) {
     wbImportRaw_t raw = wbImport_getRaw(imp);
     wbImportRaw_delete(raw);
     wbImport_setRaw(imp, NULL);
+  } else if (kind == wbImportKind_text) {
+    wbImportText_t text = wbImport_getText(imp);
+    wbImportText_delete(text);
+    wbImport_setText(imp, NULL);
   } else if (kind == wbImportKind_ppm) {
   } else {
     wbLog(ERROR, "Invalid import type.");
@@ -464,6 +544,11 @@ static inline void *wbImport_read(wbImport_t imp, wbType_t type) {
     wbImportRaw_t raw = wbImport_getRaw(imp);
     wbImportRaw_read(raw, type);
     data = wbImportRaw_getData(raw);
+  } else if (wbImportKind_text == kind) {
+    wbImportText_t text = wbImport_getText(imp);
+    text                = wbImportText_read(text);
+    data                = wbImportText_getData(text);
+
   } else {
     wbLog(ERROR, "Invalid import type.");
     wbExit();
@@ -481,6 +566,11 @@ static inline wbReal_t *wbImport_readAsReal(wbImport_t imp) {
   return (wbReal_t *)data;
 }
 
+static inline wbChar_t *wbImport_readAsText(wbImport_t imp) {
+  void *data = wbImport_read(imp, wbType_ubit8);
+  return (wbChar_t *)data;
+}
+
 static wbImportKind_t _parseImportExtension(const char *file) {
   char *extension;
   wbImportKind_t kind;
@@ -494,8 +584,12 @@ static wbImportKind_t _parseImportExtension(const char *file) {
   } else if (wbString_sameQ(extension, "raw") ||
              wbString_sameQ(extension, "dat")) {
     kind = wbImportKind_raw;
-  } else if (wbString_sameQ(extension, "ppm")) {
+  } else if (wbString_sameQ(extension, "ppm") ||
+             wbString_sameQ(extension, "pbm")) {
     kind = wbImportKind_ppm;
+  } else if (wbString_sameQ(extension, "text") ||
+             wbString_sameQ(extension, "txt")) {
+    kind = wbImportKind_text;
   } else {
     kind = wbImportKind_unknown;
     wbLog(ERROR, "File ", file, " does not have a compatible extension.");
@@ -526,23 +620,29 @@ void *wbImport(const char *file, int *resRows, int *resColumns,
   imp = wbImport_open(file, kind);
   if (wbString_sameQ(type, "Real")) {
     data = wbImport_readAsReal(imp);
-    sz = sizeof(wbReal_t);
+    sz   = sizeof(wbReal_t);
+  } else if (wbString_sameQ(type, "Text")) {
+    data = wbImport_readAsText(imp);
+    sz   = sizeof(char);
   } else {
     // printf("Reading as integer..d\n");
     data = wbImport_readAsInteger(imp);
-    sz = sizeof(int);
+    sz   = sizeof(int);
   }
 
   if (kind == wbImportKind_csv || kind == wbImportKind_tsv) {
-    rows = wbImportCSV_getRowCount(wbImport_getCSV(imp));
+    rows    = wbImportCSV_getRowCount(wbImport_getCSV(imp));
     columns = wbImportCSV_getColumnCount(wbImport_getCSV(imp));
   } else if (kind == wbImportKind_raw) {
-    rows = wbImportRaw_getRowCount(wbImport_getRaw(imp));
+    rows    = wbImportRaw_getRowCount(wbImport_getRaw(imp));
     columns = wbImportRaw_getColumnCount(wbImport_getRaw(imp));
+  } else if (kind == wbImportKind_text) {
+    rows    = 1;
+    columns = wbImportText_getLength(wbImport_getText(imp));
   }
 
   if (rows == 1 && columns > 0) {
-    rows = columns;
+    rows    = columns;
     columns = 1;
   }
 
@@ -603,7 +703,7 @@ wbImage_t wbImport(const char *file) {
 
 int wbImport_flag(const char *file) {
   int res;
-  wbFile_t fh = wbFile_open(file, "r");
+  wbFile_t fh      = wbFile_open(file, "r");
   const char *line = wbFile_readLine(fh);
   sscanf(line, "%d", &res);
   wbFile_close(fh);

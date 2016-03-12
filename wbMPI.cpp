@@ -1,13 +1,17 @@
 
 #ifdef WB_USE_MPI
 
-#include <wb.h>
+#include <cstring>
 #include <mpich/mpi.h>
 #include <string>
-#include <cstring>
+#include <wb.h>
+
+static int rank = -1;
 
 int wbMPI_getRank() {
-  int rank;
+  if (rank != -1) {
+    return rank;
+  }
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   return rank;
 }
@@ -43,11 +47,13 @@ void wbMPI_sendStringToMaster(const char *str, int tag) {
   return;
 }
 
-int wbMPI_Init() {
+int wbMPI_Init(int *argc, char ***argv) {
   int err = MPI_SUCCESS;
-  err = MPI_Init(NULL, NULL);
-  //   printf("rank = %d is master = %d\n", mpiRank, isMasterQ);
-  MPI_Barrier(MPI_COMM_WORLD);
+  err     = MPI_Init(argc, argv);
+  // printf("argc = %d\n", *argc);
+  // err = MPI_Init(NULL, NULL);
+  // printf("rank = %d is master = %d\n", wbMPI_getRank(), isMasterQ);
+  // MPI_Barrier(MPI_COMM_WORLD);
   return err;
 }
 

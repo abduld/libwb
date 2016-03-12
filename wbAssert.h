@@ -7,16 +7,18 @@
 
 #ifdef WB_DEBUG
 #define wbAssert(cond) assert(cond)
-#define wbAssertMessage(msg, cond)                                             \
-  do {                                                                         \
-    if (!(cond)) {                                                             \
-      wbPrint(msg);                                                            \
-      wbAssert(cond);                                                          \
-    }                                                                          \
+#define wbAssertMessage(msg, cond)                                        \
+  do {                                                                    \
+    if (!(cond)) {                                                        \
+      wbPrint(msg);                                                       \
+      wbAssert(cond);                                                     \
+    }                                                                     \
   } while (0)
 #else /* WB_DEBUG */
 #define wbAssert(...)
 #define wbAssertMessage(...)
 #endif /* WB_DEBUG */
+
+#define wbTodo(msg) wbAssertMessage(msg, false)
 
 #endif /* __WB_ASSERT_H__ */

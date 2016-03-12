@@ -19,7 +19,7 @@ static int wbFile_nextIndex(void) {
 }
 
 wbFile_t wbFile_new(void) {
-  int idx = wbFile_nextIndex();
+  int idx       = wbFile_nextIndex();
   wbFile_t file = wbNew(struct st_wbFile_t);
 
   wbAssert(idx >= 0);
@@ -45,6 +45,7 @@ void wbFile_delete(wbFile_t file) {
       wbDelete(wbFile_getMode(file));
     }
     if (wbFile_getFileHandle(file) != NULL) {
+      fflush(wbFile_getFileHandle(file));
       fclose(wbFile_getFileHandle(file));
     }
     if (idx >= 0) {
@@ -113,7 +114,9 @@ wbFile_t wbFile_open(const char *fileName) {
   return wbFile_open(fileName, "r");
 }
 
-void wbFile_close(wbFile_t file) { wbFile_delete(file); }
+void wbFile_close(wbFile_t file) {
+  wbFile_delete(file);
+}
 
 char *wbFile_read(wbFile_t file, size_t size, size_t count) {
   size_t res;
@@ -132,9 +135,9 @@ char *wbFile_read(wbFile_t file, size_t size, size_t count) {
   }
 #endif /* LAZY_FILE_LOAD */
 
-  handle = wbFile_getFileHandle(file);
+  handle    = wbFile_getFileHandle(file);
   bufferLen = size * count + 1;
-  buffer = wbNewArray(char, bufferLen);
+  buffer    = wbNewArray(char, bufferLen);
 
   res = fread(buffer, size, count, handle);
   // make valid C string
@@ -149,7 +152,6 @@ char *wbFile_read(wbFile_t file, size_t len) {
 }
 
 void wbFile_rewind(wbFile_t file) {
-
   if (file == NULL) {
     return;
   }
@@ -217,7 +219,6 @@ char *wbFile_read(wbFile_t file) {
 static char buffer[MAX_CHARS_PER_LINE];
 
 char *wbFile_readLine(wbFile_t file) {
-
   if (file == NULL) {
     return NULL;
   }
@@ -254,7 +255,7 @@ char *wbFile_readLine(wbFile_t file) {
   }
 
   newOffset = wbFile_getDataOffset(file);
-  tmp = wbFile_getData(file) + wbFile_getDataOffset(file);
+  tmp       = wbFile_getData(file) + wbFile_getDataOffset(file);
   while (newOffset < wbFile_getLength(file) && *tmp != '\n') {
     tmp++;
     lenToNewLine++;
@@ -344,7 +345,7 @@ char *wbFile_extension(const char *file) {
     end++;
   }
 
-  extension = wbString_duplicate(end);
+  extension      = wbString_duplicate(end);
   extensionLower = wbString_toLower(extension);
   wbDelete(extension);
 

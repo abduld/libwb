@@ -1,22 +1,17 @@
-# Compiled Object files
-*.slo
-*.lo
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+build
+build-*
+
+.srclib-cache/
+.srclib-store/
+*.swp
+*.log
 *.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-
-# cmake
-CMakeCache.txt
-CmakeFiles/
-cmake_install.cmake
-
-# executables generated on linux/osx
-/MP[0-9]
-/MP[0-9][0-9]
+lib/
+test-dataset/
+test

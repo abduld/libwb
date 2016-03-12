@@ -1,10 +1,10 @@
 
 #include <wb.h>
 
-EXTERN_C wbArg_t wbArg_new(void) {
+EXTERN_C wbArg_t wbArg_new(int *argc, char ***argv) {
   wbArg_t arg;
 
-  wb_init();
+  wb_init(argc, argv);
 
   wbArg_setInputCount(arg, 0);
   wbArg_setInputFiles(arg, NULL);
@@ -63,19 +63,21 @@ static char **parseInputFiles(char *arg, int *resCount) {
   token = strtok(arg, ",");
   while (token != NULL) {
     files[ii++] = wbString_duplicate(token);
-    token = strtok(NULL, ",");
+    token       = strtok(NULL, ",");
   }
   *resCount = ii;
   return files;
 }
 
-static char *parseString(char *arg) { return wbString_duplicate(arg); }
+static char *parseString(char *arg) {
+  return wbString_duplicate(arg);
+}
 
 EXTERN_C wbArg_t wbArg_read(int argc, char **argv) {
   int ii;
   wbArg_t arg;
 
-  arg = wbArg_new();
+  arg = wbArg_new(&argc, &argv);
   for (ii = 0; ii < argc; ii++) {
     if (wbString_startsWith(argv[ii], "-i")) {
       int fileCount;

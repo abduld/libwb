@@ -37,31 +37,24 @@ struct MD5Context {
   UWORD32 in[16];
 };
 
-static void MD5Init(struct MD5Context *context);
-static void MD5Update(struct MD5Context *context, md5byte const *buf,
-                      unsigned len);
-static void MD5Final(unsigned char digest[16], struct MD5Context *context);
-static void MD5Buffer(const unsigned char *buf, unsigned int len,
-                      unsigned char sig[16]);
-static void MD5SigToString(unsigned char sig[16], char *str, int len);
-
 static void MD5Transform(UWORD32 buf[4], UWORD32 const in[16]);
 
-static int g_bigEndian = 0;
+static int g_bigEndian         = 0;
 static int g_endianessDetected = 0;
 
 static void detectEndianess() {
-  int nl = 0x12345678;
+  int nl   = 0x12345678;
   short ns = 0x1234;
 
-  unsigned char *p = (unsigned char *)(&nl);
+  unsigned char *p  = (unsigned char *)(&nl);
   unsigned char *sp = (unsigned char *)(&ns);
 
   if (g_endianessDetected)
     return;
   if (p[0] == 0x12 && p[1] == 0x34 && p[2] == 0x56 && p[3] == 0x78) {
     g_bigEndian = 1;
-  } else if (p[0] == 0x78 && p[1] == 0x56 && p[2] == 0x34 && p[3] == 0x12) {
+  } else if (p[0] == 0x78 && p[1] == 0x56 && p[2] == 0x34 &&
+             p[3] == 0x12) {
     g_bigEndian = 0;
   } else {
     g_bigEndian = *sp != 0x12;
@@ -145,7 +138,7 @@ static void MD5Update(struct MD5Context *ctx, md5byte const *buf,
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
 static void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
-  int count = ctx->bytes[0] & 0x3f; /* Number of bytes in ctx->in */
+  int count  = ctx->bytes[0] & 0x3f; /* Number of bytes in ctx->in */
   md5byte *p = (md5byte *)ctx->in + count;
 
   /* Set the first char of padding to 0x80.  There is always room. */
@@ -158,7 +151,7 @@ static void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
     memset(p, 0, count + 8);
     byteSwap(ctx->in, 16);
     MD5Transform(ctx->buf, ctx->in);
-    p = (md5byte *)ctx->in;
+    p     = (md5byte *)ctx->in;
     count = 56;
   }
   memset(p, 0, count);
@@ -185,7 +178,7 @@ static void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
 #define F4(x, y, z) (y ^ (x | ~z))
 
 /* This is the central step in the MD5 algorithm. */
-#define MD5STEP(f, w, x, y, z, in, s)                                          \
+#define MD5STEP(f, w, x, y, z, in, s)                                     \
   (w += f(x, y, z) + in, w = (w << s | w >> (32 - s)) + x)
 
 /*
@@ -194,7 +187,7 @@ static void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
  * the data and converts bytes into longwords for this routine.
  */
 static void MD5Transform(UWORD32 buf[4], UWORD32 const in[16]) {
-  register UWORD32 a, b, c, d;
+  UWORD32 a, b, c, d;
 
   a = buf[0];
   b = buf[1];
@@ -289,7 +282,8 @@ static void MD5_buffer(const unsigned char *buf, unsigned int len,
 
 #define HEX_STRING "0123456789abcdef" /* to convert to hex */
 
-static void wbMD5_sigToString(unsigned char signature[16], char *str, int len) {
+static void wbMD5_sigToString(unsigned char signature[16], char *str,
+                              int len) {
   unsigned char *sig_p;
   char *str_p, *max_p;
   unsigned int high, low;
@@ -300,7 +294,7 @@ static void wbMD5_sigToString(unsigned char signature[16], char *str, int len) {
   for (sig_p = (unsigned char *)signature;
        sig_p < (unsigned char *)signature + 16; sig_p++) {
     high = *sig_p / 16;
-    low = *sig_p % 16;
+    low  = *sig_p % 16;
     /* account for 2 chars */
     if (str_p + 1 >= max_p) {
       break;

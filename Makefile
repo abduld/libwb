@@ -1,64 +1,75 @@
-
+##########################################
+# Options
+##########################################
+WB_LIB_PATH=$(CURDIR)/lib
+WB_SRC_PATH=$(CURDIR)
 
 ##########################################
-# INPUT
 ##########################################
+
 CXX=g++
-DEFINES=-DWB_USE_CUDA
-CUDA_INCLUDE_FLAGS=-I /usr/local/cuda/include -I /usr/local/cuda-6.5/include -I /usr/local/cuda-5.5/include
-CXX_FLAGS=-fPIC -Wno-unused-function -x c++ -O0 -g -I . -I $(HOME)/usr/include $(CUDA_INCLUDE_FLAGS) $(DEFINES)
-LIBS=-lm -lstdc++ -lrt -lcuda # -L$(HOME)/usr/lib 
-ARCH=$(shell uname -s)-$(shell uname -i)
+DEFINES=
+CXX_FLAGS=-fPIC -Wno-unused-function -x c++ -O3 -g -std=c++11 -Wall -Wno-unused-function -pedantic -I . -I $(WB_SRC_PATH) $(DEFINES)
+LIBS=-lm -lstdc++
 
 ##########################################
 ##########################################
 
-SOURCES :=  wbArg.cpp              \
-			wbExit.cpp             \
-			wbExport.cpp           \
-			wbFile.cpp             \
-			wbImage.cpp            \
-			wbMPI.cpp            \
-			wbImport.cpp           \
-			wbInit.cpp             \
-			wbLogger.cpp           \
-			wbSparse.cpp           \
-			wbPPM.cpp              \
-			wbCUDA.cpp			   \
-			wbSolution.cpp         \
-			wbTimer.cpp
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    LIBS += -lrt
+endif
 
+##########################################
+##########################################
 
-##############################################
-# OUTPUT
-##############################################
-
-EXES = libwb.a libwb.so
-
-.SUFFIXES : .o .cpp
-
+SOURCES :=  $(WB_SRC_PATH)/wbArg.cpp               \
+						$(WB_SRC_PATH)/wbCUDA.cpp              \
+						$(WB_SRC_PATH)/wbDirectory.cpp         \
+						$(WB_SRC_PATH)/wbDataGenerator.cpp     \
+						$(WB_SRC_PATH)/wbExit.cpp              \
+						$(WB_SRC_PATH)/wbExport.cpp            \
+						$(WB_SRC_PATH)/wbFile.cpp              \
+						$(WB_SRC_PATH)/wbImage.cpp             \
+						$(WB_SRC_PATH)/wbImport.cpp            \
+						$(WB_SRC_PATH)/wbInit.cpp              \
+						$(WB_SRC_PATH)/wbLogger.cpp            \
+						$(WB_SRC_PATH)/wbMPI.cpp               \
+						$(WB_SRC_PATH)/wbPPM.cpp               \
+						$(WB_SRC_PATH)/wbSolution.cpp          \
+						$(WB_SRC_PATH)/wbSparse.cpp            \
+						$(WB_SRC_PATH)/wbTimer.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
+TESTS :=  $(WB_SRC_PATH)/wb_test.cpp               \
+					$(WB_SRC_PATH)/wbDataGenerator_test.cpp
+
+TESTOBJECTS = $(TESTS:.cpp=.o)
+
 ##############################################
 # OUTPUT
 ##############################################
 
+.PHONY: all
+.SUFFIXES: .o .cpp
+all: libwb.so
 
 .cpp.o:
 	$(CXX) $(DEFINES) $(CXX_FLAGS) -c -o $@ $<
 
+libwb.so: $(OBJECTS)
+	mkdir -p $(WB_LIB_PATH)
+	$(CXX) -fPIC -shared $(LIBS) -o $(WB_LIB_PATH)/$@ $(OBJECTS)
 
-libwb.so:     $(OBJECTS)
-	mkdir -p $(ARCH)
-	$(CXX) -fPIC -shared $(LIBS) -o $(ARCH)/$@ $(OBJECTS)
+libwb.a: $(OBJECTS)
+	mkdir -p $(WB_LIB_PATH)
+	ar rcs -o $(WB_LIB_PATH)/$@ $(OBJECTS)
 
-libwb.a:     $(OBJECTS)
-	mkdir -p $(ARCH)
-	ar rcs -o $(ARCH)/$@ $(OBJECTS)
+test: $(TESTOBJECTS) $(OBJECTS)
+	$(CXX) -fPIC $(LIBS) -o $@ $(TESTOBJECTS) $(OBJECTS)
+
 
 clean:
 	rm -fr $(ARCH)
 	-rm -f $(EXES) *.o *~
-
-

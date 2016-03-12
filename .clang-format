@@ -1,0 +1,20 @@
+---
+Language:        Cpp
+BasedOnStyle:  LLVM
+ColumnLimit:     75
+AccessModifierOffset: -2
+BreakBeforeBraces: Attach
+AlignTrailingComments: true
+AlignEscapedNewlinesLeft: false
+AlignConsecutiveAssignments: true
+AlignOperands: true
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: true
+IndentCaseLabels: true
+SpacesBeforeTrailingComments: 1
+Standard:        Cpp11
+TabWidth:        4
+UseTab:          Never
+...

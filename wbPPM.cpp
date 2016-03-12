@@ -1,10 +1,14 @@
 
-#include <wb.h>
 #include <math.h>
+#include <wb.h>
 
-static inline float _min(float x, float y) { return x < y ? x : y; }
+static inline float _min(float x, float y) {
+  return x < y ? x : y;
+}
 
-static inline float _max(float x, float y) { return x > y ? x : y; }
+static inline float _max(float x, float y) {
+  return x > y ? x : y;
+}
 
 static inline float _clamp(float x, float start, float end) {
   return _min(_max(x, start), end);
@@ -84,18 +88,25 @@ wbImage_t wbPPM_import(const char *filename) {
     printf("Could not read from %s\n", filename);
     goto cleanup;
   } else if (strcmp(header, "P6") != 0 && strcmp(header, "P6\n") != 0 &&
+             strcmp(header, "P5") != 0 && strcmp(header, "P5\n") != 0 &&
              strcmp(header, "S6") != 0 && strcmp(header, "S6\n") != 0) {
     printf("Could find magic number for %s\n", filename);
     goto cleanup;
   }
 
-  // the line now contains the dimension information
-  channels = 3;
-  line = nextLine(file);
-  if (strcmp(header, "S6") != 0 && strcmp(header, "S6\n") != 0) {
-    parseDimensions(line, &width, &height, &channels);
-  } else {
+  // P5 are monochrome while P6/S6 are rgb
+  // S6 needs to parse number of channels out of file
+  if (strcmp(header, "P5") == 0 || strcmp(header, "P5\n") == 0) {
+    channels = 1;
+    line     = nextLine(file);
     parseDimensions(line, &width, &height);
+  } else if (strcmp(header, "P6") == 0 || strcmp(header, "P6\n") == 0) {
+    channels = 3;
+    line     = nextLine(file);
+    parseDimensions(line, &width, &height);
+  } else {
+    line = nextLine(file);
+    parseDimensions(line, &width, &height, &channels);
   }
 
   // the line now contains the depth information
@@ -110,7 +121,7 @@ wbImage_t wbPPM_import(const char *filename) {
 
   imgData = wbImage_getData(img);
 
-  charIter = charData;
+  charIter  = charData;
   floatIter = imgData;
 
   scale = 1.0f / ((float)depth);
@@ -149,19 +160,23 @@ void wbPPM_export(const char *filename, wbImage_t img) {
 
   file = wbFile_open(filename, "wb+");
 
-  width = wbImage_getWidth(img);
-  height = wbImage_getHeight(img);
+  width    = wbImage_getWidth(img);
+  height   = wbImage_getHeight(img);
   channels = wbImage_getChannels(img);
-  depth = 255;
+  depth    = 255;
 
-  wbFile_writeLine(file, "P6");
+  if (channels == 1) {
+    wbFile_writeLine(file, "P5");
+  } else {
+    wbFile_writeLine(file, "P6");
+  }
   wbFile_writeLine(file, "#Created via wbPPM Export");
   wbFile_writeLine(file, wbString(width, " ", height));
   wbFile_writeLine(file, wbString(depth));
 
   charData = wbNewArray(unsigned char, width *height *channels);
 
-  charIter = charData;
+  charIter  = charData;
   floatIter = wbImage_getData(img);
 
   for (ii = 0; ii < height; ii++) {

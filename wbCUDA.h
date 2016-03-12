@@ -6,9 +6,8 @@
 #ifdef __PGI
 #define __GNUC__ 4
 #endif /* __PGI */
-#include "cuda.h"
-#include "cuda_runtime.h"
-#include "time.h"
+#include <cuda.h>
+#include <cuda_runtime.h>
 
 typedef struct st_wbCUDAMemory_t {
   void *mem;
@@ -30,7 +29,8 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
 
   if (idx == 0) {
     srand(time(NULL));
-    memset(_cudaMemoryList, 0, sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);
+    memset(_cudaMemoryList, 0,
+           sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);
   }
 
   if (err == cudaSuccess) {
@@ -46,7 +46,7 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
 
   _cudaMallocSize += sz;
   _cudaMemoryList[idx].mem = *devPtr;
-  _cudaMemoryList[idx].sz = sz;
+  _cudaMemoryList[idx].sz  = sz;
   _cudaMemoryListIdx++;
   return err;
 }
@@ -54,10 +54,12 @@ static inline cudaError_t wbCUDAMalloc(void **devPtr, size_t sz) {
 static inline cudaError_t wbCUDAFree(void *mem) {
   int idx = _cudaMemoryListIdx;
   if (idx == 0) {
-    memset(_cudaMemoryList, 0, sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);
+    memset(_cudaMemoryList, 0,
+           sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);
   }
   for (int ii = 0; ii < idx; ii++) {
-    if (_cudaMemoryList[ii].mem != NULL && _cudaMemoryList[ii].mem == mem) {
+    if (_cudaMemoryList[ii].mem != NULL &&
+        _cudaMemoryList[ii].mem == mem) {
       cudaError_t err = cudaFree(mem);
       _cudaMallocSize -= _cudaMemoryList[ii].sz;
       _cudaMemoryList[ii].mem = NULL;
@@ -67,7 +69,7 @@ static inline cudaError_t wbCUDAFree(void *mem) {
   return cudaErrorMemoryAllocation;
 }
 
-#define cudaMalloc wbCUDAMalloc
+#define cudaMalloc(elem, err) wbCUDAMalloc((void **)elem, err)
 #define cudaFree wbCUDAFree
 
 #endif /* WB_USE_CUDA */

@@ -3,7 +3,7 @@
 #ifndef __WB_FILE_H__
 #define __WB_FILE_H__
 
-typedef struct st_wbFile_t {
+struct st_wbFile_t {
   int index;
   char *file;
   char *mode;
@@ -11,7 +11,7 @@ typedef struct st_wbFile_t {
   FILE *handle;
   size_t len;
   size_t offset;
-} *wbFile_t;
+};
 
 #define wbFile_getIndex(file) ((file)->index)
 #define wbFile_getFileName(file) ((file)->file)
@@ -43,7 +43,8 @@ void wbFile_rewind(wbFile_t file);
 size_t wbFile_size(wbFile_t file);
 char *wbFile_read(wbFile_t file);
 char *wbFile_readLine(wbFile_t file);
-void wbFile_write(wbFile_t file, const void *buffer, size_t size, size_t count);
+void wbFile_write(wbFile_t file, const void *buffer, size_t size,
+                  size_t count);
 void wbFile_write(wbFile_t file, const void *buffer, size_t len);
 void wbFile_write(wbFile_t file, const char *buffer);
 void wbFile_writeLine(wbFile_t file, const char *buffer0);

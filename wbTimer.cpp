@@ -1,49 +1,50 @@
 
 
-#include <wb.h>
 #include <time.h>
+#include <wb.h>
 
-#ifdef _WIN32
+#ifdef WB_USE_WINDOWS
 uint64_t _hrtime_frequency = 0;
-#endif /* _WIN32 */
+#endif /* WB_USE_WINDOWS */
 wbTimer_t _timer = NULL;
 
-#ifdef __APPLE__
-static double o_timebase = 0;
+#ifdef WB_USE_DARWIN
+static double o_timebase    = 0;
 static uint64_t o_timestart = 0;
-#endif /* __APPLE__ */
+#endif /* WB_USE_DARWIN */
 
 uint64_t _hrtime(void) {
 #define NANOSEC ((uint64_t)1e9)
-#ifdef _MSC_VER
+#ifdef WB_USE_WINDOWS
   LARGE_INTEGER counter;
   if (!QueryPerformanceCounter(&counter)) {
     return 0;
   }
   return ((uint64_t)counter.LowPart * NANOSEC / _hrtime_frequency) +
-         (((uint64_t)counter.HighPart * NANOSEC / _hrtime_frequency) << 32);
+         (((uint64_t)counter.HighPart * NANOSEC / _hrtime_frequency)
+          << 32);
 #else
   struct timespec ts;
-#ifdef __APPLE__
+#ifdef WB_USE_DARWIN
 #define O_NANOSEC (+1.0E-9)
 #define O_GIGA UINT64_C(1000000000)
   if (!o_timestart) {
-    mach_timebase_info_data_t tb = {0};
+    mach_timebase_info_data_t tb{};
     mach_timebase_info(&tb);
     o_timebase = tb.numer;
     o_timebase /= tb.denom;
     o_timestart = mach_absolute_time();
   }
   double diff = (mach_absolute_time() - o_timestart) * o_timebase;
-  ts.tv_sec = diff * O_NANOSEC;
-  ts.tv_nsec = diff - (ts.tv_sec * O_GIGA);
+  ts.tv_sec   = diff * O_NANOSEC;
+  ts.tv_nsec  = diff - (ts.tv_sec * O_GIGA);
 #undef O_NANOSEC
 #undef O_GIGA
-#else  /* __APPLE__ */
+#else  /* WB_USE_DARWIN */
   clock_gettime(CLOCK_MONOTONIC, &ts);
-#endif /* __APPLE__ */
+#endif /* WB_USE_DARWIN */
   return (((uint64_t)ts.tv_sec) * NANOSEC + ts.tv_nsec);
-#endif /* _MSC_VER */
+#endif /* WB_USE_WINDOWS */
 #undef NANOSEC
 }
 
@@ -55,10 +56,12 @@ static inline uint64_t getTime(void) {
 }
 
 static inline wbTimerNode_t wbTimerNode_new(int id, wbTimerKind_t kind,
-                                            const char *file, const char *fun,
+                                            const char *file,
+                                            const char *fun,
                                             int startLine) {
   wbTimerNode_t node = wbNew(struct st_wbTimerNode_t);
   wbTimerNode_setId(node, id);
+  wbTimerNode_setMPIRank(node, wbMPI_getRank());
   wbTimerNode_setLevel(node, 0);
   wbTimerNode_setStoppedQ(node, wbFalse);
   wbTimerNode_setKind(node, kind);
@@ -89,22 +92,22 @@ static inline void wbTimerNode_delete(wbTimerNode_t node) {
 
 static inline const char *_nodeKind(wbTimerKind_t kind) {
   switch (kind) {
-  case wbTimerKind_Generic:
-    return "Generic";
-  case wbTimerKind_IO:
-    return "IO";
-  case wbTimerKind_GPU:
-    return "GPU";
-  case wbTimerKind_Copy:
-    return "Copy";
-  case wbTimerKind_Driver:
-    return "Driver";
-  case wbTimerKind_CopyAsync:
-    return "CopyAsync";
-  case wbTimerKind_Compute:
-    return "Compute";
-  case wbTimerKind_CPUGPUOverlap:
-    return "CPUGPUOverlap";
+    case wbTimerKind_Generic:
+      return "Generic";
+    case wbTimerKind_IO:
+      return "IO";
+    case wbTimerKind_GPU:
+      return "GPU";
+    case wbTimerKind_Copy:
+      return "Copy";
+    case wbTimerKind_Driver:
+      return "Driver";
+    case wbTimerKind_CopyAsync:
+      return "CopyAsync";
+    case wbTimerKind_Compute:
+      return "Compute";
+    case wbTimerKind_CPUGPUOverlap:
+      return "CPUGPUOverlap";
   }
   return "Undefined";
 }
@@ -117,18 +120,20 @@ static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
 
     ss << "{\n";
     ss << wbString_quote("id") << ":" << wbTimerNode_getId(node) << ",\n";
+    ss << wbString_quote("mpi_rank") << ":" << wbTimerNode_getMPIRank(node)
+       << ",\n";
     ss << wbString_quote("stopped") << ":"
        << wbString(wbTimerNode_stoppedQ(node) ? "true" : "false") << ",\n";
     ss << wbString_quote("kind") << ":"
        << wbString_quote(_nodeKind(wbTimerNode_getKind(node))) << ",\n";
-    ss << wbString_quote("start_time") << ":" << wbTimerNode_getStartTime(node)
-       << ",\n";
+    ss << wbString_quote("start_time") << ":"
+       << wbTimerNode_getStartTime(node) << ",\n";
     ss << wbString_quote("end_time") << ":" << wbTimerNode_getEndTime(node)
        << ",\n";
     ss << wbString_quote("elapsed_time") << ":"
        << wbTimerNode_getElapsedTime(node) << ",\n";
-    ss << wbString_quote("start_line") << ":" << wbTimerNode_getStartLine(node)
-       << ",\n";
+    ss << wbString_quote("start_line") << ":"
+       << wbTimerNode_getStartLine(node) << ",\n";
     ss << wbString_quote("end_line") << ":" << wbTimerNode_getEndLine(node)
        << ",\n";
     ss << wbString_quote("start_function") << ":"
@@ -142,7 +147,8 @@ static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
     ss << wbString_quote("parent_id") << ":"
        << wbString(wbTimerNode_hasParent(node)
                        ? wbTimerNode_getId(wbTimerNode_getParent(node))
-                       : -1) << ",\n";
+                       : -1)
+       << ",\n";
     ss << wbString_quote("message") << ":"
        << wbString_quote(wbTimerNode_getMessage(node)) << "\n";
     ss << "}";
@@ -163,22 +169,26 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
        << wbString(wbTimerNode_stoppedQ(node) ? "true" : "false")
        << "</stoppedQ>\n";
     ss << "<kind>" << _nodeKind(wbTimerNode_getKind(node)) << "</kind>\n";
-    ss << "<start_time>" << wbTimerNode_getStartTime(node) << "</start_time>\n";
+    ss << "<start_time>" << wbTimerNode_getStartTime(node)
+       << "</start_time>\n";
     ss << "<end_time>" << wbTimerNode_getEndTime(node) << "</end_time>\n";
     ss << "<elapsed_time>" << wbTimerNode_getElapsedTime(node)
        << "</elapsed_time>\n";
-    ss << "<start_line>" << wbTimerNode_getStartLine(node) << "</start_line>\n";
+    ss << "<start_line>" << wbTimerNode_getStartLine(node)
+       << "</start_line>\n";
     ss << "<end_line>" << wbTimerNode_getEndLine(node) << "</end_line>\n";
     ss << "<start_function>" << wbTimerNode_getStartFunction(node)
        << "</start_function>\n";
     ss << "<end_function>" << wbTimerNode_getEndFunction(node)
        << "</end_function>\n";
-    ss << "<start_file>" << wbTimerNode_getStartFile(node) << "</start_file>\n";
+    ss << "<start_file>" << wbTimerNode_getStartFile(node)
+       << "</start_file>\n";
     ss << "<end_file>" << wbTimerNode_getEndFile(node) << "</end_file>\n";
     ss << "<parent_id>"
        << wbString(wbTimerNode_hasParent(node)
                        ? wbTimerNode_getId(wbTimerNode_getParent(node))
-                       : -1) << "</parent_id>\n";
+                       : -1)
+       << "</parent_id>\n";
     ss << "<message>" << wbTimerNode_getMessage(node) << "</message>\n";
     ss << "</node>\n";
 
@@ -198,7 +208,8 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
 #define wbTimer_setTail(timer, val) (wbTimer_getTail(timer) = val)
 #define wbTimer_setStartTime(node, val) (wbTimer_getStartTime(node) = val)
 #define wbTimer_setEndTime(node, val) (wbTimer_getEndTime(node) = val)
-#define wbTimer_setElapsedTime(node, val) (wbTimer_getElapsedTime(node) = val)
+#define wbTimer_setElapsedTime(node, val)                                 \
+  (wbTimer_getElapsedTime(node) = val)
 
 #define wbTimer_incrementLength(timer) (wbTimer_getLength(timer)++)
 #define wbTimer_decrementLength(timer) (wbTimer_getLength(timer)--)
@@ -222,7 +233,7 @@ void wbTimer_delete(wbTimer_t timer) {
 
 string wbTimer_toJSON(wbTimer_t timer) {
   if (timer == NULL) {
-    return NULL;
+    return "";
   } else {
     stringstream ss;
     wbTimerNode_t iter;
@@ -231,36 +242,29 @@ string wbTimer_toJSON(wbTimer_t timer) {
     currentTime = getTime();
 
     wbTimer_setEndTime(timer, currentTime);
-    wbTimer_setElapsedTime(timer, currentTime - wbTimer_getStartTime(timer));
+    wbTimer_setElapsedTime(timer,
+                           currentTime - wbTimer_getStartTime(timer));
 
-    ss << "{\n";
-    ss << wbString_quote("start_time") << ":" << wbTimer_getStartTime(timer)
-       << ",\n";
-    ss << wbString_quote("end_time") << ":" << wbTimer_getEndTime(timer)
-       << ",\n";
-    ss << wbString_quote("elapsed_time") << ":" << wbTimer_getElapsedTime(timer)
-       << ",\n";
-    ss << wbString_quote("elements") << ":[\n";
     for (iter = wbTimer_getHead(timer); iter != NULL;
          iter = wbTimerNode_getNext(iter)) {
       if (!wbTimerNode_stoppedQ(iter)) {
         wbTimerNode_setEndTime(iter, currentTime);
-        wbTimerNode_setElapsedTime(iter, currentTime -
-                                             wbTimerNode_getStartTime(iter));
+        wbTimerNode_setElapsedTime(
+            iter, currentTime - wbTimerNode_getStartTime(iter));
       }
       ss << wbTimerNode_toJSON(iter);
       if (wbTimerNode_getNext(iter) != NULL) {
         ss << ",\n";
       }
     }
-    ss << "]\n";
-    ss << "}";
 
     return ss.str();
   }
 }
 
-string wbTimer_toJSON() { return wbTimer_toJSON(_timer); }
+string wbTimer_toJSON() {
+  return wbTimer_toJSON(_timer);
+}
 
 string wbTimer_toXML(wbTimer_t timer) {
   if (timer == NULL) {
@@ -273,10 +277,12 @@ string wbTimer_toXML(wbTimer_t timer) {
     currentTime = getTime();
 
     wbTimer_setEndTime(timer, currentTime);
-    wbTimer_setElapsedTime(timer, currentTime - wbTimer_getStartTime(timer));
+    wbTimer_setElapsedTime(timer,
+                           currentTime - wbTimer_getStartTime(timer));
 
     ss << "<timer>\n";
-    ss << "<start_time>" << wbTimer_getStartTime(timer) << "</start_time>\n";
+    ss << "<start_time>" << wbTimer_getStartTime(timer)
+       << "</start_time>\n";
     ss << "<end_time>" << wbTimer_getEndTime(timer) << "</end_time>\n";
     ss << "<elapsed_time>" << wbTimer_getElapsedTime(timer)
        << "</elapsed_time>\n";
@@ -285,8 +291,8 @@ string wbTimer_toXML(wbTimer_t timer) {
          iter = wbTimerNode_getNext(iter)) {
       if (!wbTimerNode_stoppedQ(iter)) {
         wbTimerNode_setEndTime(iter, currentTime);
-        wbTimerNode_setElapsedTime(iter, currentTime -
-                                             wbTimerNode_getStartTime(iter));
+        wbTimerNode_setElapsedTime(
+            iter, currentTime - wbTimerNode_getStartTime(iter));
       }
       ss << wbTimerNode_toXML(iter);
     }
@@ -297,7 +303,9 @@ string wbTimer_toXML(wbTimer_t timer) {
   }
 }
 
-string wbTimer_toXML() { return wbTimer_toXML(_timer); }
+string wbTimer_toXML() {
+  return wbTimer_toXML(_timer);
+}
 
 wbTimer_t wbTimer_new(void) {
   wbTimer_t timer = wbNew(struct st_wbTimer_t);
@@ -343,8 +351,6 @@ wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
   wbTimerNode_t node;
   wbTimerNode_t parent;
 
-  wb_init();
-
   currentTime = getTime();
 
   id = wbTimer_getLength(_timer);
@@ -363,8 +369,8 @@ wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
   return node;
 }
 
-wbTimerNode_t wbTimer_start(wbTimerKind_t kind, string msg, const char *file,
-                            const char *fun, int line) {
+wbTimerNode_t wbTimer_start(wbTimerKind_t kind, string msg,
+                            const char *file, const char *fun, int line) {
   wbTimerNode_t node = wbTimer_start(kind, file, fun, line);
   wbTimerNode_setMessage(node, wbString_duplicate(msg));
   return node;
@@ -377,11 +383,13 @@ static inline wbTimerNode_t _findNode(wbTimer_t timer, wbTimerKind_t kind,
   for (iter = wbTimer_getTail(timer); iter != NULL;
        iter = wbTimerNode_getPrevious(iter)) {
     if (msg == "") {
-      if (!wbTimerNode_stoppedQ(iter) && wbTimerNode_getKind(iter) == kind) {
+      if (!wbTimerNode_stoppedQ(iter) &&
+          wbTimerNode_getKind(iter) == kind) {
         return iter;
       }
     } else {
-      if (!wbTimerNode_stoppedQ(iter) && wbTimerNode_getKind(iter) == kind &&
+      if (!wbTimerNode_stoppedQ(iter) &&
+          wbTimerNode_getKind(iter) == kind &&
           msg == wbTimerNode_getMessage(iter)) {
         return iter;
       }

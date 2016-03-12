@@ -3,15 +3,7 @@
 #ifndef __WB_TIMER_H__
 #define __WB_TIMER_H__
 
-#include <time.h>
-#include <stdint.h>
-#include <sys/types.h>
-
-#ifdef __APPLE__
-#include <mach/mach_time.h>
-#endif /* __APPLE__ */
-
-#ifdef _WIN32
+#ifdef WB_USE_WINDOWS
 extern uint64_t _hrtime_frequency;
 #endif /* _WIN32 */
 
@@ -30,6 +22,7 @@ typedef enum en_wbTimerKind_t {
 
 struct st_wbTimerNode_t {
   int id;
+  int mpiRank;
   int level;
   wbBool stoppedQ;
   wbTimerKind_t kind;
@@ -58,6 +51,7 @@ struct st_wbTimer_t {
 };
 
 #define wbTimerNode_getId(node) ((node)->id)
+#define wbTimerNode_getMPIRank(node) ((node)->mpiRank)
 #define wbTimerNode_getLevel(node) ((node)->level)
 #define wbTimerNode_getStoppedQ(node) ((node)->stoppedQ)
 #define wbTimerNode_getKind(node) ((node)->kind)
@@ -76,32 +70,43 @@ struct st_wbTimer_t {
 #define wbTimerNode_getMessage(node) ((node)->msg)
 
 #define wbTimerNode_setId(node, val) (wbTimerNode_getId(node) = val)
+#define wbTimerNode_setMPIRank(node, val)                                 \
+  (wbTimerNode_getMPIRank(node) = val)
 #define wbTimerNode_setLevel(node, val) (wbTimerNode_getLevel(node) = val)
-#define wbTimerNode_setStoppedQ(node, val) (wbTimerNode_getStoppedQ(node) = val)
+#define wbTimerNode_setStoppedQ(node, val)                                \
+  (wbTimerNode_getStoppedQ(node) = val)
 #define wbTimerNode_setKind(node, val) (wbTimerNode_getKind(node) = val)
-#define wbTimerNode_setStartTime(node, val)                                    \
+#define wbTimerNode_setStartTime(node, val)                               \
   (wbTimerNode_getStartTime(node) = val)
-#define wbTimerNode_setEndTime(node, val) (wbTimerNode_getEndTime(node) = val)
-#define wbTimerNode_setElapsedTime(node, val)                                  \
+#define wbTimerNode_setEndTime(node, val)                                 \
+  (wbTimerNode_getEndTime(node) = val)
+#define wbTimerNode_setElapsedTime(node, val)                             \
   (wbTimerNode_getElapsedTime(node) = val)
-#define wbTimerNode_setStartLine(node, val)                                    \
+#define wbTimerNode_setStartLine(node, val)                               \
   (wbTimerNode_getStartLine(node) = val)
-#define wbTimerNode_setEndLine(node, val) (wbTimerNode_getEndLine(node) = val)
-#define wbTimerNode_setStartFunction(node, val)                                \
+#define wbTimerNode_setEndLine(node, val)                                 \
+  (wbTimerNode_getEndLine(node) = val)
+#define wbTimerNode_setStartFunction(node, val)                           \
   (wbTimerNode_getStartFunction(node) = val)
-#define wbTimerNode_setEndFunction(node, val)                                  \
+#define wbTimerNode_setEndFunction(node, val)                             \
   (wbTimerNode_getEndFunction(node) = val)
-#define wbTimerNode_setStartFile(node, val)                                    \
+#define wbTimerNode_setStartFile(node, val)                               \
   (wbTimerNode_getStartFile(node) = val)
-#define wbTimerNode_setEndFile(node, val) (wbTimerNode_getEndFile(node) = val)
+#define wbTimerNode_setEndFile(node, val)                                 \
+  (wbTimerNode_getEndFile(node) = val)
 #define wbTimerNode_setNext(node, val) (wbTimerNode_getNext(node) = val)
-#define wbTimerNode_setPrevious(node, val) (wbTimerNode_getPrevious(node) = val)
-#define wbTimerNode_setParent(node, val) (wbTimerNode_getParent(node) = val)
-#define wbTimerNode_setMessage(node, val) (wbTimerNode_getMessage(node) = val)
+#define wbTimerNode_setPrevious(node, val)                                \
+  (wbTimerNode_getPrevious(node) = val)
+#define wbTimerNode_setParent(node, val)                                  \
+  (wbTimerNode_getParent(node) = val)
+#define wbTimerNode_setMessage(node, val)                                 \
+  (wbTimerNode_getMessage(node) = val)
 
-#define wbTimerNode_stoppedQ(node) (wbTimerNode_getStoppedQ(node) == wbTrue)
+#define wbTimerNode_stoppedQ(node)                                        \
+  (wbTimerNode_getStoppedQ(node) == wbTrue)
 #define wbTimerNode_hasNext(node) (wbTimerNode_getNext(node) != NULL)
-#define wbTimerNode_hasPrevious(node) (wbTimerNode_getPrevious(node) != NULL)
+#define wbTimerNode_hasPrevious(node)                                     \
+  (wbTimerNode_getPrevious(node) != NULL)
 #define wbTimerNode_hasParent(node) (wbTimerNode_getParent(node) != NULL)
 
 uint64_t _hrtime(void);
@@ -117,18 +122,18 @@ string wbTimer_toXML();
 
 wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
                             const char *fun, int line);
-wbTimerNode_t wbTimer_start(wbTimerKind_t kind, string msg, const char *file,
-                            const char *fun, int line);
+wbTimerNode_t wbTimer_start(wbTimerKind_t kind, string msg,
+                            const char *file, const char *fun, int line);
 void wbTimer_stop(wbTimerKind_t kind, string msg, const char *file,
                   const char *fun, int line);
 void wbTimer_stop(wbTimerKind_t kind, const char *file, const char *fun,
                   int line);
 
-#define wbTime_start(kind, ...)                                                \
-  wbTimer_start(wbTimerKind_##kind, wbString(__VA_ARGS__), wbFile, wbFunction, \
-                wbLine)
-#define wbTime_stop(kind, ...)                                                 \
-  wbTimer_stop(wbTimerKind_##kind, wbString(__VA_ARGS__), wbFile, wbFunction,  \
-               wbLine)
+#define wbTime_start(kind, ...)                                           \
+  wbTimer_start(wbTimerKind_##kind, wbString(__VA_ARGS__), wbFile,        \
+                wbFunction, wbLine)
+#define wbTime_stop(kind, ...)                                            \
+  wbTimer_stop(wbTimerKind_##kind, wbString(__VA_ARGS__), wbFile,         \
+               wbFunction, wbLine)
 
 #endif /* __WB_TIMER_H__ */

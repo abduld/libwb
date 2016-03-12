@@ -13,6 +13,7 @@ static inline wbLogEntry_t wbLogEntry_new() {
   elem = wbNew(struct st_wbLogEntry_t);
 
   wbLogEntry_setMessage(elem, NULL);
+  wbLogEntry_setMPIRank(elem, wbMPI_getRank());
   wbLogEntry_setTime(elem, _hrtime());
 #ifndef NDEBUG
   wbLogEntry_setLevel(elem, wbLogLevel_TRACE);
@@ -28,9 +29,9 @@ static inline wbLogEntry_t wbLogEntry_new() {
   return elem;
 }
 
-static inline wbLogEntry_t wbLogEntry_initialize(wbLogLevel_t level, string msg,
-                                                 const char *file,
-                                                 const char *fun, int line) {
+static inline wbLogEntry_t
+wbLogEntry_initialize(wbLogLevel_t level, string msg, const char *file,
+                      const char *fun, int line) {
   wbLogEntry_t elem;
 
   elem = wbLogEntry_new();
@@ -58,22 +59,22 @@ static inline void wbLogEntry_delete(wbLogEntry_t elem) {
 
 static inline const char *getLevelName(wbLogLevel_t level) {
   switch (level) {
-  case wbLogLevel_unknown:
-    return "Unknown";
-  case wbLogLevel_OFF:
-    return "Off";
-  case wbLogLevel_FATAL:
-    return "Fatal";
-  case wbLogLevel_ERROR:
-    return "Error";
-  case wbLogLevel_WARN:
-    return "Warn";
-  case wbLogLevel_INFO:
-    return "Info";
-  case wbLogLevel_DEBUG:
-    return "Debug";
-  case wbLogLevel_TRACE:
-    return "Trace";
+    case wbLogLevel_unknown:
+      return "Unknown";
+    case wbLogLevel_OFF:
+      return "Off";
+    case wbLogLevel_FATAL:
+      return "Fatal";
+    case wbLogLevel_ERROR:
+      return "Error";
+    case wbLogLevel_WARN:
+      return "Warn";
+    case wbLogLevel_INFO:
+      return "Info";
+    case wbLogLevel_DEBUG:
+      return "Debug";
+    case wbLogLevel_TRACE:
+      return "Trace";
   }
   return NULL;
 }
@@ -83,6 +84,8 @@ static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
     stringstream ss;
 
     ss << "{\n";
+    ss << wbString_quote("mpi_rank") << ":"
+       << wbString(wbLogEntry_getMPIRank(elem)) << ",\n";
     ss << wbString_quote("level") << ":"
        << wbString_quote(getLevelName(wbLogEntry_getLevel(elem))) << ",\n";
     ss << wbString_quote("message") << ":"
@@ -91,8 +94,10 @@ static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
        << wbString_quote(wbLogEntry_getFile(elem)) << ",\n";
     ss << wbString_quote("function") << ":"
        << wbString_quote(wbLogEntry_getFunction(elem)) << ",\n";
-    ss << wbString_quote("line") << ":" << wbLogEntry_getLine(elem) << ",\n";
-    ss << wbString_quote("time") << ":" << wbLogEntry_getTime(elem) << "\n";
+    ss << wbString_quote("line") << ":" << wbLogEntry_getLine(elem)
+       << ",\n";
+    ss << wbString_quote("time") << ":" << wbLogEntry_getTime(elem)
+       << "\n";
     ss << "}";
 
     return ss.str();
@@ -137,12 +142,12 @@ wbLogger_t wbLogger_new() {
   return logger;
 }
 
-static inline void _wbLogger_setLevel(wbLogger_t logger, wbLogLevel_t level) {
+static inline void _wbLogger_setLevel(wbLogger_t logger,
+                                      wbLogLevel_t level) {
   wbLogger_getLevel(logger) = level;
 }
 
 static inline void _wbLogger_setLevel(wbLogLevel_t level) {
-  wb_init();
   _wbLogger_setLevel(_logger, level);
 }
 
@@ -178,8 +183,6 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
   wbLogEntry_t elem;
   wbLogger_t logger;
 
-  wb_init();
-
   logger = _logger;
 
   if (wbLogger_getLevel(logger) < level) {
@@ -214,15 +217,15 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
   return;
 }
 
-string wbLogger_toJSON() { return wbLogger_toJSON(_logger); }
+string wbLogger_toJSON() {
+  return wbLogger_toJSON(_logger);
+}
 
 string wbLogger_toJSON(wbLogger_t logger) {
   if (logger != NULL) {
     wbLogEntry_t iter;
     stringstream ss;
 
-    ss << "{\n";
-    ss << wbString_quote("elements") << ":[\n";
     for (iter = wbLogger_getHead(logger); iter != NULL;
          iter = wbLogEntry_getNext(iter)) {
       ss << wbLogEntry_toJSON(iter);
@@ -230,15 +233,15 @@ string wbLogger_toJSON(wbLogger_t logger) {
         ss << ",\n";
       }
     }
-    ss << "]\n";
-    ss << "}\n";
 
     return ss.str();
   }
   return "";
 }
 
-string wbLogger_toXML() { return wbLogger_toXML(_logger); }
+string wbLogger_toXML() {
+  return wbLogger_toXML(_logger);
+}
 
 string wbLogger_toXML(wbLogger_t logger) {
   if (logger != NULL) {

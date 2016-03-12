@@ -1,9 +1,9 @@
-Copyright (c) 2014, Abdul Dakkak All rights reserved.
+Copyright (c) 2016, Abdul Dakkak All rights reserved.
 
 Developed by: 	Abdul Dakkak
-                    IMPACT Group
-                    University of Illinois, Urbana-Champaign
-                    impact.crhc.illinois.edu
+                IMPACT Group
+                University of Illinois, Urbana-Champaign
+                impact.crhc.illinois.edu
 
 Permission  is  hereby  granted,  free  of  charge,  to  any
 person  obtaining a  copy  of this  software and  associated
@@ -34,4 +34,3 @@ CLAIM, DAMAGES OR  OTHER LIABILITY, WHETHER IN  AN ACTION OF
 CONTRACT,  TORT OR  OTHERWISE, ARISING  FROM, OUT  OF OR  IN
 CONNECTION WITH  THE SOFTWARE OR  THE USE OR  OTHER DEALINGS
 WITH THE SOFTWARE.
-

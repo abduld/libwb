@@ -20,7 +20,7 @@ static inline void *_malloc(size_t size) THROW {
       fprintf(stderr, "<<MEMORY>>:: Memory allocation failed\n");
       exit(1);
     } else {
-      size_t ii = 0;
+      size_t ii        = 0;
       unsigned char *p = (unsigned char *)res;
       while (ii++ < size) {
         *p++ = 0;
@@ -32,8 +32,7 @@ static inline void *_malloc(size_t size) THROW {
 
 static inline void _free(void *ptr) THROW {
   if (ptr != NULL) {
-    // the memory free has a bug...
-    // memmgr_free(ptr);
+    memmgr_free(ptr);
   }
 }
 
@@ -59,7 +58,7 @@ static inline void *_realloc(void *ptr, size_t size) THROW {
     if (buf != 0) {
       // Find original allocation size
       alloc_size = (size_t)memmgr_get_block_size(ptr);
-      to_copy = alloc_size;
+      to_copy    = alloc_size;
       if (to_copy > size) {
         to_copy = size;
       }
@@ -82,11 +81,11 @@ static inline void *_realloc(void *ptr, size_t size) THROW {
 #define wbNew(type) ((type *)_malloc(sizeof(type)))
 #define wbNewArray(type, len) ((type *)_malloc((len) * sizeof(type)))
 #define wbMalloc(sz) _malloc(sz)
-#define wbDelete(var)                                                          \
-  _free(var);                                                                  \
+#define wbDelete(var)                                                     \
+  _free(var);                                                             \
   var = NULL
-#define wbFree(var)                                                            \
-  _free(var);                                                                  \
+#define wbFree(var)                                                       \
+  _free(var);                                                             \
   var = NULL
 #define wbRealloc(var, newSize) _realloc(var, newSize)
 #define wbReallocArray(t, m, n) ((t *)_realloc(m, n * sizeof(t)))
@@ -130,8 +129,8 @@ static inline void *xRealloc(void *mem, size_t sz) {
 #define wbNewArray(type, len) ((type *)wbMalloc((len) * sizeof(type)))
 #define wbMalloc(sz) xMalloc(sz)
 #define wbDelete(var) wbFree(var)
-#define wbFree(var)                                                            \
-  xFree(var);                                                                  \
+#define wbFree(var)                                                       \
+  xFree(var);                                                             \
   var = NULL
 #define wbRealloc(var, newSize) xRealloc(var, newSize)
 #define wbReallocArray(t, m, n) ((t *)xRealloc(m, n * sizeof(t)))
