@@ -58,6 +58,6 @@ matrix:
       env: CXX=clang++-3.8
 
 script: 
-  - $CXX --version
+  - echo `$CXX --version`
   - make test
   - ./test
