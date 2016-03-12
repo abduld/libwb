@@ -6,7 +6,7 @@ language: cpp
 compiler:
   - clang
   - gcc
-  
+
 matrix:
   include:
     - compiler: gcc
@@ -16,7 +16,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
-      env: CXX=g++-4.9
+      env: COMPILER=g++-4.9
     - compiler: gcc
       addons:
         apt:
@@ -24,7 +24,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: CXX=g++-5
+      env: COMPILER=g++-5
     - compiler: gcc
       addons:
         apt:
@@ -32,7 +32,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-      env: CXX=g++-6
+      env: COMPILER=g++-6
     - compiler: clang
       addons:
         apt:
@@ -41,7 +41,7 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
-      env: CXX=clang++-3.6
+      env: COMPILER=clang++-3.6
     - compiler: clang
       addons:
         apt:
@@ -50,7 +50,7 @@ matrix:
             - llvm-toolchain-precise-3.7
           packages:
             - clang-3.7
-      env: CXX=clang++-3.7
+      env: COMPILER=clang++-3.7
     - compiler: clang
       addons:
         apt:
@@ -59,11 +59,11 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: CXX=clang++-3.8
+      env: COMPILER=clang++-3.8
 
 before_install:
   - sudo apt-get update -qq
 script: 
-  - echo `$CXX --version`
-  - make test
+  - $COMPILER --version
+  - CXX=$COMPILER make test
   - ./test
