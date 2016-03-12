@@ -1,5 +1,10 @@
 #include "wb.h"
 
+#ifndef PATH_MAX
+#define PATH_MAX        4096
+#endif /* PATH_MAX */
+
+
 #ifdef WB_USE_UNIX
 static const char dir_seperator = '/';
 static void mkdir_(const char *dir) {
