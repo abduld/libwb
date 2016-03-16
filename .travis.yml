@@ -39,14 +39,14 @@ matrix:
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env: COMPILER=g++-6
+#    - compiler: gcc
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-6
+#      env: COMPILER=g++-6
     - compiler: clang
       addons:
         apt:
