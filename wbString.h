@@ -3,11 +3,10 @@
 #ifndef __WB_STRING_H__
 #define __WB_STRING_H__
 
-#include <cstring>
+#include <string.h>
 #include <iostream>
 #include <ostream>
 #include <sstream>
-#include <string.h>
 #include <string>
 #include <vector>
 #include "wb.h"

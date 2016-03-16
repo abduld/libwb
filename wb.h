@@ -27,7 +27,7 @@
 #include <windows.h>
 #define WB_USE_WINDOWS
 #else /* _MSC_VER */
-#include <cstdint>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #define WB_USE_UNIX

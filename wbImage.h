@@ -3,6 +3,8 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
+#include "wbTypes.h"
+
 struct st_wbImage_t {
   int width;
   int height;
