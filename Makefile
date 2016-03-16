@@ -9,7 +9,7 @@ WB_SRC_PATH=$(CURDIR)
 
 DEFINES=
 CXX_FLAGS=-fPIC -Wno-unused-function -x c++ -O3 -g -std=c++11 -Wall -Wno-unused-function -pedantic -I . -I $(WB_SRC_PATH) $(DEFINES)
-LIBS=-lm -lstdc++
+LIBS=-lm -lstdc++ -lrt
 
 ##########################################
 ##########################################
