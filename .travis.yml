@@ -59,8 +59,6 @@ matrix:
 
 before_install:
   - sudo apt-get update -qq
-install:
-  - make get-deps
 script: 
   - $COMPILER --version
   - make CXX=$COMPILER test
