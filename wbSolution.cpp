@@ -213,21 +213,41 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns,
   res = wbSolution(expectedOutputFile, outputFile, type, data, rows,
                    columns, depth);
 
-  if (res) {
-    ss << "{\n";
-    ss << wbString_quote("correctq") << ": true,\n";
-    ss << wbString_quote("message") << ": "
-       << wbString_quote("Solution is correct.") << "\n";
-    ss << "}";
-  } else {
-    ss << "{\n";
-    ss << wbString_quote("correctq") << ": false,\n";
-    ss << wbString_quote("message") << ": "
-       << wbString_quote(_solution_correctQ) << "\n";
-    ss << "}";
-  }
+  if (WB_USE_JSON11) {
+    json11::Json json;
+    if (!res) {
+      json = json11::Json::object{{"correctq", true},
+                                  {"message", "The solution is correct"}};
+    } else {
+      json = json11::Json::object{{"correctq", false},
+                                  {"message", _solution_correctQ}};
+    }
 
-  solutionJSON = wbString_duplicate(ss.str());
+#ifdef wbLogger_printOnLog
+    if (wbLogger_printOnLog) {
+      json11::Json e =
+          json11::Json::object{{"type", "solution"}, {"data", json}};
+      std::cout << e.dump() << std::endl;
+    }
+#endif /* wbLogger_printOnLog */
+
+    // solutionJSON = wbString_duplicate(json.string_value());
+  } else {
+    if (res) {
+      ss << "{\n";
+      ss << wbString_quote("correctq") << ": true,\n";
+      ss << wbString_quote("message") << ": "
+         << wbString_quote("Solution is correct.") << "\n";
+      ss << "}";
+    } else {
+      ss << "{\n";
+      ss << wbString_quote("correctq") << ": false,\n";
+      ss << wbString_quote("message") << ": "
+         << wbString_quote(_solution_correctQ) << "\n";
+      ss << "}";
+    }
+    solutionJSON = wbString_duplicate(ss.str());
+  }
 
   return res;
 }

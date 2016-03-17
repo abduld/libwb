@@ -15,11 +15,9 @@ static inline wbLogEntry_t wbLogEntry_new() {
   wbLogEntry_setMessage(elem, NULL);
   wbLogEntry_setMPIRank(elem, wbMPI_getRank());
   wbLogEntry_setTime(elem, _hrtime());
-#ifndef NDEBUG
+
   wbLogEntry_setLevel(elem, wbLogLevel_TRACE);
-#else
-  wbLogEntry_setLevel(elem, wbLogLevel_OFF);
-#endif
+
   wbLogEntry_setNext(elem, NULL);
 
   wbLogEntry_setLine(elem, -1);
@@ -87,6 +85,7 @@ static inline json11::Json wbLogEntry_toJSONObject(wbLogEntry_t elem) {
       {"function", wbLogEntry_getFunction(elem)},
       {"line", wbLogEntry_getLine(elem)},
       {"time", wbLogEntry_getTime(elem)},
+      {"message", wbLogEntry_getMessage(elem)},
   };
   return json;
 }
@@ -150,11 +149,8 @@ wbLogger_t wbLogger_new() {
 
   wbLogger_setLength(logger, 0);
   wbLogger_setHead(logger, NULL);
-#ifndef NDEBUG
+
   wbLogger_getLevel(logger) = wbLogLevel_TRACE;
-#else
-  wbLogger_getLevel(logger) = wbLogLevel_OFF;
-#endif
 
   return logger;
 }
@@ -208,6 +204,16 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
 
   elem = wbLogEntry_initialize(level, msg, file, fun, line);
 
+#ifdef wbLogger_printOnLog
+  if (wbLogger_printOnLog) {
+    if (level <= wbLogger_getLevel(logger) && elem) {
+      json11::Json json = json11::Json::object{
+          {"type", "logger"}, {"data", wbLogEntry_toJSONObject(elem)}};
+      std::cout << json.dump() << std::endl;
+    }
+  }
+#endif /* wbLogger_printOnLog */
+
   if (wbLogger_getHead(logger) == NULL) {
     wbLogger_setHead(logger, elem);
   } else {
@@ -228,14 +234,6 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
             wbLogEntry_getFunction(elem), wbLogEntry_getLine(elem));
   }
 #endif
-
-#ifdef wbLogger_printOnLog
-  if (wbLogger_printOnLog) {
-    json11::Json json = json11::Json::object{
-        {"type", "logger"}, {"data", wbLogEntry_toJSONObject(elem)}};
-    std::cout << json.dump() << std::endl;
-  }
-#endif /* wbLogger_printOnLog */
 
   wbLogger_incrementLength(logger);
 

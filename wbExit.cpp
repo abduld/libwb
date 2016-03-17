@@ -107,10 +107,6 @@ void wb_atExit(void) {
 
 // wbFile_atExit();
 
-#ifdef WB_DEBUG_MEMMGR_SUPPORT_STATS
-  memmgr_print_stats();
-#endif /* WB_DEBUG_MEMMGR_SUPPORT_STATS */
-
 #ifdef WB_USE_CUDA
   cudaDeviceReset();
 #endif
