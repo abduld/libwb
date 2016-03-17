@@ -111,8 +111,8 @@ wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
             if (onUnSame != NULL) {
               string str =
                   wbString("Image pixels do not match at position (",
-                           wbString(ii, ", ", jj, ", ", kk, "). [ "),
-                           wbString(x, ", ", y, "]"));
+                           wbString(ii, ", ", jj, ", ", kk, ") expecting a value of "),
+                           wbString(y, " but got a computed value of ", x));
               onUnSame(str);
             }
             return wbFalse;
