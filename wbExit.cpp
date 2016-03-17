@@ -20,6 +20,7 @@ void wb_atExit(void) {
   if (nranks > 1) {
 #ifdef WB_USE_MPI
     if (isMasterQ) {
+#ifdef wbLogger_printOnExit
       cout << "==$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
 
       cout << "{\n";
@@ -72,9 +73,11 @@ void wb_atExit(void) {
       wbMPI_sendStringToMaster(wbTimer_toJSON().c_str(), wbMPI_timerTag);
       wbMPI_sendStringToMaster(wbLogger_toJSON().c_str(), wbMPI_loggerTag);
     }
+#endif /* wbLogger_printOnExit */
 
 #endif /* WB_USE_MPI */
   } else {
+#ifdef wbLogger_printOnExit
     cout << "==$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
 
     cout << "{\n" << wbString_quote("timer") << ":[" << wbTimer_toJSON()
@@ -93,6 +96,7 @@ void wb_atExit(void) {
       cout << wbString_quote("solution_exists") << ": false\n";
     }
     cout << "}" << endl;
+#endif /* wbLogger_printOnExit */
   }
 
   // wbTimer_delete(_timer);

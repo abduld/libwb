@@ -112,9 +112,30 @@ static inline const char *_nodeKind(wbTimerKind_t kind) {
 static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
   if (node == NULL) {
     return "";
+  } else if (WB_USE_JSON11) {
+      json11::Json json = json11::Json::object{
+          {"id",  wbTimerNode_getId(node)},
+          {"mpi_rank",  wbTimerNode_getMPIRank(node)},
+          {"stopped",  wbTimerNode_stoppedQ(node)},
+          {"kind",  _nodeKind(wbTimerNode_getKind(node))},
+          {"start_time",  wbTimerNode_getStartTime(node)},
+          {"end_time",  wbTimerNode_getEndTime(node)},
+          {"elapsed_time",  wbTimerNode_getElapsedTime(node)},
+          {"start_line",  wbTimerNode_getStartLine(node)},
+          {"end_line",  wbTimerNode_getEndLine(node)},
+          {"start_function",  wbTimerNode_getStartFunction(node)},
+          {"end_function",  wbTimerNode_getEndFunction(node)},
+          {"start_file",  wbTimerNode_getStartFile(node)},
+          {"end_file",  wbTimerNode_getEndFile(node)},
+          {"parent_id",  wbTimerNode_hasParent(node)
+                       ? wbTimerNode_getId(wbTimerNode_getParent(node))
+                       : -1},
+          {"message",  wbTimerNode_getMessage(node)},
+      };
+      return json.string_value();
   } else {
     stringstream ss;
-
+    
     ss << "{\n";
     ss << wbString_quote("id") << ":" << wbTimerNode_getId(node) << ",\n";
     ss << wbString_quote("mpi_rank") << ":" << wbTimerNode_getMPIRank(node)
