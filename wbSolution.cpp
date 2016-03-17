@@ -215,7 +215,7 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns,
 
   if (WB_USE_JSON11) {
     json11::Json json;
-    if (!res) {
+    if (res) {
       json = json11::Json::object{{"correctq", true},
                                   {"message", "The solution is correct"}};
     } else {
@@ -231,7 +231,7 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns,
     }
 #endif /* wbLogger_printOnLog */
 
-    // solutionJSON = wbString_duplicate(json.string_value());
+    solutionJSON = wbString_duplicate(json.string_value());
   } else {
     if (res) {
       ss << "{\n";

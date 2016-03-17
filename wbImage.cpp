@@ -110,8 +110,8 @@ wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
           if (wbUnequalQ(x, y)) {
             if (onUnSame != NULL) {
               string str = wbString(
-                  "Image pixels do not match at position (",
-                  wbString(ii, ", ", jj, ", ", kk,
+                  "Image pixels do not match at position ( row = ",
+                  wbString(ii, ", col = ", jj, ", channel = ", kk,
                            ") expecting a value of "),
                   wbString(y, " but got a computed value of ", x));
               onUnSame(str);
