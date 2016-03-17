@@ -1,6 +1,6 @@
 
 #include "wb.h"
-#include "catch.hpp"
+#include "vendor/catch.hpp"
 
 TEST_CASE("Can create Raw dataset", "[DataGenerator]") {
   wbGenerateParams_t params;
