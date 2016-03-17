@@ -109,33 +109,38 @@ static inline const char *_nodeKind(wbTimerKind_t kind) {
   return "Undefined";
 }
 
+static inline json11::Json wbTimerNode_toJSONObject(wbTimerNode_t node) {
+  json11::Json json = json11::Json::object{
+      {"id", wbTimerNode_getId(node)},
+      {"mpi_rank", wbTimerNode_getMPIRank(node)},
+      {"stopped", wbTimerNode_stoppedQ(node)},
+      {"kind", _nodeKind(wbTimerNode_getKind(node))},
+      {"start_time", wbTimerNode_getStartTime(node)},
+      {"end_time", wbTimerNode_getEndTime(node)},
+      {"elapsed_time", wbTimerNode_getElapsedTime(node)},
+      {"start_line", wbTimerNode_getStartLine(node)},
+      {"end_line", wbTimerNode_getEndLine(node)},
+      {"start_function", wbTimerNode_getStartFunction(node)},
+      {"end_function", wbTimerNode_getEndFunction(node)},
+      {"start_file", wbTimerNode_getStartFile(node)},
+      {"end_file", wbTimerNode_getEndFile(node)},
+      {"parent_id", wbTimerNode_hasParent(node)
+                        ? wbTimerNode_getId(wbTimerNode_getParent(node))
+                        : -1},
+      {"message", wbTimerNode_getMessage(node)},
+  };
+  return json;
+}
+
 static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
   if (node == NULL) {
     return "";
   } else if (WB_USE_JSON11) {
-      json11::Json json = json11::Json::object{
-          {"id",  wbTimerNode_getId(node)},
-          {"mpi_rank",  wbTimerNode_getMPIRank(node)},
-          {"stopped",  wbTimerNode_stoppedQ(node)},
-          {"kind",  _nodeKind(wbTimerNode_getKind(node))},
-          {"start_time",  wbTimerNode_getStartTime(node)},
-          {"end_time",  wbTimerNode_getEndTime(node)},
-          {"elapsed_time",  wbTimerNode_getElapsedTime(node)},
-          {"start_line",  wbTimerNode_getStartLine(node)},
-          {"end_line",  wbTimerNode_getEndLine(node)},
-          {"start_function",  wbTimerNode_getStartFunction(node)},
-          {"end_function",  wbTimerNode_getEndFunction(node)},
-          {"start_file",  wbTimerNode_getStartFile(node)},
-          {"end_file",  wbTimerNode_getEndFile(node)},
-          {"parent_id",  wbTimerNode_hasParent(node)
-                       ? wbTimerNode_getId(wbTimerNode_getParent(node))
-                       : -1},
-          {"message",  wbTimerNode_getMessage(node)},
-      };
-      return json.string_value();
+    json11::Json json = wbTimerNode_toJSONObject(node);
+    return json.string_value();
   } else {
     stringstream ss;
-    
+
     ss << "{\n";
     ss << wbString_quote("id") << ":" << wbTimerNode_getId(node) << ",\n";
     ss << wbString_quote("mpi_rank") << ":" << wbTimerNode_getMPIRank(node)
@@ -249,9 +254,36 @@ void wbTimer_delete(wbTimer_t timer) {
   }
 }
 
+static json11::Json wbTimer_toJSONObject(wbTimer_t timer) {
+
+  stringstream ss;
+  wbTimerNode_t iter;
+  uint64_t currentTime;
+  std::vector<json11::Json> elems;
+
+  currentTime = getTime();
+
+  wbTimer_setEndTime(timer, currentTime);
+  wbTimer_setElapsedTime(timer, currentTime - wbTimer_getStartTime(timer));
+
+  for (iter = wbTimer_getHead(timer); iter != NULL;
+       iter = wbTimerNode_getNext(iter)) {
+    if (!wbTimerNode_stoppedQ(iter)) {
+      wbTimerNode_setEndTime(iter, currentTime);
+      wbTimerNode_setElapsedTime(iter, currentTime -
+                                           wbTimerNode_getStartTime(iter));
+    }
+    elems.push_back(wbTimerNode_toJSONObject(iter));
+  }
+  return json11::Json(elems);
+}
+
 string wbTimer_toJSON(wbTimer_t timer) {
   if (timer == NULL) {
     return "";
+  } else if (WB_USE_JSON11) {
+    json11::Json json = wbTimer_toJSONObject(timer);
+    return json.string_value();
   } else {
     stringstream ss;
     wbTimerNode_t iter;
@@ -438,6 +470,13 @@ void wbTimer_stop(wbTimerKind_t kind, string msg, const char *file,
   wbTimerNode_setEndFile(node, file);
   wbTimerNode_setStoppedQ(node, wbTrue);
 
+#ifdef wbLogger_printOnLog
+  if (wbLogger_printOnLog) {
+    json11::Json json = json11::Json::object{
+        {"type", "timer"}, {"data", wbTimerNode_toJSONObject(node)}};
+    std::cout << json.dump() << std::endl;
+  }
+#endif /* wbLogger_printOnLog */
   return;
 }
 

@@ -44,6 +44,7 @@ list(APPEND LIBWB_SOURCE_FILES
     ${CMAKE_CURRENT_LIST_DIR}/wbSolution.cpp
     ${CMAKE_CURRENT_LIST_DIR}/wbSparse.cpp
     ${CMAKE_CURRENT_LIST_DIR}/wbTimer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/vendor/json11.cpp
 )
 
 list(APPEND LIBWB_TEST_FILES

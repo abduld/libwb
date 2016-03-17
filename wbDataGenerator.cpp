@@ -99,8 +99,8 @@ static inline void *genRandomList(wbType_t type, size_t len, double minVal,
 static void genRaw(const char *path, wbRaw_GenerateParams_t params) {
   int rows      = _max(1, params.rows);
   int cols      = _max(1, params.cols);
-  double minVal    = params.minVal;
-  double maxVal    = params.maxVal;
+  double minVal = params.minVal;
+  double maxVal = params.maxVal;
   wbType_t type = params.type;
   void *data    = genRandomList(type, rows * cols, minVal, maxVal);
   wbExport(path, wbExportKind_raw, data, rows, cols, type);
@@ -110,8 +110,8 @@ static void genRaw(const char *path, wbRaw_GenerateParams_t params) {
 static void genCSV(const char *path, wbCSV_GenerateParams_t params) {
   int rows      = _max(1, params.rows);
   int cols      = _max(1, params.cols);
-  double minVal    = params.minVal;
-  double maxVal    = params.maxVal;
+  double minVal = params.minVal;
+  double maxVal = params.maxVal;
   wbType_t type = params.type;
   void *data    = genRandomList(type, rows * cols, minVal, maxVal);
   wbExport(path, wbExportKind_csv, data, rows, cols, type);
@@ -121,8 +121,8 @@ static void genCSV(const char *path, wbCSV_GenerateParams_t params) {
 static void genTSV(const char *path, wbTSV_GenerateParams_t params) {
   int rows      = _max(1, params.rows);
   int cols      = _max(1, params.cols);
-  double minVal    = params.minVal;
-  double maxVal    = params.maxVal;
+  double minVal = params.minVal;
+  double maxVal = params.maxVal;
   wbType_t type = params.type;
   void *data    = genRandomList(type, rows * cols, minVal, maxVal);
   wbExport(path, wbExportKind_tsv, data, rows, cols, type);
@@ -141,8 +141,8 @@ static void genPPM(const char *path, wbPPM_GenerateParams_t params) {
   int width     = _max(1, params.width);
   int height    = _max(1, params.height);
   int channels  = _max(1, params.channels);
-  double minVal  = params.minVal;
-  double maxVal  = params.maxVal;
+  double minVal = params.minVal;
+  double maxVal = params.maxVal;
   wbType_t type = wbType_float;
   float *data   = (float *)genRandomList(type, width * height * channels,
                                        minVal, maxVal);
