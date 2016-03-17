@@ -41,14 +41,14 @@ all: libwb.so
 
 libwb.so: $(OBJECTS)
 	mkdir -p $(WB_LIB_PATH)
-	$(CXX) -fPIC -shared $(LIBS) -o $(WB_LIB_PATH)/$@ $(OBJECTS)
+	$(CXX) -fPIC -shared -o $(WB_LIB_PATH)/$@ $(OBJECTS) $(LIBS)
 
 libwb.a: $(OBJECTS)
 	mkdir -p $(WB_LIB_PATH)
 	ar rcs -o $(WB_LIB_PATH)/$@ $(OBJECTS)
 
 test: $(TESTOBJECTS) $(OBJECTS)
-	$(CXX) -fPIC $(LIBS) -o $@ $(TESTOBJECTS) $(OBJECTS)
+	$(CXX) -fPIC -o $@ $(TESTOBJECTS) $(OBJECTS) $(LIBS)
 
 
 clean:
