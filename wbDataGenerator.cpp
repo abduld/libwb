@@ -15,8 +15,8 @@ inline T lerp(const double &x, const T &start, const T &end) {
   return (1 - x) * start + x * end;
 }
 
-static inline void genRandom(void *trgt, wbType_t type, int minVal,
-                             int maxVal) {
+static inline void genRandom(void *trgt, wbType_t type, double minVal,
+                             double maxVal) {
   const int span  = maxVal - minVal;
   const int r     = rand();
   const double rf = ((double)r) / ((double)RAND_MAX);
@@ -48,8 +48,8 @@ static inline void genRandom(void *trgt, wbType_t type, int minVal,
   return;
 }
 
-static inline void *genRandomList(wbType_t type, size_t len, int minVal,
-                                  int maxVal) {
+static inline void *genRandomList(wbType_t type, size_t len, double minVal,
+                                  double maxVal) {
   size_t ii;
   void *data = wbNewArray(char, wbType_size(type) * len);
   switch (type) {
@@ -99,8 +99,8 @@ static inline void *genRandomList(wbType_t type, size_t len, int minVal,
 static void genRaw(const char *path, wbRaw_GenerateParams_t params) {
   int rows      = _max(1, params.rows);
   int cols      = _max(1, params.cols);
-  int minVal    = params.minVal;
-  int maxVal    = params.maxVal;
+  double minVal    = params.minVal;
+  double maxVal    = params.maxVal;
   wbType_t type = params.type;
   void *data    = genRandomList(type, rows * cols, minVal, maxVal);
   wbExport(path, wbExportKind_raw, data, rows, cols, type);
@@ -110,8 +110,8 @@ static void genRaw(const char *path, wbRaw_GenerateParams_t params) {
 static void genCSV(const char *path, wbCSV_GenerateParams_t params) {
   int rows      = _max(1, params.rows);
   int cols      = _max(1, params.cols);
-  int minVal    = params.minVal;
-  int maxVal    = params.maxVal;
+  double minVal    = params.minVal;
+  double maxVal    = params.maxVal;
   wbType_t type = params.type;
   void *data    = genRandomList(type, rows * cols, minVal, maxVal);
   wbExport(path, wbExportKind_csv, data, rows, cols, type);
@@ -121,8 +121,8 @@ static void genCSV(const char *path, wbCSV_GenerateParams_t params) {
 static void genTSV(const char *path, wbTSV_GenerateParams_t params) {
   int rows      = _max(1, params.rows);
   int cols      = _max(1, params.cols);
-  int minVal    = params.minVal;
-  int maxVal    = params.maxVal;
+  double minVal    = params.minVal;
+  double maxVal    = params.maxVal;
   wbType_t type = params.type;
   void *data    = genRandomList(type, rows * cols, minVal, maxVal);
   wbExport(path, wbExportKind_tsv, data, rows, cols, type);
@@ -141,8 +141,8 @@ static void genPPM(const char *path, wbPPM_GenerateParams_t params) {
   int width     = _max(1, params.width);
   int height    = _max(1, params.height);
   int channels  = _max(1, params.channels);
-  float minVal  = params.minVal;
-  float maxVal  = params.maxVal;
+  double minVal  = params.minVal;
+  double maxVal  = params.maxVal;
   wbType_t type = wbType_float;
   float *data   = (float *)genRandomList(type, width * height * channels,
                                        minVal, maxVal);

@@ -8,23 +8,23 @@ typedef struct {
   int rows;
   int cols;
   wbType_t type;
-  int minVal;
-  int maxVal;
+  double minVal;
+  double maxVal;
 } wbCSV_GenerateParams_t;
 
 typedef struct {
   int rows;
   int cols;
   wbType_t type;
-  int minVal;
-  int maxVal;
+  double minVal;
+  double maxVal;
 } wbTSV_GenerateParams_t;
 
 typedef struct {
   int rows;
   int cols;
-  int minVal;
-  int maxVal;
+  double minVal;
+  double maxVal;
   wbType_t type;
 } wbRaw_GenerateParams_t;
 
@@ -32,8 +32,8 @@ typedef struct {
   int width;
   int height;
   int channels;
-  float minVal;
-  float maxVal;
+  double minVal;
+  double maxVal;
 } wbPPM_GenerateParams_t;
 
 typedef struct { int length; } wbText_GenerateParams_t;
