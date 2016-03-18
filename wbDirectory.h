@@ -3,5 +3,6 @@
 
 EXTERN_C char *DirectoryName(const char *pth);
 EXTERN_C void CreateDirectory(const char *dir);
+EXTERN_C char *CurrentDirectory();
 
 #endif /* __WB_DIRECTORY__ */

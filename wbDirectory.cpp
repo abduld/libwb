@@ -1,16 +1,26 @@
 #include "wb.h"
 
 #ifndef PATH_MAX
+#ifdef FILENAME_MAX
+#define PATH_MAX FILENAME_MAX
+#else /* FILENAME_MAX */
 #define PATH_MAX 4096
+#endif /* FILENAME_MAX */
 #endif /* PATH_MAX */
 
 #ifdef WB_USE_UNIX
 static const char dir_seperator = '/';
+static char *getcwd_(char *buf, int maxLen) {
+  return getcwd(buf, maxLen);
+}
 static void mkdir_(const char *dir) {
   mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 #else  /* WB_USE_LINUX */
 static const char dir_seperator = '\\';
+static char *getcwd_(char *buf, int maxLen) {
+  return _getcwd(buf, maxLen);
+}
 static void mkdir_(const char *dir) {
   _mkdir(dir);
 }
@@ -41,4 +51,31 @@ EXTERN_C char *DirectoryName(const char *pth0) {
     p[0] = 0;
   }
   return pth;
+}
+
+EXTERN_C char *CurrentDirectory() {
+  char *tmp = wbNewArray(char, PATH_MAX + 1);
+  if (getcwd_(tmp, PATH_MAX)) {
+    tmp[sizeof(tmp) - 1] = '\0';
+    return tmp;
+  }
+
+  int error = errno;
+  wbFree(tmp);
+  switch (error) {
+    case EACCES:
+      std::cerr
+          << "Cannot get current directory :: access denied. exiting..."
+          << std::endl;
+      exit(-1);
+    case ENOMEM:
+      std::cerr << "Cannot get current directory :: insufficient storage. "
+                   "exiting..."
+                << std::endl;
+      exit(-1);
+    default:
+      std::cerr << "Cannot get current directory :: unrecognised error "
+                << error << std::endl;
+      exit(-1);
+  }
 }
