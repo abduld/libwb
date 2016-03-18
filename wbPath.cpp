@@ -6,9 +6,13 @@ char *wbPath_join(const char *p1, const char *p2) {
   char *res =
       wbNewArray(char, s1 + 1 /* seperator */ + s2 + 1 /* terminator */);
   memcpy(res, p1, s1);
-  res[s1] = wbDirectorySeperator;
-  memcpy(res + s1 + 1, p2, s2);
-  res[s1 + s2 + 1] = '\0';
+  char *iter = res + s1;
+  if (*iter != wbDirectorySeperator) {
+    *iter++ = wbDirectorySeperator;
+  }
+  memcpy(iter, p2, s2);
+  iter += s2;
+  *iter = '\0';
   return res;
 }
 
@@ -25,4 +29,16 @@ char *wbPath_join(const char *p1, const char *p2, const char *p3,
   char *res  = wbPath_join(p123, p4);
   wbDelete(p123);
   return res;
+}
+
+char *wbPath_join(const std::string &p1, const std::string &p2) {
+  return wbPath_join(p1.c_str(), p2.c_str());
+}
+char *wbPath_join(const std::string &p1, const std::string &p2,
+                  const std::string &p3) {
+  return wbPath_join(p1.c_str(), p2.c_str(), p3.c_str());
+}
+char *wbPath_join(const std::string &p1, const std::string &p2,
+                  const std::string &p3, const std::string &p4) {
+  return wbPath_join(p1.c_str(), p2.c_str(), p3.c_str(), p4.c_str());
 }

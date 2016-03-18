@@ -58,7 +58,6 @@ EXTERN_C char *wbDirectory_name(const char *pth0) {
 EXTERN_C char *wbDirectory_current() {
   char *tmp = wbNewArray(char, PATH_MAX + 1);
   if (getcwd_(tmp, PATH_MAX)) {
-    tmp[sizeof(tmp) - 1] = '\0';
     return tmp;
   }
 

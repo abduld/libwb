@@ -401,6 +401,8 @@ wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
   wbTimerNode_t node;
   wbTimerNode_t parent;
 
+  wb_init(NULL, NULL);
+
   currentTime = getTime();
 
   id = wbTimer_getLength(_timer);

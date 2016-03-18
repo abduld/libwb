@@ -196,6 +196,8 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
   wbLogEntry_t elem;
   wbLogger_t logger;
 
+  wb_init(NULL, NULL);
+
   logger = _logger;
 
   if (wbLogger_getLevel(logger) < level) {

@@ -135,7 +135,7 @@ extern char *solutionJSON;
 #include "wbTimer.h"
 #include "wbPath.h"
 
-#include "wbDataGenerator.h"
+#include "wbDataset.h"
 
 /***********************************************************/
 /***********************************************************/

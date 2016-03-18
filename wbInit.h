@@ -3,7 +3,7 @@
 #ifndef __WB_INIT_H__
 #define __WB_INIT_H__
 
-#if 0  // ndef _MSC_VER
+#ifndef _MSC_VER
 __attribute__((__constructor__))
 #endif /* _MSC_VER */
 void wb_init(int *argc, char ***argv);

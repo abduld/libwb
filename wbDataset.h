@@ -1,5 +1,5 @@
-#ifndef __WB_DATASET_GENERATOR__
-#define __WB_DATASET_GENERATOR__
+#ifndef __WB_DATASET_H__
+#define __WB_DATASET_H__
 
 #include "wbImport.h"
 #include "wbTypes.h"
@@ -46,7 +46,7 @@ typedef union {
   wbText_GenerateParams_t text;
 } wbGenerateParams_t;
 
-EXTERN_C void wbData_generate(const char *path, wbExportKind_t kind,
-                              wbGenerateParams_t params);
+EXTERN_C void wbDataset_generate(const char *path, wbExportKind_t kind,
+                                 wbGenerateParams_t params);
 
-#endif /* __WB_DATASET_GENERATOR__ */
+#endif /* __WB_DATASET_H__ */
