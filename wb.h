@@ -30,6 +30,7 @@
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 #define WB_USE_UNIX
 #ifdef __APPLE__
 #include <mach/mach_time.h>
