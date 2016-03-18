@@ -26,7 +26,7 @@ static void mkdir_(const char *dir) {
 }
 #endif /* WB_USE_LINUX */
 
-EXTERN_C void wbDirectory_create(const char *dir) {
+EXTERN_C char * wbDirectory_create(const char *dir) {
   char tmp[PATH_MAX];
   char *p = NULL;
   size_t len;
@@ -44,6 +44,7 @@ EXTERN_C void wbDirectory_create(const char *dir) {
     }
   }
   mkdir_(tmp);
+  return dir;
 }
 
 EXTERN_C char *wbDirectory_name(const char *pth0) {
