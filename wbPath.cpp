@@ -7,9 +7,7 @@ char *wbPath_join(const char *p1, const char *p2) {
       wbNewArray(char, s1 + 1 /* seperator */ + s2 + 1 /* terminator */);
   memcpy(res, p1, s1);
   char *iter = res + s1;
-  if (*iter != wbDirectorySeperator) {
-    *iter++ = wbDirectorySeperator;
-  }
+  *iter++    = wbDirectorySeperator;
   memcpy(iter, p2, s2);
   iter += s2;
   *iter = '\0';
