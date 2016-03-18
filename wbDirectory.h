@@ -1,8 +1,9 @@
 #ifndef __WB_DIRECTORY__
 #define __WB_DIRECTORY__
 
-EXTERN_C char *DirectoryName(const char *pth);
-EXTERN_C void CreateDirectory(const char *dir);
-EXTERN_C char *CurrentDirectory();
+extern const char wbDirectorySeperator;
+EXTERN_C char *wbDirectory_name(const char *pth);
+EXTERN_C void wbDirectory_create(const char *dir);
+EXTERN_C char *wbDirectory_current();
 
 #endif /* __WB_DIRECTORY__ */

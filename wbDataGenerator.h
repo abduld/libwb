@@ -46,7 +46,7 @@ typedef union {
   wbText_GenerateParams_t text;
 } wbGenerateParams_t;
 
-EXTERN_C void GenerateDataset(const char *path, wbExportKind_t kind,
+EXTERN_C void wbData_generate(const char *path, wbExportKind_t kind,
                               wbGenerateParams_t params);
 
 #endif /* __WB_DATASET_GENERATOR__ */

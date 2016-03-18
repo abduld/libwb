@@ -9,7 +9,7 @@
 #endif /* PATH_MAX */
 
 #ifdef WB_USE_UNIX
-static const char dir_seperator = '/';
+const char wbDirectorySeperator = '/';
 static char *getcwd_(char *buf, int maxLen) {
   return getcwd(buf, maxLen);
 }
@@ -17,7 +17,7 @@ static void mkdir_(const char *dir) {
   mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 #else  /* WB_USE_LINUX */
-static const char dir_seperator = '\\';
+const char wbDirectorySeperator = '\\';
 static char *getcwd_(char *buf, int maxLen) {
   return _getcwd(buf, maxLen);
 }
@@ -26,42 +26,45 @@ static void mkdir_(const char *dir) {
 }
 #endif /* WB_USE_LINUX */
 
-EXTERN_C void CreateDirectory(const char *dir) {
+EXTERN_C void wbDirectory_create(const char *dir) {
   char tmp[PATH_MAX];
   char *p = NULL;
   size_t len;
 
   snprintf(tmp, sizeof(tmp), "%s", dir);
   len = strlen(tmp);
-  if (tmp[len - 1] == dir_seperator)
+  if (tmp[len - 1] == wbDirectorySeperator) {
     tmp[len - 1] = 0;
-  for (p = tmp + 1; *p; p++)
-    if (*p == dir_seperator) {
+  }
+  for (p = tmp + 1; *p; p++) {
+    if (*p == wbDirectorySeperator) {
       *p = 0;
       mkdir_(tmp);
-      *p = dir_seperator;
+      *p = wbDirectorySeperator;
     }
+  }
   mkdir_(tmp);
 }
 
-EXTERN_C char *DirectoryName(const char *pth0) {
+EXTERN_C char *wbDirectory_name(const char *pth0) {
   char *pth = wbString_duplicate(pth0);
-  char *p   = strrchr(pth, dir_seperator);
+  char *p   = strrchr(pth, wbDirectorySeperator);
   if (p) {
     p[0] = 0;
   }
   return pth;
 }
 
-EXTERN_C char *CurrentDirectory() {
+EXTERN_C char *wbDirectory_current() {
   char *tmp = wbNewArray(char, PATH_MAX + 1);
   if (getcwd_(tmp, PATH_MAX)) {
     tmp[sizeof(tmp) - 1] = '\0';
     return tmp;
   }
 
+  wbDelete(tmp);
+
   int error = errno;
-  wbFree(tmp);
   switch (error) {
     case EACCES:
       std::cerr

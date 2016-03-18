@@ -133,6 +133,7 @@ extern char *solutionJSON;
 #include "wbSparse.h"
 #include "wbThrust.h"
 #include "wbTimer.h"
+#include "wbPath.h"
 
 #include "wbDataGenerator.h"
 

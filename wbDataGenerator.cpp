@@ -151,9 +151,9 @@ static void genPPM(const char *path, wbPPM_GenerateParams_t params) {
   wbImage_delete(img);
 }
 
-EXTERN_C void GenerateDataset(const char *path, wbExportKind_t kind,
+EXTERN_C void wbData_generate(const char *path, wbExportKind_t kind,
                               wbGenerateParams_t params) {
-  CreateDirectory(DirectoryName(path));
+  wbDirectory_create(wbDirectory_name(path));
 
   switch (kind) {
     case wbExportKind_raw:
