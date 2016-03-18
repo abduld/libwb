@@ -9,7 +9,7 @@ init:
   - git config --global core.autocrlf input
 
 # clone directory
-clone_folder: c:\projects\sqlite
+clone_folder: c:\projects\libwb
 
 platform: x64
 configuration: Release
@@ -23,5 +23,5 @@ build:
 # scripts to run before build
 before_build:
   - echo Running cmake...
-  - cd c:\projects\sqlite
+  - cd c:\projects\libwb
   - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=%P%
