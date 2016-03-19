@@ -17,10 +17,20 @@ clone_folder: c:\projects\libwb
 # fetch repository as zip archive
 shallow_clone: true                 # default is "false"
 
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+
 platform:
   - x64
 configuration: 
   - Release
+
+environment:
+  P: "c:/projects/libs"
+
 
 install:
   # by default, all script lines are interpreted as batch
@@ -33,14 +43,12 @@ before_build:
   - echo Running cmake...
   - cd c:\projects\libwb
   - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=%P%
-  - echo 
 
-after_build:
-  - echo after_build step
-  - ps: ls
+# after_build:
+#   - echo after_build step
 
 
 # on_finish always executes regardless of passed or failed builds
-on_finish:
-  - echo on_finish step
-  - ps: ls
+# on_finish:
+#   - echo on_finish step
+#   - ps: ls
