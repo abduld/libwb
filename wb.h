@@ -21,10 +21,7 @@
 #pragma warning(push,0)
 // some warnings still occur at this level
 // if necessary, disable specific warnings not covered by previous pragma
-#pragma warning(disable:4800)
-#pragma warning(disable:C4996)
-#pragma warning(disable:C4101)
-#pragma warning(disable:C4244)
+#pragma warning(disable : 4244 4056 4305 4800 4267 4996 4756 4661 4385 4101)
 
 #define __func__ __FUNCTION__
 #ifndef _CRT_SECURE_NO_WARNINGS
