@@ -38,3 +38,9 @@ before_build:
 after_build:
   - echo after_build step
   - ps: ls
+
+
+# on_finish always executes regardless of passed or failed builds
+on_finish:
+  - echo on_finish step
+  - ps: ls
