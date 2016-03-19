@@ -1,18 +1,26 @@
 
 
 # Operating system (build VM template)
-os: Visual Studio 2015
+os:
+  - Visual Studio 2015
 
 
 # scripts that are called at very beginning, before repo cloning
 init:
+  - echo init step
   - git config --global core.autocrlf input
+  - cmake --version
+  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
 
 # clone directory
 clone_folder: c:\projects\libwb
+# fetch repository as zip archive
+shallow_clone: true                 # default is "false"
 
-platform: x64
-configuration: Release
+platform:
+  - x64
+configuration: 
+  - Release
 
 install:
   # by default, all script lines are interpreted as batch
@@ -25,3 +33,8 @@ before_build:
   - echo Running cmake...
   - cd c:\projects\libwb
   - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=%P%
+  - echo 
+
+after_build:
+  - echo after_build step
+  - ps: ls
