@@ -16,6 +16,16 @@
 #include <time.h>
 
 #ifdef _MSC_VER
+
+// set minimal warning level
+#pragma warning(push,0)
+// some warnings still occur at this level
+// if necessary, disable specific warnings not covered by previous pragma
+#pragma warning(disable:4800)
+#pragma warning(disable:C4996)
+#pragma warning(disable:C4101)
+#pragma warning(disable:C4244)
+
 #define __func__ __FUNCTION__
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS 1
