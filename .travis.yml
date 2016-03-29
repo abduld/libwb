@@ -62,4 +62,5 @@ before_install:
 script: 
   - $COMPILER --version
   - make CXX=$COMPILER test
-  - LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH ./test -s -d yes
+  - cp lib/libwb.so .
+  - ./test -s -d yes
