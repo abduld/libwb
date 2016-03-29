@@ -62,4 +62,4 @@ before_install:
 script: 
   - $COMPILER --version
   - make CXX=$COMPILER test
-  - LD_LIBRARY_PATH=`pwd`/lib ./test
+  - LD_LIBRARY_PATH=$(PWD)/lib ./test -s -d yes
