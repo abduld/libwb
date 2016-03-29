@@ -1,11 +1,31 @@
 
 #include "wb.h"
 
+std::string _sessionId{};
+std::string _envSessionId() {
+#ifdef WB_USE_UNIX
+  if (_sessionId != "") {
+    char *env = std::getenv("SESSION_ID");
+    if (env) {
+      _sessionId = env;
+    }
+  }
+#endif /* WB_USE_UNIX */
+  return _sessionId;
+}
+std::string sessionId() {
+  if (_sessionId != "") {
+    return _sessionId;
+  }
+  return _envSessionId();
+}
+
 EXTERN_C wbArg_t wbArg_new(int *argc, char ***argv) {
   wbArg_t arg;
 
   wb_init(argc, argv);
 
+  wbArg_setSessionId(arg, wbString_duplicate(_envSessionId()));
   wbArg_setInputCount(arg, 0);
   wbArg_setInputFiles(arg, NULL);
   wbArg_setOutputFile(arg, NULL);
@@ -73,28 +93,36 @@ static char *parseString(char *arg) {
   return wbString_duplicate(arg);
 }
 
+static void parseSessionId(char *arg) {
+  _sessionId = std::string(arg);
+}
+
 EXTERN_C wbArg_t wbArg_read(int argc, char **argv) {
   int ii;
   wbArg_t arg;
 
   arg = wbArg_new(&argc, &argv);
   for (ii = 0; ii < argc; ii++) {
-    if (wbString_startsWith(argv[ii], "-i")) {
+    if (wbString_startsWith(argv[ii], "-s")) {
+      parseSessionId(argv[++ii]);
+      wbDelete(wbArg_getSessionId(arg));
+      wbArg_setSessionId(arg, wbString_duplicate(_sessionId));
+    } else if (wbString_startsWith(argv[ii], "-i")) {
       int fileCount;
       char **files;
 
-      files = parseInputFiles(argv[ii + 1], &fileCount);
+      files = parseInputFiles(argv[++ii], &fileCount);
 
       wbArg_setInputCount(arg, fileCount);
       wbArg_setInputFiles(arg, files);
     } else if (wbString_startsWith(argv[ii], "-o")) {
-      char *file = parseString(argv[ii + 1]);
+      char *file = parseString(argv[++ii]);
       wbArg_setOutputFile(arg, file);
     } else if (wbString_startsWith(argv[ii], "-e")) {
-      char *file = parseString(argv[ii + 1]);
+      char *file = parseString(argv[++ii]);
       wbArg_setExpectedOutputFile(arg, file);
     } else if (wbString_startsWith(argv[ii], "-t")) {
-      char *type = parseString(argv[ii + 1]);
+      char *type = parseString(argv[++ii]);
       wbArg_setType(arg, type);
     } else if (argv[ii][0] == '-') {
       wbLog(ERROR, "Unexpected program option ", argv[ii]);

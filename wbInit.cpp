@@ -28,6 +28,7 @@ void wb_init(int *
   wbMPI_Init(argc, argv);
 #endif /* WB_USE_MPI */
 
+  _envSessionId();
 #ifdef WB_USE_CUDA
   CUresult err = cuInit(0);
 
