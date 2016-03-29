@@ -8,8 +8,11 @@ WB_SRC_PATH=$(CURDIR)
 ##########################################
 
 DEFINES=
-CXX_FLAGS=-fPIC -Wno-unused-function -x c++ -O3 -g -std=c++11 -Wall -Wno-unused-function -pedantic -I . -I $(WB_SRC_PATH) $(DEFINES)
-LIBS=-lm -lstdc++ 
+CXX_FLAGS=-fPIC -Wno-unused-function -Wc++11-extensions \
+					-Wno-dollar-in-identifier-extension -x c++ -O3 \
+					-g -std=c++11 -Wall -Wno-unused-function -pedantic \
+					-I . -I $(WB_SRC_PATH) $(DEFINES) 
+LIBS=-lm -lstdc++ -L $(WB_LIB_PATH)
 
 ##########################################
 ##########################################
@@ -26,7 +29,6 @@ SOURCES := $(shell find $(WB_SRC_PATH) ! -name "*_test.cpp" -name "*.cpp")
 TESTS :=  $(shell find $(WB_SRC_PATH) -name "*_test.cpp")
 
 OBJECTS = $(SOURCES:.cpp=.o)
-TESTOBJECTS = $(TESTS:.cpp=.o)
 
 ##############################################
 # OUTPUT
@@ -47,10 +49,10 @@ libwb.a: $(OBJECTS)
 	mkdir -p $(WB_LIB_PATH)
 	ar rcs -o $(WB_LIB_PATH)/$@ $(OBJECTS)
 
-test: $(TESTOBJECTS) $(OBJECTS)
-	$(CXX) -fPIC -o $@ $(TESTOBJECTS) $(OBJECTS) $(LIBS)
+test: libwb.so
+	$(CXX) $(DEFINES) $(CXX_FLAGS) -fPIC -o $@ $(TESTS) -lwb $(LIBS)
 
 
 clean:
-	rm -fr $(ARCH)
+	rm -fr $(ARCH) test
 	-rm -f $(EXES) *.o *~

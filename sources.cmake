@@ -3,6 +3,10 @@ set(WBLIB "wb")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
+if (UNIX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-dollar-in-identifier-extension")
+endif ()
+
 file(GLOB THESE_CPP_FILES
     ${CMAKE_CURRENT_LIST_DIR}/*.cpp
 )
