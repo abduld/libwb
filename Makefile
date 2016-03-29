@@ -48,7 +48,7 @@ libwb.a: $(OBJECTS)
 	mkdir -p $(WB_LIB_PATH)
 	ar rcs -o $(WB_LIB_PATH)/$@ $(OBJECTS)
 
-test: libwb.a
+test: libwb.so
 	$(CXX) $(DEFINES) $(CXX_FLAGS) -fPIC -o $@ $(TESTS) -lwb $(LIBS)
 
 
