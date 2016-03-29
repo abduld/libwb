@@ -87,6 +87,7 @@ namespace sole
     uuid rebuild( const std::string &uustr );
 }
 
+#if 0
 namespace std {
     template<>
     class hash< sole::uuid > : public std::unary_function< sole::uuid, size_t > {
@@ -102,6 +103,7 @@ namespace std {
         }
     };
 }
+#endif
 
 // implementation
 

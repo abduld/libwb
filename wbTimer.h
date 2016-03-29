@@ -21,7 +21,9 @@ typedef enum en_wbTimerKind_t {
 } wbTimerKind_t;
 
 struct st_wbTimerNode_t {
-  int id;
+  int idx;
+  std::string id;
+  std::string session_id;
   int mpiRank;
   int level;
   wbBool stoppedQ;
@@ -42,6 +44,8 @@ struct st_wbTimerNode_t {
 };
 
 struct st_wbTimer_t {
+  std::string id;
+  std::string session_id;
   size_t length;
   wbTimerNode_t head;
   wbTimerNode_t tail;
@@ -50,7 +54,9 @@ struct st_wbTimer_t {
   uint64_t elapsedTime;
 };
 
+#define wbTimerNode_getIdx(node) ((node)->idx)
 #define wbTimerNode_getId(node) ((node)->id)
+#define wbTimerNode_getSessionId(node) ((node)->session_id)
 #define wbTimerNode_getMPIRank(node) ((node)->mpiRank)
 #define wbTimerNode_getLevel(node) ((node)->level)
 #define wbTimerNode_getStoppedQ(node) ((node)->stoppedQ)
@@ -69,7 +75,10 @@ struct st_wbTimer_t {
 #define wbTimerNode_getParent(node) ((node)->parent)
 #define wbTimerNode_getMessage(node) ((node)->msg)
 
+#define wbTimerNode_setIdx(node, val) (wbTimerNode_getIdx(node) = val)
 #define wbTimerNode_setId(node, val) (wbTimerNode_getId(node) = val)
+#define wbTimerNode_setSessionId(node, val)                               \
+  (wbTimerNode_getSessionId(node) = val)
 #define wbTimerNode_setMPIRank(node, val)                                 \
   (wbTimerNode_getMPIRank(node) = val)
 #define wbTimerNode_setLevel(node, val) (wbTimerNode_getLevel(node) = val)

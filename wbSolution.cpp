@@ -153,6 +153,8 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
   }
 
   wbSolution_setOutputFile(sol, outputFile);
+  wbSolution_setId(sol, uuid());
+  wbSolution_setSessionId(sol, sessionId());
   wbSolution_setType(sol, type);
   wbSolution_setData(sol, data);
   wbSolution_setRows(sol, rows);

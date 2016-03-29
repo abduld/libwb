@@ -12,6 +12,8 @@ static inline wbLogEntry_t wbLogEntry_new() {
 
   elem = wbNew(struct st_wbLogEntry_t);
 
+  wbLogEntry_setId(elem, uuid());
+  wbLogEntry_setSessionId(elem, sessionId());
   wbLogEntry_setMessage(elem, NULL);
   wbLogEntry_setMPIRank(elem, wbMPI_getRank());
   wbLogEntry_setTime(elem, _hrtime());
@@ -79,6 +81,8 @@ static inline const char *getLevelName(wbLogLevel_t level) {
 
 static inline json11::Json wbLogEntry_toJSONObject(wbLogEntry_t elem) {
   json11::Json json = json11::Json::object{
+      {"id", wbLogEntry_getId(elem)},
+      {"session_id", wbLogEntry_getSessionId(elem)},
       {"mpi_rank", wbLogEntry_getMPIRank(elem)},
       {"level", getLevelName(wbLogEntry_getLevel(elem))},
       {"file", wbLogEntry_getFile(elem)},
@@ -100,6 +104,10 @@ static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
     stringstream ss;
 
     ss << "{\n";
+    ss << wbString_quote("id") << ":"
+       << wbString_quote(wbLogEntry_getId(elem)) << ",\n";
+    ss << wbString_quote("session_id") << ":"
+       << wbString_quote(wbLogEntry_getSessionId(elem)) << ",\n";
     ss << wbString_quote("mpi_rank") << ":"
        << wbString(wbLogEntry_getMPIRank(elem)) << ",\n";
     ss << wbString_quote("level") << ":"
@@ -129,6 +137,9 @@ static inline string wbLogEntry_toXML(wbLogEntry_t elem) {
     ss << "<type>"
        << "LoggerElement"
        << "</type>\n";
+    ss << "<id>" << wbLogEntry_getId(elem) << "</id>\n";
+    ss << "<session_id>" << wbLogEntry_getSessionId(elem)
+       << "</session_id>\n";
     ss << "<level>" << wbLogEntry_getLevel(elem) << "</level>\n";
     ss << "<message>" << wbLogEntry_getMessage(elem) << "</message>\n";
     ss << "<file>" << wbLogEntry_getFile(elem) << "</file>\n";
@@ -147,6 +158,8 @@ wbLogger_t wbLogger_new() {
 
   logger = wbNew(struct st_wbLogger_t);
 
+  wbLogger_setId(logger, uuid());
+  wbLogger_setSessionId(logger, sessionId());
   wbLogger_setLength(logger, 0);
   wbLogger_setHead(logger, NULL);
 
@@ -210,7 +223,10 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
   if (wbLogger_printOnLog) {
     if (level <= wbLogger_getLevel(logger) && elem) {
       json11::Json json = json11::Json::object{
-          {"type", "logger"}, {"data", wbLogEntry_toJSONObject(elem)}};
+          {"type", "logger"},
+          {"id", wbLogEntry_getId(elem)},
+          {"session_id", wbLogEntry_getSessionId(elem)},
+          {"data", wbLogEntry_toJSONObject(elem)}};
       std::cout << json.dump() << std::endl;
     }
   }
@@ -292,6 +308,9 @@ string wbLogger_toXML(wbLogger_t logger) {
     ss << "<type>"
        << "Logger"
        << "</type>\n";
+    ss << "<id>" << wbLogger_getId(logger) << "</id>\n";
+    ss << "<session_id>" << wbLogger_getSessionId(logger)
+       << "</session_id>\n";
     ss << "<elements>\n";
     for (iter = wbLogger_getHead(logger); iter != NULL;
          iter = wbLogEntry_getNext(iter)) {

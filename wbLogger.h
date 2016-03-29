@@ -16,6 +16,8 @@ typedef enum en_wbLogLevel_t {
 } wbLogLevel_t;
 
 struct st_wbLogEntry_t {
+  std::string id;
+  std::string session_id;
   int line;
   int mpiRank;
   char *msg;
@@ -27,11 +29,15 @@ struct st_wbLogEntry_t {
 };
 
 struct st_wbLogger_t {
+  std::string id;
+  std::string session_id;
   int length;
   wbLogEntry_t head;
   wbLogLevel_t level;
 };
 
+#define wbLogEntry_getId(elem) ((elem)->id)
+#define wbLogEntry_getSessionId(elem) ((elem)->session_id)
 #define wbLogEntry_getMessage(elem) ((elem)->msg)
 #define wbLogEntry_getMPIRank(elem) ((elem)->mpiRank)
 #define wbLogEntry_getTime(elem) ((elem)->time)
@@ -41,6 +47,9 @@ struct st_wbLogger_t {
 #define wbLogEntry_getFunction(elem) ((elem)->fun)
 #define wbLogEntry_getFile(elem) ((elem)->file)
 
+#define wbLogEntry_setId(elem, val) (wbLogEntry_getId(elem) = val)
+#define wbLogEntry_setSessionId(elem, val)                                \
+  (wbLogEntry_getSessionId(elem) = val)
 #define wbLogEntry_setMessage(elem, val)                                  \
   (wbLogEntry_getMessage(elem) = val)
 #define wbLogEntry_setMPIRank(elem, val)                                  \
@@ -53,10 +62,14 @@ struct st_wbLogger_t {
   (wbLogEntry_getFunction(elem) = val)
 #define wbLogEntry_setFile(elem, val) (wbLogEntry_getFile(elem) = val)
 
+#define wbLogger_getId(log) ((log)->id)
+#define wbLogger_getSessionId(log) ((log)->session_id)
 #define wbLogger_getLength(log) ((log)->length)
 #define wbLogger_getHead(log) ((log)->head)
 #define wbLogger_getLevel(log) ((log)->level)
 
+#define wbLogger_setId(log, val) (wbLogger_getId(log) = val)
+#define wbLogger_setSessionId(log, val) (wbLogger_getSessionId(log) = val)
 #define wbLogger_setLength(log, val) (wbLogger_getLength(log) = val)
 #define wbLogger_setHead(log, val) (wbLogger_getHead(log) = val)
 

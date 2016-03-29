@@ -4,6 +4,8 @@
 #define __WB_SOLUTION_H__
 
 typedef struct st_wbSolution_t {
+  std::string id;
+  std::string session_id;
   char *type;
   char *outputFile;
   void *data;
@@ -12,6 +14,8 @@ typedef struct st_wbSolution_t {
   int depth;
 } wbSolution_t;
 
+#define wbSolution_getId(sol) ((sol).id)
+#define wbSolution_getSessionId(sol) ((sol).session_id)
 #define wbSolution_getType(sol) ((sol).type)
 #define wbSolution_getOutputFile(sol) ((sol).outputFile)
 #define wbSolution_getData(sol) ((sol).data)
@@ -23,6 +27,9 @@ typedef struct st_wbSolution_t {
 #define wbSolution_getWidth wbSolution_getColumns
 #define wbSolution_getChannels wbSolution_getDepth
 
+#define wbSolution_setId(sol, val) (wbSolution_getId(sol) = val)
+#define wbSolution_setSessionId(sol, val)                                 \
+  (wbSolution_getSessionId(sol) = val)
 #define wbSolution_setType(sol, val) (wbSolution_getType(sol) = val)
 #define wbSolution_setOutputFile(sol, val)                                \
   (wbSolution_getOutputFile(sol) = val)

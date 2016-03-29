@@ -52,12 +52,14 @@ static inline uint64_t getTime(void) {
   return _hrtime();
 }
 
-static inline wbTimerNode_t wbTimerNode_new(int id, wbTimerKind_t kind,
+static inline wbTimerNode_t wbTimerNode_new(int idx, wbTimerKind_t kind,
                                             const char *file,
                                             const char *fun,
                                             int startLine) {
   wbTimerNode_t node = wbNew(struct st_wbTimerNode_t);
-  wbTimerNode_setId(node, id);
+  wbTimerNode_setId(node, uuid());
+  wbTimerNode_setIdx(node, idx);
+  wbTimerNode_setSessionId(node, sessionId());
   wbTimerNode_setMPIRank(node, wbMPI_getRank());
   wbTimerNode_setLevel(node, 0);
   wbTimerNode_setStoppedQ(node, wbFalse);
@@ -110,8 +112,13 @@ static inline const char *_nodeKind(wbTimerKind_t kind) {
 }
 
 static inline json11::Json wbTimerNode_toJSONObject(wbTimerNode_t node) {
+  int parent_id = wbTimerNode_hasParent(node)
+                      ? wbTimerNode_getIdx(wbTimerNode_getParent(node))
+                      : -1;
   json11::Json json = json11::Json::object{
       {"id", wbTimerNode_getId(node)},
+      {"session_id", wbTimerNode_getSessionId(node)},
+      {"idx", wbTimerNode_getIdx(node)},
       {"mpi_rank", wbTimerNode_getMPIRank(node)},
       {"stopped", wbTimerNode_stoppedQ(node)},
       {"kind", _nodeKind(wbTimerNode_getKind(node))},
@@ -124,9 +131,7 @@ static inline json11::Json wbTimerNode_toJSONObject(wbTimerNode_t node) {
       {"end_function", wbTimerNode_getEndFunction(node)},
       {"start_file", wbTimerNode_getStartFile(node)},
       {"end_file", wbTimerNode_getEndFile(node)},
-      {"parent_id", wbTimerNode_hasParent(node)
-                        ? wbTimerNode_getId(wbTimerNode_getParent(node))
-                        : -1},
+      {"parent_id", parent_id},
       {"message", wbTimerNode_getMessage(node)},
   };
   return json;
@@ -142,7 +147,12 @@ static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
     stringstream ss;
 
     ss << "{\n";
-    ss << wbString_quote("id") << ":" << wbTimerNode_getId(node) << ",\n";
+    ss << wbString_quote("idx") << ":" << wbTimerNode_getIdx(node)
+       << ",\n";
+    ss << wbString_quote("id") << ":"
+       << wbString_quote(wbTimerNode_getId(node)) << ",\n";
+    ss << wbString_quote("session_id") << ":"
+       << wbString_quote(wbTimerNode_getSessionId(node)) << ",\n";
     ss << wbString_quote("mpi_rank") << ":" << wbTimerNode_getMPIRank(node)
        << ",\n";
     ss << wbString_quote("stopped") << ":"
@@ -169,7 +179,7 @@ static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
        << wbString_quote(wbTimerNode_getEndFile(node)) << ",\n";
     ss << wbString_quote("parent_id") << ":"
        << wbString(wbTimerNode_hasParent(node)
-                       ? wbTimerNode_getId(wbTimerNode_getParent(node))
+                       ? wbTimerNode_getIdx(wbTimerNode_getParent(node))
                        : -1)
        << ",\n";
     ss << wbString_quote("message") << ":"
@@ -187,7 +197,9 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
     stringstream ss;
 
     ss << "<node>\n";
+    ss << "<idx>" << wbTimerNode_getIdx(node) << "</id>\n";
     ss << "<id>" << wbTimerNode_getId(node) << "</id>\n";
+    ss << "<session_id>" << wbTimerNode_getSessionId(node) << "</id>\n";
     ss << "<stoppedQ>"
        << wbString(wbTimerNode_stoppedQ(node) ? "true" : "false")
        << "</stoppedQ>\n";
@@ -209,7 +221,7 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
     ss << "<end_file>" << wbTimerNode_getEndFile(node) << "</end_file>\n";
     ss << "<parent_id>"
        << wbString(wbTimerNode_hasParent(node)
-                       ? wbTimerNode_getId(wbTimerNode_getParent(node))
+                       ? wbTimerNode_getIdx(wbTimerNode_getParent(node))
                        : -1)
        << "</parent_id>\n";
     ss << "<message>" << wbTimerNode_getMessage(node) << "</message>\n";
@@ -219,6 +231,8 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
   }
 }
 
+#define wbTimer_getId(timer) ((timer)->id)
+#define wbTimer_getSessionId(timer) ((timer)->session_id)
 #define wbTimer_getLength(timer) ((timer)->length)
 #define wbTimer_getHead(timer) ((timer)->head)
 #define wbTimer_getTail(timer) ((timer)->tail)
@@ -226,6 +240,9 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
 #define wbTimer_getEndTime(timer) ((timer)->endTime)
 #define wbTimer_getElapsedTime(timer) ((timer)->elapsedTime)
 
+#define wbTimer_setId(timer, val) (wbTimer_getId(timer) = val)
+#define wbTimer_setSessionId(timer, val)                                  \
+  (wbTimer_getSessionId(timer) = val)
 #define wbTimer_setLength(timer, val) (wbTimer_getLength(timer) = val)
 #define wbTimer_setHead(timer, val) (wbTimer_getHead(timer) = val)
 #define wbTimer_setTail(timer, val) (wbTimer_getTail(timer) = val)
@@ -359,6 +376,8 @@ string wbTimer_toXML() {
 
 wbTimer_t wbTimer_new(void) {
   wbTimer_t timer = wbNew(struct st_wbTimer_t);
+  wbTimer_setId(timer, uuid());
+  wbTimer_setSessionId(timer, sessionId());
   wbTimer_setLength(timer, 0);
   wbTimer_setHead(timer, NULL);
   wbTimer_setTail(timer, NULL);
@@ -475,7 +494,10 @@ void wbTimer_stop(wbTimerKind_t kind, string msg, const char *file,
 #ifdef wbLogger_printOnLog
   if (wbLogger_printOnLog) {
     json11::Json json = json11::Json::object{
-        {"type", "timer"}, {"data", wbTimerNode_toJSONObject(node)}};
+        {"type", "timer"},
+        {"id", wbTimerNode_getId(node)},
+        {"session_id", wbTimerNode_getSessionId(node)},
+        {"data", wbTimerNode_toJSONObject(node)}};
     std::cout << json.dump() << std::endl;
   }
 #endif /* wbLogger_printOnLog */
