@@ -62,5 +62,5 @@ before_install:
 script: 
   - $COMPILER --version
   - make CXX=$COMPILER test
-  - cp lib/libwb.so .
-  - ./test -s -d yes
+  # - cp lib/libwb.so .
+  # - ./test -s -d yes
