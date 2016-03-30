@@ -1,7 +1,7 @@
 
 #include "wb.h"
 
-static std::string _sessionId{};
+static std::string _sessionId = string("");
 std::string _envSessionId() {
 #ifdef WB_USE_UNIX
   if (_sessionId != "") {
