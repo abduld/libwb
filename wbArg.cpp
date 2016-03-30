@@ -1,7 +1,7 @@
 
 #include "wb.h"
 
-std::string _sessionId{};
+static std::string _sessionId{};
 std::string _envSessionId() {
 #ifdef WB_USE_UNIX
   if (_sessionId != "") {
@@ -20,12 +20,12 @@ std::string sessionId() {
   return _envSessionId();
 }
 
-EXTERN_C wbArg_t wbArg_new(int *argc, char ***argv) {
+wbArg_t wbArg_new(int *argc, char ***argv) {
   wbArg_t arg;
 
   wb_init(argc, argv);
 
-  wbArg_setSessionId(arg, wbString_duplicate(_envSessionId()));
+  wbArg_setSessionId(arg, _envSessionId());
   wbArg_setInputCount(arg, 0);
   wbArg_setInputFiles(arg, NULL);
   wbArg_setOutputFile(arg, NULL);
@@ -34,7 +34,7 @@ EXTERN_C wbArg_t wbArg_new(int *argc, char ***argv) {
   return arg;
 }
 
-EXTERN_C void wbArg_delete(wbArg_t arg) {
+void wbArg_delete(wbArg_t arg) {
   if (wbArg_getInputCount(arg) > 0 && wbArg_getInputFiles(arg) != NULL) {
     int ii;
     for (ii = 0; ii < wbArg_getInputCount(arg); ii++) {
@@ -97,7 +97,7 @@ static void parseSessionId(char *arg) {
   _sessionId = std::string(arg);
 }
 
-EXTERN_C wbArg_t wbArg_read(int argc, char **argv) {
+wbArg_t wbArg_read(int argc, char **argv) {
   int ii;
   wbArg_t arg;
 
@@ -105,8 +105,7 @@ EXTERN_C wbArg_t wbArg_read(int argc, char **argv) {
   for (ii = 0; ii < argc; ii++) {
     if (wbString_startsWith(argv[ii], "-s")) {
       parseSessionId(argv[++ii]);
-      wbDelete(wbArg_getSessionId(arg));
-      wbArg_setSessionId(arg, wbString_duplicate(_sessionId));
+      wbArg_setSessionId(arg, _sessionId);
     } else if (wbString_startsWith(argv[ii], "-i")) {
       int fileCount;
       char **files;
