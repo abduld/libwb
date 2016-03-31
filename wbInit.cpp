@@ -8,7 +8,7 @@
 
 static bool _initializedQ = wbFalse;
 
-#if 0 //ndef WB_USE_WINDOWS
+#ifndef WB_USE_WINDOWS
 __attribute__((__constructor__))
 #endif /* WB_USE_WINDOWS */
 void wb_init(int *
