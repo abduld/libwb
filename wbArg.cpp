@@ -1,6 +1,7 @@
 
 #include "wb.h"
 
+#ifdef WB_USE_SESSION_ID
 static std::string _sessionId = string("");
 std::string _envSessionId() {
 #ifdef WB_USE_UNIX
@@ -19,6 +20,11 @@ std::string sessionId() {
   }
   return _envSessionId();
 }
+#else /* WB_USE_SESSION_ID */
+std::string sessionId() {
+  return "session_id_disabled";
+}
+#endif /* WB_USE_SESSION_ID */
 
 wbArg_t wbArg_new(int *argc, char ***argv) {
   wbArg_t arg;
