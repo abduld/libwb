@@ -111,7 +111,7 @@ wbArg_t wbArg_read(int argc, char **argv) {
   for (ii = 0; ii < argc; ii++) {
     if (wbString_startsWith(argv[ii], "-s")) {
       parseSessionId(argv[++ii]);
-      wbArg_setSessionId(arg, _sessionId);
+      wbArg_setSessionId(arg, sessionId());
     } else if (wbString_startsWith(argv[ii], "-i")) {
       int fileCount;
       char **files;
