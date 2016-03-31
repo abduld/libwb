@@ -21,6 +21,9 @@ std::string sessionId() {
   return _envSessionId();
 }
 #else /* WB_USE_SESSION_ID */
+std::string _envSessionId() {
+  return "session_id_disabled";
+}
 std::string sessionId() {
   return "session_id_disabled";
 }
