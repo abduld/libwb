@@ -159,7 +159,7 @@ wbLogger_t wbLogger_new() {
   logger = wbNew(struct st_wbLogger_t);
 
   wbLogger_setId(logger, uuid());
-  wbLogger_setSessionId(logger, sessionId());
+  // wbLogger_setSessionId(logger, sessionId());
   wbLogger_setLength(logger, 0);
   wbLogger_setHead(logger, NULL);
 
