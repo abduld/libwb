@@ -4,8 +4,8 @@
 #define __WB_SOLUTION_H__
 
 typedef struct st_wbSolution_t {
-  std::string id;
-  std::string session_id;
+  char * id;
+  char * session_id;
   char *type;
   char *outputFile;
   void *data;

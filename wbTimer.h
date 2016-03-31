@@ -22,8 +22,8 @@ typedef enum en_wbTimerKind_t {
 
 struct st_wbTimerNode_t {
   int idx;
-  std::string id;
-  std::string session_id;
+  char * id;
+  char * session_id;
   int mpiRank;
   int level;
   wbBool stoppedQ;
@@ -44,8 +44,8 @@ struct st_wbTimerNode_t {
 };
 
 struct st_wbTimer_t {
-  std::string id;
-  std::string session_id;
+  char * id;
+  char * session_id;
   size_t length;
   wbTimerNode_t head;
   wbTimerNode_t tail;
