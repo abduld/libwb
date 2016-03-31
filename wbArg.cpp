@@ -100,7 +100,9 @@ static char *parseString(char *arg) {
 }
 
 static void parseSessionId(char *arg) {
+#ifdef WB_USE_SESSION_ID
   _sessionId = std::string(arg);
+#endif /* WB_USE_SESSION_ID */
 }
 
 wbArg_t wbArg_read(int argc, char **argv) {
