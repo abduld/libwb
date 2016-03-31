@@ -16,8 +16,8 @@ typedef enum en_wbLogLevel_t {
 } wbLogLevel_t;
 
 struct st_wbLogEntry_t {
-  std::string id;
-  std::string session_id;
+  char * id;
+  char * session_id;
   int line;
   int mpiRank;
   char *msg;
@@ -29,8 +29,8 @@ struct st_wbLogEntry_t {
 };
 
 struct st_wbLogger_t {
-  std::string id;
-  std::string session_id;
+  char * id;
+  char * session_id;
   int length;
   wbLogEntry_t head;
   wbLogLevel_t level;

@@ -4,7 +4,7 @@
 #define __WB_ARG_H__
 
 struct st_wbArg_t {
-  std::string sessionId;
+  char * sessionId;
   int inputCount;
   char **inputFiles;
   char *outputFile;
@@ -29,11 +29,11 @@ struct st_wbArg_t {
   (wbArg_getExpectedOutputFile(wa) = val)
 #define wbArg_setType(wa, val) (wbArg_getType(wa) = val)
 
-wbArg_t wbArg_new(int *argc, char ***argv);
-void wbArg_delete(wbArg_t arg);
-wbArg_t wbArg_read(int argc, char **argv);
+EXTERN_C wbArg_t wbArg_new(int *argc, char ***argv);
+EXTERN_C void wbArg_delete(wbArg_t arg);
+EXTERN_C wbArg_t wbArg_read(int argc, char **argv);
 
-std::string sessionId();
-std::string _envSessionId();
+char* sessionId();
+char * _envSessionId();
 
 #endif /* __WB_ARG_H__ */

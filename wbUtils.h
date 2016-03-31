@@ -1,6 +1,7 @@
 #ifndef __WB_UTILS_H__
 #define __WB_UTILS_H__
 
+#include "wbString.h"
 #include "vendor/sole.hpp"
 
 #ifdef WB_DEBUG
@@ -9,9 +10,9 @@
 #define DEBUG(...)
 #endif /* WB_DEBUG */
 
-static std::string uuid() {
+static char* uuid() {
   auto u4 = sole::uuid4();
-  return u4.str();
+  return wbString_duplicate(u4.str());
 }
 
 #endif /* __WB_UTILS_H__ */

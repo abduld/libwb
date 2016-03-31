@@ -2,30 +2,30 @@
 #include "wb.h"
 
 #ifdef WB_USE_SESSION_ID
-static std::string _sessionId = string("");
-std::string _envSessionId() {
+static char * _sessionId = NULL;
+char * _envSessionId() {
 #ifdef WB_USE_UNIX
-  if (_sessionId != "") {
+  if (_sessionId != NULL) {
     char *env = std::getenv("SESSION_ID");
     if (env) {
-      _sessionId = env;
+      _sessionId = wbString_duplicate(env);
     }
   }
 #endif /* WB_USE_UNIX */
-  return _sessionId;
+  return wbString_duplicate(_sessionId);
 }
-std::string sessionId() {
+char * sessionId() {
   if (_sessionId != "") {
-    return _sessionId;
+    return wbString_duplicate(_sessionId);
   }
-  return _envSessionId();
+  return wbString_duplicate(_envSessionId());
 }
 #else /* WB_USE_SESSION_ID */
-std::string _envSessionId() {
-  return "session_id_disabled";
+char * _envSessionId() {
+  return wbString_duplicate("session_id_disabled");
 }
-std::string sessionId() {
-  return "session_id_disabled";
+char * sessionId() {
+  return wbString_duplicate("session_id_disabled");
 }
 #endif /* WB_USE_SESSION_ID */
 
