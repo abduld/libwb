@@ -17,6 +17,13 @@
 
 #ifdef _MSC_VER
 
+#if MSC_VER <= 1800
+#define NOEXCEPT _NOEXCEPT
+#define snprintf _snprintf
+#else
+#define NOEXCEPT noexcept
+#endif
+
 // set minimal warning level
 #pragma warning(push, 0)
 // some warnings still occur at this level
@@ -39,9 +46,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#define NOEXCEPT noexcept
 #define WB_USE_UNIX
 #ifdef __APPLE__
 #include <mach/mach_time.h>
+#define NOEXCEPT noexcept
 #define WB_USE_DARWIN
 #else /* __APPLE__ */
 #define WB_USE_LINUX
