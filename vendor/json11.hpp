@@ -77,6 +77,7 @@
 #ifdef _MSC_VER
 #if MSC_VER <= 1800
 #define NOEXCEPT _NOEXCEPT
+#define snprintf _snprintf
 #else
 #define NOEXCEPT noexcept
 #endif /*MSC_VER */

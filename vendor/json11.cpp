@@ -372,9 +372,9 @@ static const Json &static_null() {
  * Constructors
  */
 
-Json::Json() noexcept : m_ptr(statics().null) {
+Json::Json() NOEXCEPT : m_ptr(statics().null) {
 }
-Json::Json(std::nullptr_t) noexcept : m_ptr(statics().null) {
+Json::Json(std::nullptr_t) NOEXCEPT : m_ptr(statics().null) {
 }
 Json::Json(double value) : m_ptr(make_shared<JsonDouble>(value)) {
 }
