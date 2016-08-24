@@ -1,8 +1,7 @@
 ##########################################
 # Options
 ##########################################
-ARCH=$(shell uname -s)-x86_64
-WB_LIB_PATH=$(CURDIR)/$(ARCH)
+WB_LIB_PATH=$(CURDIR)/lib
 WB_SRC_PATH=$(CURDIR)
 CXX=nvcc
 
@@ -53,5 +52,5 @@ test: libwb.so
 
 
 clean:
-	rm -fr $(ARCH) test
+	rm -fr lib test
 	-rm -f $(EXES) *.o *~
