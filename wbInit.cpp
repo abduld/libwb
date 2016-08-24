@@ -9,7 +9,7 @@
 static bool _initializedQ = wbFalse;
 
 #ifndef WB_USE_WINDOWS
-__attribute__((__constructor__))
+//__attribute__((__constructor__))
 #endif /* WB_USE_WINDOWS */
 void wb_init(int *
 #ifdef WB_USE_MPI

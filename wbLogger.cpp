@@ -96,7 +96,7 @@ static inline json11::Json wbLogEntry_toJSONObject(wbLogEntry_t elem) {
 
 static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
   if (elem == NULL) {
-    return "";
+    return "\"\"";
   } else if (WB_USE_JSON11) {
     json11::Json json = wbLogEntry_toJSONObject(elem);
     return json.string_value();

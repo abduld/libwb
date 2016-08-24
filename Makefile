@@ -1,17 +1,17 @@
 ##########################################
 # Options
 ##########################################
-WB_LIB_PATH=$(CURDIR)/lib
+ARCH=$(shell uname -s)-x86_64
+WB_LIB_PATH=$(CURDIR)/$(ARCH)
 WB_SRC_PATH=$(CURDIR)
+CXX=nvcc
 
 ##########################################
 ##########################################
 
-DEFINES=
-CXX_FLAGS=-fPIC -Wno-unused-function -Wno-dollar-in-identifier-extension \
-					-x c++ -O3 -g -std=c++11 -Wall -Wno-unused-function -pedantic \
-					-I . -I $(WB_SRC_PATH) $(DEFINES) 
-LIBS=-lm -lstdc++ -L $(WB_LIB_PATH)
+DEFINES=-DWB_USE_COURSERA -DWB_USE_CUDA -DWB_USE_JSON11=0
+CXX_FLAGS=-Xcompiler -fpic -O3 -g -std=c++11 -I . -I $(WB_SRC_PATH) -I /usr/local/cuda/include -L /usr/local/cuda/lib64 $(DEFINES) 
+LIBS=-lm -std=c++11 -lcuda -L $(WB_LIB_PATH)
 
 ##########################################
 ##########################################
@@ -42,14 +42,14 @@ all: libwb.so
 
 libwb.so: $(OBJECTS)
 	mkdir -p $(WB_LIB_PATH)
-	$(CXX) -fPIC -shared -o $(WB_LIB_PATH)/$@ $(OBJECTS) $(LIBS)
+	$(CXX) -shared -o $(WB_LIB_PATH)/$@ $(OBJECTS) $(LIBS)
 
 libwb.a: $(OBJECTS)
 	mkdir -p $(WB_LIB_PATH)
 	ar rcs -o $(WB_LIB_PATH)/$@ $(OBJECTS)
 
 test: libwb.so
-	$(CXX) $(DEFINES) $(CXX_FLAGS) -fPIC -o $@ $(TESTS) -lwb $(LIBS)
+	$(CXX) $(DEFINES) $(CXX_FLAGS) -o $@ $(TESTS) -lwb $(LIBS)
 
 
 clean:
