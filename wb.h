@@ -100,9 +100,12 @@
 /***********************************************************/
 /***********************************************************/
 
-#include "vendor/json11.hpp"
 #ifndef WB_USE_JSON11
 #define WB_USE_JSON11 1
+#endif /* WB_USE_JSON11 */
+
+#if WB_USE_JSON11
+#include "vendor/json11.hpp"
 #endif /* WB_USE_JSON11 */
 
 /***********************************************************/
