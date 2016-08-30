@@ -9,7 +9,7 @@ CXX=nvcc
 ##########################################
 
 DEFINES=-DWB_USE_COURSERA -DWB_USE_CUDA -DWB_USE_JSON11=0
-CXX_FLAGS=-Xcompiler -fpic -O3 -g -std=c++11 -I . -I $(WB_SRC_PATH) -I /usr/local/cuda/include -L /usr/local/cuda/lib64 $(DEFINES) 
+CXX_FLAGS=-Xcompiler -fpic -O3 -g -std=c++11 -I . -I $(WB_SRC_PATH) -I /usr/local/cuda/include -L /usr/local/cuda/lib64 
 LIBS=-lm -std=c++11 -lcuda -L $(WB_LIB_PATH)
 
 ##########################################

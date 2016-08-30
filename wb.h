@@ -17,6 +17,12 @@
 
 #ifdef _MSC_VER
 
+#if _MSC_VER <= 1800
+#define NOEXCEPT _NOEXCEPT
+#else
+#define NOEXCEPT noexcept
+#endif
+
 // set minimal warning level
 #pragma warning(push, 0)
 // some warnings still occur at this level
@@ -39,9 +45,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#define NOEXCEPT noexcept
 #define WB_USE_UNIX
 #ifdef __APPLE__
 #include <mach/mach_time.h>
+#define NOEXCEPT noexcept
 #define WB_USE_DARWIN
 #else /* __APPLE__ */
 #define WB_USE_LINUX
@@ -92,9 +100,12 @@
 /***********************************************************/
 /***********************************************************/
 
-#include "vendor/json11.hpp"
 #ifndef WB_USE_JSON11
 #define WB_USE_JSON11 1
+#endif /* WB_USE_JSON11 */
+
+#if 1 || WB_USE_JSON11
+#include "vendor/json11.hpp"
 #endif /* WB_USE_JSON11 */
 
 /***********************************************************/
