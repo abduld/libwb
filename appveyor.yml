@@ -1,3 +1,4 @@
+version: "{build}"
 
 
 # Operating system (build VM template)
@@ -10,8 +11,9 @@ os:
 init:
   - echo init step
   - git config --global core.autocrlf input
-  - cmake --version
-#  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
+  - cmd: cmake --version
+  - cmd: msbuild /version
+  - cmd: devenv.exe
 
 # clone directory
 clone_folder: c:\projects\libwb
@@ -43,6 +45,7 @@ build:
 before_build:
   - echo Running cmake...
   - cd c:\projects\libwb
+  - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
   - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=%P%
 
 # after_build:
