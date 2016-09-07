@@ -3,6 +3,7 @@
 # Operating system (build VM template)
 os:
   - Visual Studio 2015
+  - Visual Studio 2013
 
 
 # scripts that are called at very beginning, before repo cloning
@@ -10,7 +11,7 @@ init:
   - echo init step
   - git config --global core.autocrlf input
   - cmake --version
-  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
+#  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
 
 # clone directory
 clone_folder: c:\projects\libwb
