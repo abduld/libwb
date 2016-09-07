@@ -74,6 +74,7 @@
 
 #pragma once
 
+#ifdef _MSC_VER
 #ifndef NOEXCEPT
 #if _MSC_VER <= 1200 // VS 2013
     #define NOEXCEPT
@@ -86,6 +87,16 @@
 #ifndef snprintf
 #define snprintf _snprintf_s
 #endif /* snprintf */
+
+
+// set minimal warning level
+#pragma warning(push, 0)
+// some warnings still occur at this level
+// if necessary, disable specific warnings not covered by previous pragma
+#pragma warning(                                                          \
+    disable : 4244 4056 4305 4800 4267 4996 4756 4661 4385 4101 4800)
+
+#endif /* _MSC_VER */
 
 #include <string>
 #include <vector>
