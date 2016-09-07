@@ -32,7 +32,7 @@ EXTERN_C const char *wbDirectory_create(const char *dir) {
   size_t len;
 
 #ifdef WB_USE_WINDOWS
-  snprintf(tmp, sizeof(tmp), "%s", dir);
+  _snprintf(tmp, sizeof(tmp), "%s", dir);
 #else /* WB_USE_WINDOWS */
   snprintf(tmp, sizeof(tmp), "%s", dir);
 #endif /* WB_USE_WINDOWS */
