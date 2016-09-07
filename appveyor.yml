@@ -1,19 +1,12 @@
 version: "{build}"
 
 
-# Operating system (build VM template)
-os:
-  - Visual Studio 2015
-  - Visual Studio 2013
-
-
 # scripts that are called at very beginning, before repo cloning
 init:
   - echo init step
   - git config --global core.autocrlf input
   - cmd: cmake --version
   - cmd: msbuild /version
-  - devenv.exe
 
 # clone directory
 clone_folder: c:\projects\libwb
@@ -33,6 +26,10 @@ configuration:
 
 environment:
   P: "c:/projects/libs"
+  matrix:
+    - CMAKE_GENERATOR: "Visual Studio 10 2010"
+    - CMAKE_GENERATOR: "Visual Studio 11 2012"
+    - CMAKE_GENERATOR: "Visual Studio 12 2013"
 
 
 install:
@@ -45,8 +42,7 @@ build:
 before_build:
   - echo Running cmake...
   - cd c:\projects\libwb
-  - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
-  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=%P%
+  - cmake -G "$env:CMAKE_GENERATOR" -DCMAKE_INSTALL_PREFIX=%P%
 
 # after_build:
 #   - echo after_build step
