@@ -39,11 +39,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define NOEXCEPT noexcept
 #define WB_USE_UNIX
 #ifdef __APPLE__
 #include <mach/mach_time.h>
-#define NOEXCEPT noexcept
 #define WB_USE_DARWIN
 #else /* __APPLE__ */
 #define WB_USE_LINUX

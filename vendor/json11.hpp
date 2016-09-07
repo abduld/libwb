@@ -95,7 +95,8 @@
 // if necessary, disable specific warnings not covered by previous pragma
 #pragma warning(                                                          \
     disable : 4244 4056 4305 4800 4267 4996 4756 4661 4385 4101 4800)
-
+#else /* _MSC_VER */
+#define NOEXCEPT noexcept
 #endif /* _MSC_VER */
 
 #include <string>
