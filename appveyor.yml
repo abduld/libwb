@@ -41,7 +41,7 @@ build:
 before_build:
   - echo Running cmake...
   - cd c:\projects\libwb
-  - cmake -G %CMAKE_GENERATOR% -DCMAKE_INSTALL_PREFIX=%P%
+  - cmake -G "%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=%P%
 
 # after_build:
 #   - echo after_build step
