@@ -31,7 +31,11 @@ EXTERN_C const char *wbDirectory_create(const char *dir) {
   char *p = NULL;
   size_t len;
 
+#ifdef WB_USE_WINDOWS
   snprintf(tmp, sizeof(tmp), "%s", dir);
+#else /* WB_USE_WINDOWS */
+  snprintf(tmp, sizeof(tmp), "%s", dir);
+#endif /* WB_USE_WINDOWS */
   len = strlen(tmp);
   if (tmp[len - 1] == wbDirectorySeperator) {
     tmp[len - 1] = 0;
