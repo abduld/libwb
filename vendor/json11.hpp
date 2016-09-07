@@ -78,15 +78,15 @@
 #ifndef NOEXCEPT
 #if _MSC_VER <= 1200 // VS 2013
     #define NOEXCEPT
+#ifndef snprintf
+#define snprintf _snprintf_s
+#endif /* snprintf */
 #elif _MSC_VER <= 1800 // VS 2015
     #define NOEXCEPT throw()
 #else
     #define NOEXCEPT noexcept
 #endif /* _MSC_VER <= 1200 */
 #endif /* NOEXCEPT */
-#ifndef snprintf
-#define snprintf _snprintf_s
-#endif /* snprintf */
 
 
 // set minimal warning level
