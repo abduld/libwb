@@ -83,7 +83,9 @@
     #define NOEXCEPT noexcept
 #endif /* _MSC_VER <= 1200 */
 #endif /* NOEXCEPT */
-
+#ifndef snprintf
+#define snprintf _snprintf_s
+#endif /* snprintf */
 
 #include <string>
 #include <vector>
