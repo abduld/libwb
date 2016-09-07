@@ -13,7 +13,7 @@ init:
   - git config --global core.autocrlf input
   - cmd: cmake --version
   - cmd: msbuild /version
-  - cmd: devenv.exe
+  - devenv.exe
 
 # clone directory
 clone_folder: c:\projects\libwb
