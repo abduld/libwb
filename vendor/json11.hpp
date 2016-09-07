@@ -74,17 +74,6 @@
 
 #pragma once
 
-#ifdef _MSC_VER
-#if MSC_VER <= 1800
-#define NOEXCEPT _NOEXCEPT
-#define snprintf _snprintf
-#else
-#define NOEXCEPT noexcept
-#endif /*MSC_VER */
-#else  /* _MSC_VER */
-#define NOEXCEPT noexcept
-#endif /* _MSC_VER */
-
 #include <string>
 #include <vector>
 #include <map>
