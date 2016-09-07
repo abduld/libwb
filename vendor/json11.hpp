@@ -76,7 +76,7 @@
 
 #ifdef _MSC_VER
 #ifndef NOEXCEPT
-#if _MSC_VER <= 1200 // VS 2013
+#if _MSC_VER <= 1500 // VS 2013
     #define NOEXCEPT
 #ifndef snprintf
 #define snprintf _snprintf_s
