@@ -24,6 +24,8 @@
     #define NOEXCEPT
 #elif _MSC_VER <= 1800 // VS 2015
     #define NOEXCEPT throw()
+#else
+    #define NOEXCEPT noexcept
 #endif /* _MSC_VER <= 1200 */
 #endif /* NOEXCEPT */
 #ifndef snprintf
