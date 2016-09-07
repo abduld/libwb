@@ -27,7 +27,6 @@ configuration:
 environment:
   P: "c:/projects/libs"
   matrix:
-    - CMAKE_GENERATOR: "Visual Studio 10 2010 Win64"
     - CMAKE_GENERATOR: "Visual Studio 12 2013 Win64"
     - CMAKE_GENERATOR: "Visual Studio 14 2015 Win64"
 
