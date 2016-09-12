@@ -75,18 +75,22 @@
 #pragma once
 
 #ifdef _MSC_VER
-#ifndef NOEXCEPT
 #if _MSC_VER <= 1800 // VS 2013
+#ifndef NOEXCEPT
     #define NOEXCEPT
+#endif /* NOEXCEPT */
 #ifndef snprintf
-#define snprintf _snprintf
+    #define snprintf _snprintf
 #endif /* snprintf */
 #elif _MSC_VER <= 1900 // VS 2015
+#ifndef NOEXCEPT
     #define NOEXCEPT throw()
-#else
-    #define NOEXCEPT noexcept
-#endif /* _MSC_VER <= 1200 */
 #endif /* NOEXCEPT */
+#else
+#ifndef NOEXCEPT
+    #define NOEXCEPT noexcept
+#endif /* NOEXCEPT */
+#endif /* _MSC_VER <= 1200 */
 
 
 
@@ -97,7 +101,9 @@
 #pragma warning(                                                          \
     disable : 4244 4056 4305 4800 4267 4996 4756 4661 4385 4101 4800)
 #else /* _MSC_VER */
-#define NOEXCEPT noexcept
+#ifndef NOEXCEPT
+    #define NOEXCEPT noexcept
+#endif /* NOEXCEPT */
 #endif /* _MSC_VER */
 
 #include <string>
