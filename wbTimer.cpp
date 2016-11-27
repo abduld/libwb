@@ -3,7 +3,7 @@
 #ifdef WB_USE_WINDOWS
 uint64_t _hrtime_frequency = 0;
 #endif /* WB_USE_WINDOWS */
-wbTimer_t _timer = NULL;
+wbTimer_t _timer = nullptr;
 
 #ifdef WB_USE_DARWIN
 static double o_timebase    = 0;
@@ -81,7 +81,7 @@ static inline wbTimerNode_t wbTimerNode_new(int idx, wbTimerKind_t kind,
 }
 
 static inline void wbTimerNode_delete(wbTimerNode_t node) {
-  if (node != NULL) {
+  if (node != nullptr) {
     if (wbTimerNode_getMessage(node)) {
       wbDelete(wbTimerNode_getMessage(node));
     }
@@ -112,6 +112,9 @@ static inline const char *_nodeKind(wbTimerKind_t kind) {
 }
 
 static inline json11::Json wbTimerNode_toJSONObject(wbTimerNode_t node) {
+  if (node == nullptr) {
+    return json11::Json{};
+  }
   int parent_id = wbTimerNode_hasParent(node)
                       ? wbTimerNode_getIdx(wbTimerNode_getParent(node))
                       : -1;
@@ -138,7 +141,7 @@ static inline json11::Json wbTimerNode_toJSONObject(wbTimerNode_t node) {
 }
 
 static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
-  if (node == NULL) {
+  if (node == nullptr) {
     return "";
   } else if (WB_USE_JSON11) {
     json11::Json json = wbTimerNode_toJSONObject(node);
@@ -191,7 +194,7 @@ static inline string wbTimerNode_toJSON(wbTimerNode_t node) {
 }
 
 static inline string wbTimerNode_toXML(wbTimerNode_t node) {
-  if (node == NULL) {
+  if (node == nullptr) {
     return "";
   } else {
     stringstream ss;
@@ -257,7 +260,7 @@ static inline string wbTimerNode_toXML(wbTimerNode_t node) {
 #define wbTimer_emptyQ(timer) (wbTimer_getLength(timer) == 0)
 
 void wbTimer_delete(wbTimer_t timer) {
-  if (timer != NULL) {
+  if (timer != nullptr) {
     wbTimerNode_t tmp, iter;
 
     iter = wbTimer_getHead(timer);
@@ -283,7 +286,7 @@ static json11::Json wbTimer_toJSONObject(wbTimer_t timer) {
   wbTimer_setEndTime(timer, currentTime);
   wbTimer_setElapsedTime(timer, currentTime - wbTimer_getStartTime(timer));
 
-  for (iter = wbTimer_getHead(timer); iter != NULL;
+  for (iter = wbTimer_getHead(timer); iter != nullptr;
        iter = wbTimerNode_getNext(iter)) {
     if (!wbTimerNode_stoppedQ(iter)) {
       wbTimerNode_setEndTime(iter, currentTime);
@@ -296,7 +299,7 @@ static json11::Json wbTimer_toJSONObject(wbTimer_t timer) {
 }
 
 string wbTimer_toJSON(wbTimer_t timer) {
-  if (timer == NULL) {
+  if (timer == nullptr) {
     return "";
   } else if (WB_USE_JSON11) {
     json11::Json json = wbTimer_toJSONObject(timer);
@@ -312,7 +315,7 @@ string wbTimer_toJSON(wbTimer_t timer) {
     wbTimer_setElapsedTime(timer,
                            currentTime - wbTimer_getStartTime(timer));
 
-    for (iter = wbTimer_getHead(timer); iter != NULL;
+    for (iter = wbTimer_getHead(timer); iter != nullptr;
          iter = wbTimerNode_getNext(iter)) {
       if (!wbTimerNode_stoppedQ(iter)) {
         wbTimerNode_setEndTime(iter, currentTime);
@@ -320,7 +323,7 @@ string wbTimer_toJSON(wbTimer_t timer) {
             iter, currentTime - wbTimerNode_getStartTime(iter));
       }
       ss << wbTimerNode_toJSON(iter);
-      if (wbTimerNode_getNext(iter) != NULL) {
+      if (wbTimerNode_getNext(iter) != nullptr) {
         ss << ",\n";
       }
     }
@@ -334,7 +337,7 @@ string wbTimer_toJSON() {
 }
 
 string wbTimer_toXML(wbTimer_t timer) {
-  if (timer == NULL) {
+  if (timer == nullptr) {
     return "";
   } else {
     stringstream ss;
@@ -354,7 +357,7 @@ string wbTimer_toXML(wbTimer_t timer) {
     ss << "<elapsed_time>" << wbTimer_getElapsedTime(timer)
        << "</elapsed_time>\n";
     ss << "<elements>\n";
-    for (iter = wbTimer_getHead(timer); iter != NULL;
+    for (iter = wbTimer_getHead(timer); iter != nullptr;
          iter = wbTimerNode_getNext(iter)) {
       if (!wbTimerNode_stoppedQ(iter)) {
         wbTimerNode_setEndTime(iter, currentTime);
@@ -391,7 +394,7 @@ wbTimer_t wbTimer_new(void) {
 static inline wbTimerNode_t _findParent(wbTimer_t timer) {
   wbTimerNode_t iter;
 
-  for (iter = wbTimer_getTail(timer); iter != NULL;
+  for (iter = wbTimer_getTail(timer); iter != nullptr;
        iter = wbTimerNode_getPrevious(iter)) {
     if (!wbTimerNode_stoppedQ(iter)) {
       return iter;
@@ -433,7 +436,7 @@ wbTimerNode_t wbTimer_start(wbTimerKind_t kind, const char *file,
 
   wbTimerNode_setStartTime(node, currentTime);
   wbTimerNode_setParent(node, parent);
-  if (parent != NULL) {
+  if (parent != nullptr) {
     wbTimerNode_setLevel(node, wbTimerNode_getLevel(parent) + 1);
   }
 
@@ -451,7 +454,7 @@ static inline wbTimerNode_t _findNode(wbTimer_t timer, wbTimerKind_t kind,
                                       string msg) {
   wbTimerNode_t iter;
 
-  for (iter = wbTimer_getTail(timer); iter != NULL;
+  for (iter = wbTimer_getTail(timer); iter != nullptr;
        iter = wbTimerNode_getPrevious(iter)) {
     if (msg == "") {
       if (!wbTimerNode_stoppedQ(iter) &&
@@ -478,8 +481,8 @@ void wbTimer_stop(wbTimerKind_t kind, string msg, const char *file,
 
   node = _findNode(_timer, kind, msg);
 
-  wbAssert(node != NULL);
-  if (node == NULL) {
+  wbAssert(node != nullptr);
+  if (node == nullptr) {
     return;
   }
 
@@ -492,7 +495,7 @@ void wbTimer_stop(wbTimerKind_t kind, string msg, const char *file,
   wbTimerNode_setStoppedQ(node, wbTrue);
 
 #ifdef wbLogger_printOnLog
-  if (wbLogger_printOnLog) {
+  if (wbLogger_printOnLog && node) {
     json11::Json json = json11::Json::object{
         {"type", "timer"},
         {"id", wbTimerNode_getId(node)},

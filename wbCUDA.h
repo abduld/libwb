@@ -58,11 +58,11 @@ static inline cudaError_t wbCUDAFree(void *mem) {
            sizeof(wbCUDAMemory_t) * _cudaMemoryListSize);
   }
   for (int ii = 0; ii < idx; ii++) {
-    if (_cudaMemoryList[ii].mem != NULL &&
+    if (_cudaMemoryList[ii].mem != nullptr &&
         _cudaMemoryList[ii].mem == mem) {
       cudaError_t err = cudaFree(mem);
       _cudaMallocSize -= _cudaMemoryList[ii].sz;
-      _cudaMemoryList[ii].mem = NULL;
+      _cudaMemoryList[ii].mem = nullptr;
       return err;
     }
   }

@@ -55,8 +55,8 @@ static void parseDepth(const char *line0, int *depth) {
 }
 
 static char *nextLine(wbFile_t file) {
-  char *line = NULL;
-  while ((line = wbFile_readLine(file)) != NULL) {
+  char *line = nullptr;
+  while ((line = wbFile_readLine(file)) != nullptr) {
     if (!isComment(line)) {
       break;
     }
@@ -75,16 +75,16 @@ wbImage_t wbPPM_import(const char *filename) {
   float *imgData, *floatIter;
   float scale;
 
-  img = NULL;
+  img = nullptr;
 
   file = wbFile_open(filename, "rb");
-  if (file == NULL) {
+  if (file == nullptr) {
     printf("Could not open %s\n", filename);
     goto cleanup;
   }
 
   header = wbFile_readLine(file);
-  if (header == NULL) {
+  if (header == nullptr) {
     printf("Could not read from %s\n", filename);
     goto cleanup;
   } else if (strcmp(header, "P6") != 0 && strcmp(header, "P6\n") != 0 &&

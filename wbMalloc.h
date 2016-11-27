@@ -31,7 +31,7 @@ static inline void *_malloc(size_t size) THROW {
 }
 
 static inline void _free(void *ptr) THROW {
-  if (ptr != NULL) {
+  if (ptr != nullptr) {
     memmgr_free(ptr);
   }
 }
@@ -44,7 +44,7 @@ static inline void *_realloc(void *ptr, size_t size) THROW {
   if (size == 0) {
     free(ptr);
     return NULL;
-  } else if (ptr == NULL) {
+  } else if (ptr == nullptr) {
     return malloc(size);
   } else {
     void *buf;
@@ -83,10 +83,10 @@ static inline void *_realloc(void *ptr, size_t size) THROW {
 #define wbMalloc(sz) _malloc(sz)
 #define wbDelete(var)                                                     \
   _free(var);                                                             \
-  var = NULL
+  var = nullptr
 #define wbFree(var)                                                       \
   _free(var);                                                             \
-  var = NULL
+  var = nullptr
 #define wbRealloc(var, newSize) _realloc(var, newSize)
 #define wbReallocArray(t, m, n) ((t *)_realloc(m, n * sizeof(t)))
 
@@ -98,7 +98,7 @@ static inline void *_realloc(void *ptr, size_t size) THROW {
 #else /* WB_USE_CUSTOM_MALLOC */
 
 static inline void *xMalloc(size_t sz) {
-  void *mem = NULL;
+  void *mem = nullptr;
   if (sz != 0) {
     mem = malloc(sz);
   }
@@ -106,21 +106,21 @@ static inline void *xMalloc(size_t sz) {
 }
 
 static inline void xFree(void *mem) {
-  if (mem != NULL) {
+  if (mem != nullptr) {
     free(mem);
   }
   return;
 }
 
 static inline void *xRealloc(void *mem, size_t sz) {
-  if (mem == NULL) {
+  if (mem == nullptr) {
     return NULL;
   } else if (sz == 0) {
     xFree(mem);
     return NULL;
   } else {
     void *res = realloc(mem, sz);
-    wbAssert(res != NULL);
+    wbAssert(res != nullptr);
     return res;
   }
 }
@@ -131,7 +131,7 @@ static inline void *xRealloc(void *mem, size_t sz) {
 #define wbDelete(var) wbFree(var)
 #define wbFree(var)                                                       \
   xFree(var);                                                             \
-  var = NULL
+  var = nullptr
 #define wbRealloc(var, newSize) xRealloc(var, newSize)
 #define wbReallocArray(t, m, n) ((t *)xRealloc(m, n * sizeof(t)))
 

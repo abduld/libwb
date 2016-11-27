@@ -4,14 +4,14 @@
 
 static inline void wbImportCSV_setFile(wbImportCSV_t csv,
                                        const char *path) {
-  if (csv != NULL) {
-    if (wbImportCSV_getFile(csv) != NULL) {
+  if (csv != nullptr) {
+    if (wbImportCSV_getFile(csv) != nullptr) {
       wbFile_delete(wbImportCSV_getFile(csv));
     }
-    if (path != NULL) {
+    if (path != nullptr) {
       wbImportCSV_getFile(csv) = wbFile_open(path, "r");
     } else {
-      wbImportCSV_getFile(csv) = NULL;
+      wbImportCSV_getFile(csv) = nullptr;
     }
   }
 
@@ -26,14 +26,14 @@ static inline wbImportCSV_t wbImportCSV_new(void) {
   wbImportCSV_setRowCount(csv, -1);
   wbImportCSV_setColumnCount(csv, -1);
   wbImportCSV_setData(csv, NULL);
-  wbImportCSV_getFile(csv) = NULL;
+  wbImportCSV_getFile(csv) = nullptr;
   wbImportCSV_setSeperator(csv, '\0');
 
   return csv;
 }
 
 static inline void wbImportCSV_delete(wbImportCSV_t csv) {
-  if (csv != NULL) {
+  if (csv != nullptr) {
     wbImportCSV_setFile(csv, NULL);
     if (wbImportCSV_getData(csv)) {
       wbDelete(wbImportCSV_getData(csv));
@@ -50,7 +50,7 @@ static inline wbImportCSV_t wbImportCSV_findDimensions(wbImportCSV_t csv,
   wbFile_t file;
   char seperator[2];
 
-  if (csv == NULL) {
+  if (csv == nullptr) {
     return NULL;
   }
 
@@ -63,10 +63,10 @@ static inline wbImportCSV_t wbImportCSV_findDimensions(wbImportCSV_t csv,
 
   file = wbImportCSV_getFile(csv);
 
-  while ((line = wbFile_readLine(file)) != NULL) {
+  while ((line = wbFile_readLine(file)) != nullptr) {
     int currColumn = 0;
     char *token    = strtok(line, seperator);
-    while (token != NULL) {
+    while (token != nullptr) {
       token = strtok(NULL, seperator);
       currColumn++;
     }
@@ -96,7 +96,7 @@ static inline int *csv_readAsInteger(wbFile_t file, char sep, int rows,
   int var;
   char seperator[2];
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return NULL;
   }
 
@@ -111,15 +111,15 @@ static inline int *csv_readAsInteger(wbFile_t file, char sep, int rows,
 
   // printf("cols = %d rows = %d\n", columns, rows);
   if (columns == 1) {
-    while ((line = wbFile_readLine(file)) != NULL) {
+    while ((line = wbFile_readLine(file)) != nullptr) {
       sscanf(line, "%d", &var);
       // printf("reading %d\n", var);
       data[ii++] = var;
     }
   } else {
-    while ((line = wbFile_readLine(file)) != NULL) {
+    while ((line = wbFile_readLine(file)) != nullptr) {
       char *token = strtok(line, seperator);
-      while (token != NULL) {
+      while (token != nullptr) {
         sscanf(token, "%d", &var);
         token      = strtok(NULL, seperator);
         data[ii++] = var;
@@ -138,7 +138,7 @@ static inline wbReal_t *csv_readAsReal(wbFile_t file, char sep, int rows,
   wbReal_t var;
   char seperator[2];
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return NULL;
   }
 
@@ -152,14 +152,14 @@ static inline wbReal_t *csv_readAsReal(wbFile_t file, char sep, int rows,
   seperator[1] = '\0';
 
   if (columns == 1) {
-    while ((line = wbFile_readLine(file)) != NULL) {
+    while ((line = wbFile_readLine(file)) != nullptr) {
       sscanf(line, "%f", &var);
       data[ii++] = var;
     }
   } else {
-    while ((line = wbFile_readLine(file)) != NULL) {
+    while ((line = wbFile_readLine(file)) != nullptr) {
       char *token = strtok(line, seperator);
-      while (token != NULL) {
+      while (token != nullptr) {
         sscanf(token, "%f", &var);
         token      = strtok(NULL, seperator);
         data[ii++] = var;
@@ -177,13 +177,13 @@ static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv,
   char seperator;
   int rows, columns;
 
-  if (csv == NULL) {
+  if (csv == nullptr) {
     return NULL;
   }
 
   if (wbImportCSV_getRowCount(csv) == -1 ||
       wbImportCSV_getColumnCount(csv) == -1) {
-    if (wbImportCSV_findDimensions(csv, &rows, &columns) == NULL) {
+    if (wbImportCSV_findDimensions(csv, &rows, &columns) == nullptr) {
       wbLog(ERROR, "Failed to figure out csv dimensions.");
       return NULL;
     }
@@ -196,7 +196,7 @@ static inline wbImportCSV_t wbImportCSV_read(wbImportCSV_t csv,
   rows      = wbImportCSV_getRowCount(csv);
   columns   = wbImportCSV_getColumnCount(csv);
 
-  if (wbImportCSV_getData(csv) != NULL) {
+  if (wbImportCSV_getData(csv) != nullptr) {
     wbDelete(wbImportCSV_getData(csv));
     wbImportCSV_setData(csv, NULL);
   }
@@ -223,14 +223,14 @@ static inline wbImportCSV_t wbImportCSV_readAsReal(wbImportCSV_t csv) {
 
 static inline void wbImportRaw_setFile(wbImportRaw_t raw,
                                        const char *path) {
-  if (raw != NULL) {
-    if (wbImportRaw_getFile(raw) != NULL) {
+  if (raw != nullptr) {
+    if (wbImportRaw_getFile(raw) != nullptr) {
       wbFile_delete(wbImportRaw_getFile(raw));
     }
-    if (path != NULL) {
+    if (path != nullptr) {
       wbImportRaw_getFile(raw) = wbFile_open(path, "r");
     } else {
-      wbImportRaw_getFile(raw) = NULL;
+      wbImportRaw_getFile(raw) = nullptr;
     }
   }
 
@@ -245,13 +245,13 @@ static inline wbImportRaw_t wbImportRaw_new(void) {
   wbImportRaw_setRowCount(raw, -1);
   wbImportRaw_setColumnCount(raw, -1);
   wbImportRaw_setData(raw, NULL);
-  wbImportRaw_getFile(raw) = NULL;
+  wbImportRaw_getFile(raw) = nullptr;
 
   return raw;
 }
 
 static inline void wbImportRaw_delete(wbImportRaw_t raw) {
-  if (raw != NULL) {
+  if (raw != nullptr) {
     wbImportRaw_setFile(raw, NULL);
     if (wbImportRaw_getData(raw)) {
       wbDelete(wbImportRaw_getData(raw));
@@ -284,7 +284,7 @@ static inline char *lineStrip(const char *line) {
 }
 
 static inline wbBool wbImportRaw_findDimensions(wbImportRaw_t raw) {
-  if (raw != NULL) {
+  if (raw != nullptr) {
     int rows;
     int columns;
     char *line;
@@ -297,7 +297,7 @@ static inline wbBool wbImportRaw_findDimensions(wbImportRaw_t raw) {
 
     line = wbFile_readLine(file);
 
-    if (line == NULL) {
+    if (line == nullptr) {
       return wbTrue;
     }
 
@@ -328,7 +328,7 @@ static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw,
   char seperator;
   int rows, columns;
 
-  if (raw == NULL) {
+  if (raw == nullptr) {
     return NULL;
   }
 
@@ -345,7 +345,7 @@ static inline wbImportRaw_t wbImportRaw_read(wbImportRaw_t raw,
   rows      = wbImportRaw_getRowCount(raw);
   columns   = wbImportRaw_getColumnCount(raw);
 
-  if (wbImportRaw_getData(raw) != NULL) {
+  if (wbImportRaw_getData(raw) != nullptr) {
     wbDelete(wbImportRaw_getData(raw));
     wbImportRaw_setData(raw, NULL);
   }
@@ -377,21 +377,21 @@ static inline wbImportText_t wbImportText_new(void) {
 
   wbImportText_setLength(text, 0);
   wbImportText_setData(text, NULL);
-  wbImportText_getFile(text) = NULL;
+  wbImportText_getFile(text) = nullptr;
 
   return text;
 }
 
 static inline void wbImportText_setFile(wbImportText_t text,
                                         const char *path) {
-  if (text != NULL) {
-    if (wbImportText_getFile(text) != NULL) {
+  if (text != nullptr) {
+    if (wbImportText_getFile(text) != nullptr) {
       wbFile_delete(wbImportText_getFile(text));
     }
-    if (path != NULL) {
+    if (path != nullptr) {
       wbImportText_getFile(text) = wbFile_open(path, "r");
     } else {
-      wbImportText_getFile(text) = NULL;
+      wbImportText_getFile(text) = nullptr;
     }
   }
 
@@ -399,7 +399,7 @@ static inline void wbImportText_setFile(wbImportText_t text,
 }
 
 static inline void wbImportText_delete(wbImportText_t text) {
-  if (text != NULL) {
+  if (text != nullptr) {
     wbImportText_setFile(text, NULL);
     if (wbImportText_getData(text)) {
       wbDelete(wbImportText_getData(text));
@@ -413,13 +413,13 @@ static inline wbImportText_t wbImportText_read(wbImportText_t text) {
   wbFile_t file;
   int length;
 
-  if (text == NULL) {
+  if (text == nullptr) {
     return NULL;
   }
 
   file = wbImportText_getFile(text);
 
-  if (wbImportText_getData(text) != NULL) {
+  if (wbImportText_getData(text) != nullptr) {
     wbDelete(wbImportText_getData(text));
     wbImportText_setData(text, NULL);
   }
@@ -437,7 +437,7 @@ static inline wbImport_t wbImport_open(const char *file,
                                        wbImportKind_t kind) {
   wbImport_t imp;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     wbLog(ERROR, "Go NULL for file value.");
     wbExit();
   }
@@ -532,7 +532,7 @@ static inline void wbImport_close(wbImport_t imp) {
 }
 
 static inline void *wbImport_read(wbImport_t imp, wbType_t type) {
-  void *data = NULL;
+  void *data = nullptr;
   wbImportKind_t kind;
 
   kind = wbImport_getKind(imp);
@@ -608,7 +608,7 @@ void *wbImport(const char *file, int *resRows, int *resColumns,
   int columns = 0, rows = 0;
   wbImportKind_t kind;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     fprintf(stderr, "Failed to import file.\n");
     wbExit();
   }
@@ -646,11 +646,11 @@ void *wbImport(const char *file, int *resRows, int *resColumns,
     columns = 1;
   }
 
-  if (resRows != NULL) {
+  if (resRows != nullptr) {
     *resRows = rows;
   }
 
-  if (resColumns != NULL) {
+  if (resColumns != nullptr) {
     *resColumns = columns;
   }
 
@@ -685,7 +685,7 @@ wbImage_t wbImport(const char *file) {
   wbImport_t imp;
   wbImportKind_t kind;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     fprintf(stderr, "Failed to import file.\n");
     wbExit();
   }

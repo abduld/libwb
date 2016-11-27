@@ -1,10 +1,10 @@
 
 #include "wb.h"
 
-wbLogger_t _logger = NULL;
+wbLogger_t _logger = nullptr;
 
 static inline wbBool wbLogEntry_hasNext(wbLogEntry_t elem) {
-  return wbLogEntry_getNext(elem) != NULL;
+  return wbLogEntry_getNext(elem) != nullptr;
 }
 
 static inline wbLogEntry_t wbLogEntry_new() {
@@ -48,8 +48,8 @@ wbLogEntry_initialize(wbLogLevel_t level, string msg, const char *file,
 }
 
 static inline void wbLogEntry_delete(wbLogEntry_t elem) {
-  if (elem != NULL) {
-    if (wbLogEntry_getMessage(elem) != NULL) {
+  if (elem != nullptr) {
+    if (wbLogEntry_getMessage(elem) != nullptr) {
       wbFree(wbLogEntry_getMessage(elem));
     }
     wbDelete(elem);
@@ -80,6 +80,9 @@ static inline const char *getLevelName(wbLogLevel_t level) {
 }
 
 static inline json11::Json wbLogEntry_toJSONObject(wbLogEntry_t elem) {
+  if (elem == nullptr) {
+    return json11::Json{};
+  }
   json11::Json json = json11::Json::object{
       {"id", wbLogEntry_getId(elem)},
       {"session_id", wbLogEntry_getSessionId(elem)},
@@ -95,7 +98,7 @@ static inline json11::Json wbLogEntry_toJSONObject(wbLogEntry_t elem) {
 }
 
 static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
-  if (elem == NULL) {
+  if (elem == nullptr) {
     return "";
   } else if (WB_USE_JSON11) {
     json11::Json json = wbLogEntry_toJSONObject(elem);
@@ -130,7 +133,7 @@ static inline string wbLogEntry_toJSON(wbLogEntry_t elem) {
 }
 
 static inline string wbLogEntry_toXML(wbLogEntry_t elem) {
-  if (elem != NULL) {
+  if (elem != nullptr) {
     stringstream ss;
 
     ss << "<entry>\n";
@@ -180,12 +183,12 @@ static inline void _wbLogger_setLevel(wbLogLevel_t level) {
 #define wbLogger_setLevel(level) _wbLogger_setLevel(wbLogLevel_##level)
 
 void wbLogger_clear(wbLogger_t logger) {
-  if (logger != NULL) {
+  if (logger != nullptr) {
     wbLogEntry_t tmp;
     wbLogEntry_t iter;
 
     iter = wbLogger_getHead(logger);
-    while (iter != NULL) {
+    while (iter != nullptr) {
       tmp = wbLogEntry_getNext(iter);
       wbLogEntry_delete(iter);
       iter = tmp;
@@ -197,7 +200,7 @@ void wbLogger_clear(wbLogger_t logger) {
 }
 
 void wbLogger_delete(wbLogger_t logger) {
-  if (logger != NULL) {
+  if (logger != nullptr) {
     wbLogger_clear(logger);
     wbDelete(logger);
   }
@@ -232,7 +235,7 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
   }
 #endif /* wbLogger_printOnLog */
 
-  if (wbLogger_getHead(logger) == NULL) {
+  if (wbLogger_getHead(logger) == nullptr) {
     wbLogger_setHead(logger, elem);
   } else {
     wbLogEntry_t prev = wbLogger_getHead(logger);
@@ -265,11 +268,11 @@ string wbLogger_toJSON() {
 static json11::Json wbLogger_toJSONObject(wbLogger_t logger) {
   std::vector<json11::Json> elems{};
 
-  if (logger != NULL) {
+  if (logger != nullptr) {
     wbLogEntry_t iter;
     stringstream ss;
 
-    for (iter = wbLogger_getHead(logger); iter != NULL;
+    for (iter = wbLogger_getHead(logger); iter != nullptr;
          iter = wbLogEntry_getNext(iter)) {
       elems.push_back(wbLogEntry_toJSONObject(iter));
     }
@@ -278,14 +281,14 @@ static json11::Json wbLogger_toJSONObject(wbLogger_t logger) {
 }
 
 string wbLogger_toJSON(wbLogger_t logger) {
-  if (logger != NULL) {
+  if (logger != nullptr) {
     wbLogEntry_t iter;
     stringstream ss;
 
-    for (iter = wbLogger_getHead(logger); iter != NULL;
+    for (iter = wbLogger_getHead(logger); iter != nullptr;
          iter = wbLogEntry_getNext(iter)) {
       ss << wbLogEntry_toJSON(iter);
-      if (wbLogEntry_getNext(iter) != NULL) {
+      if (wbLogEntry_getNext(iter) != nullptr) {
         ss << ",\n";
       }
     }
@@ -300,7 +303,7 @@ string wbLogger_toXML() {
 }
 
 string wbLogger_toXML(wbLogger_t logger) {
-  if (logger != NULL) {
+  if (logger != nullptr) {
     wbLogEntry_t iter;
     stringstream ss;
 
@@ -312,7 +315,7 @@ string wbLogger_toXML(wbLogger_t logger) {
     ss << "<session_id>" << wbLogger_getSessionId(logger)
        << "</session_id>\n";
     ss << "<elements>\n";
-    for (iter = wbLogger_getHead(logger); iter != NULL;
+    for (iter = wbLogger_getHead(logger); iter != nullptr;
          iter = wbLogEntry_getNext(iter)) {
       ss << wbLogEntry_toXML(iter);
     }

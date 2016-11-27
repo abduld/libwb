@@ -3,14 +3,14 @@
 
 static inline void wbExportText_setFile(wbExportText_t text,
                                         const char *path) {
-  if (text != NULL) {
-    if (wbExportText_getFile(text) != NULL) {
+  if (text != nullptr) {
+    if (wbExportText_getFile(text) != nullptr) {
       wbFile_delete(wbExportText_getFile(text));
     }
-    if (path != NULL) {
+    if (path != nullptr) {
       wbExportText_getFile(text) = wbFile_open(path, "w+");
     } else {
-      wbExportText_getFile(text) = NULL;
+      wbExportText_getFile(text) = nullptr;
     }
   }
 
@@ -22,14 +22,14 @@ static inline wbExportText_t wbExportText_new(void) {
 
   text = wbNew(struct st_wbExportText_t);
 
-  wbExportText_getFile(text) = NULL;
+  wbExportText_getFile(text) = nullptr;
   wbExportText_setLength(text, -1);
 
   return text;
 }
 
 static inline void wbExportText_delete(wbExportText_t text) {
-  if (text != NULL) {
+  if (text != nullptr) {
     wbExportText_setFile(text, NULL);
     wbDelete(text);
   }
@@ -42,7 +42,7 @@ static inline void wbExportText_write(wbExportText_t text,
   FILE *handle;
   wbFile_t file;
 
-  if (text == NULL || wbExportText_getFile(text) == NULL) {
+  if (text == nullptr || wbExportText_getFile(text) == nullptr) {
     return;
   }
 
@@ -50,7 +50,7 @@ static inline void wbExportText_write(wbExportText_t text,
 
   handle = wbFile_getFileHandle(file);
 
-  if (handle == NULL) {
+  if (handle == nullptr) {
     return;
   }
 
@@ -63,14 +63,14 @@ static inline void wbExportText_write(wbExportText_t text,
 
 static inline void wbExportRaw_setFile(wbExportRaw_t raw,
                                        const char *path) {
-  if (raw != NULL) {
-    if (wbExportRaw_getFile(raw) != NULL) {
+  if (raw != nullptr) {
+    if (wbExportRaw_getFile(raw) != nullptr) {
       wbFile_delete(wbExportRaw_getFile(raw));
     }
-    if (path != NULL) {
+    if (path != nullptr) {
       wbExportRaw_getFile(raw) = wbFile_open(path, "w+");
     } else {
-      wbExportRaw_getFile(raw) = NULL;
+      wbExportRaw_getFile(raw) = nullptr;
     }
   }
 
@@ -82,7 +82,7 @@ static inline wbExportRaw_t wbExportRaw_new(void) {
 
   raw = wbNew(struct st_wbExportRaw_t);
 
-  wbExportRaw_getFile(raw) = NULL;
+  wbExportRaw_getFile(raw) = nullptr;
   wbExportRaw_setRowCount(raw, -1);
   wbExportRaw_setColumnCount(raw, -1);
 
@@ -90,7 +90,7 @@ static inline wbExportRaw_t wbExportRaw_new(void) {
 }
 
 static inline void wbExportRaw_delete(wbExportRaw_t raw) {
-  if (raw != NULL) {
+  if (raw != nullptr) {
     wbExportRaw_setFile(raw, NULL);
     wbDelete(raw);
   }
@@ -104,7 +104,7 @@ static inline void wbExportRaw_write(wbExportRaw_t raw, void *data,
   FILE *handle;
   wbFile_t file;
 
-  if (raw == NULL || wbExportRaw_getFile(raw) == NULL) {
+  if (raw == nullptr || wbExportRaw_getFile(raw) == nullptr) {
     return;
   }
 
@@ -112,7 +112,7 @@ static inline void wbExportRaw_write(wbExportRaw_t raw, void *data,
 
   handle = wbFile_getFileHandle(file);
 
-  if (handle == NULL) {
+  if (handle == nullptr) {
     return;
   }
 
@@ -147,14 +147,14 @@ static inline void wbExportRaw_write(wbExportRaw_t raw, void *data,
 
 static inline void wbExportCSV_setFile(wbExportCSV_t csv,
                                        const char *path) {
-  if (csv != NULL) {
-    if (wbExportCSV_getFile(csv) != NULL) {
+  if (csv != nullptr) {
+    if (wbExportCSV_getFile(csv) != nullptr) {
       wbFile_delete(wbExportCSV_getFile(csv));
     }
-    if (path != NULL) {
+    if (path != nullptr) {
       wbExportCSV_getFile(csv) = wbFile_open(path, "w+");
     } else {
-      wbExportCSV_getFile(csv) = NULL;
+      wbExportCSV_getFile(csv) = nullptr;
     }
   }
 
@@ -166,7 +166,7 @@ static inline wbExportCSV_t wbExportCSV_new(void) {
 
   csv = wbNew(struct st_wbExportCSV_t);
 
-  wbExportCSV_getFile(csv) = NULL;
+  wbExportCSV_getFile(csv) = nullptr;
   wbExportCSV_setColumnCount(csv, -1);
   wbExportCSV_setRowCount(csv, -1);
   wbExportCSV_setSeperator(csv, '\0');
@@ -175,7 +175,7 @@ static inline wbExportCSV_t wbExportCSV_new(void) {
 }
 
 static inline void wbExportCSV_delete(wbExportCSV_t csv) {
-  if (csv != NULL) {
+  if (csv != nullptr) {
     wbExportCSV_setFile(csv, NULL);
     wbDelete(csv);
   }
@@ -189,7 +189,7 @@ static inline void wbExportCSV_write(wbExportCSV_t csv, void *data,
   FILE *handle;
   char seperator[2];
 
-  if (csv == NULL || wbExportCSV_getFile(csv) == NULL) {
+  if (csv == nullptr || wbExportCSV_getFile(csv) == nullptr) {
     return;
   }
 
@@ -197,7 +197,7 @@ static inline void wbExportCSV_write(wbExportCSV_t csv, void *data,
 
   handle = wbFile_getFileHandle(file);
 
-  if (handle == NULL) {
+  if (handle == nullptr) {
     return;
   }
 
@@ -235,7 +235,7 @@ static inline wbExport_t wbExport_open(const char *file,
                                        wbExportKind_t kind) {
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     wbLog(ERROR, "Go NULL for file value.");
     wbExit();
   }
@@ -402,7 +402,7 @@ static void wbExport(const char *file, void *data, int rows, int columns,
   wbExportKind_t kind;
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
@@ -433,7 +433,7 @@ void wbExport(const char *file, unsigned char *data, int rows,
   wbExportKind_t kind;
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
@@ -448,7 +448,7 @@ void wbExport(const char *file, int *data, int rows, int columns) {
   wbExportKind_t kind;
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
@@ -463,7 +463,7 @@ void wbExport(const char *file, wbReal_t *data, int rows, int columns) {
   wbExportKind_t kind;
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
@@ -478,7 +478,7 @@ void wbExport(const char *file, wbExportKind_t kind, void *data, int rows,
               int columns, wbType_t type) {
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
@@ -492,7 +492,7 @@ void wbExport(const char *file, wbImage_t img) {
   wbExportKind_t kind;
   wbExport_t exprt;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 

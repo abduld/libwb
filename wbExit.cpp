@@ -31,7 +31,7 @@ void wb_atExit(void) {
           cout << wbTimer_toJSON();
         } else {
           const char *msg = wbMPI_getStringFromRank(ii, wbMPI_timerTag);
-          if (msg != NULL && strlen(msg) != 0) {
+          if (msg != nullptr && strlen(msg) != 0) {
             cout << ",\n";
             cout << msg;
             //		 free(msg);
@@ -48,7 +48,7 @@ void wb_atExit(void) {
           cout << wbLogger_toJSON();
         } else {
           const char *msg = wbMPI_getStringFromRank(ii, wbMPI_loggerTag);
-          if (msg != NULL && strlen(msg) != 0) {
+          if (msg != nullptr && strlen(msg) != 0) {
             cout << ",\n";
             cout << msg;
             //		 free(msg);
@@ -102,8 +102,8 @@ void wb_atExit(void) {
   // wbTimer_delete(_timer);
   // wbLogger_delete(_logger);
 
-  _timer  = NULL;
-  _logger = NULL;
+  _timer  = nullptr;
+  _logger = nullptr;
 
 // wbFile_atExit();
 

@@ -9,7 +9,7 @@ static wbFile_t wbFile_handles[wbFile_maxCount];
 static int wbFile_nextIndex(void) {
   int ii;
   for (ii = 0; ii < wbFile_maxCount; ii++) {
-    if (wbFile_handles[ii] == NULL) {
+    if (wbFile_handles[ii] == nullptr) {
       return ii;
     }
   }
@@ -36,23 +36,23 @@ wbFile_t wbFile_new(void) {
 }
 
 void wbFile_delete(wbFile_t file) {
-  if (file != NULL) {
+  if (file != nullptr) {
     int idx = wbFile_getIndex(file);
-    if (wbFile_getFileName(file) != NULL) {
+    if (wbFile_getFileName(file) != nullptr) {
       wbDelete(wbFile_getFileName(file));
     }
-    if (wbFile_getMode(file) != NULL) {
+    if (wbFile_getMode(file) != nullptr) {
       wbDelete(wbFile_getMode(file));
     }
-    if (wbFile_getFileHandle(file) != NULL) {
+    if (wbFile_getFileHandle(file) != nullptr) {
       fflush(wbFile_getFileHandle(file));
       fclose(wbFile_getFileHandle(file));
     }
     if (idx >= 0) {
       wbAssert(wbFile_handles[idx] == file);
-      wbFile_handles[idx] = NULL;
+      wbFile_handles[idx] = nullptr;
     }
-    if (wbFile_getData(file) != NULL) {
+    if (wbFile_getData(file) != nullptr) {
       wbDelete(wbFile_getData(file));
     }
     wbDelete(file);
@@ -63,7 +63,7 @@ void wbFile_init(void) {
   int ii;
 
   for (ii = 0; ii < wbFile_maxCount; ii++) {
-    wbFile_handles[ii] = NULL;
+    wbFile_handles[ii] = nullptr;
   }
 }
 
@@ -71,7 +71,7 @@ void wbFile_atExit(void) {
   int ii;
 
   for (ii = 0; ii < wbFile_maxCount; ii++) {
-    if (wbFile_handles[ii] != NULL) {
+    if (wbFile_handles[ii] != nullptr) {
       wbFile_delete(wbFile_handles[ii]);
     }
   }
@@ -81,7 +81,7 @@ int wbFile_count(void) {
   int ii, count = 0;
 
   for (ii = 0; ii < wbFile_maxCount; ii++) {
-    if (wbFile_handles[ii] != NULL) {
+    if (wbFile_handles[ii] != nullptr) {
       count++;
     }
   }
@@ -92,12 +92,12 @@ wbFile_t wbFile_open(const char *fileName, const char *mode) {
   FILE *handle;
   wbFile_t file;
 
-  if (fileName == NULL) {
+  if (fileName == nullptr) {
     return NULL;
   }
 
   handle = fopen(fileName, mode);
-  if (handle == NULL) {
+  if (handle == nullptr) {
     wbLog(ERROR, "Failed to open ", file, " in mode ", mode);
     return NULL;
   }
@@ -124,11 +124,11 @@ char *wbFile_read(wbFile_t file, size_t size, size_t count) {
   size_t bufferLen;
   FILE *handle;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return NULL;
   }
 #ifndef LAZY_FILE_LOAD
-  if (wbFile_getData(file) != NULL) {
+  if (wbFile_getData(file) != nullptr) {
     char *data = wbFile_getData(file) + wbFile_getDataOffset(file);
     wbFile_setDataOffset(file, wbFile_getDataOffset(file) + size * count);
     return data;
@@ -152,14 +152,14 @@ char *wbFile_read(wbFile_t file, size_t len) {
 }
 
 void wbFile_rewind(wbFile_t file) {
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
-  if (wbFile_getData(file) == NULL) {
+  if (wbFile_getData(file) == nullptr) {
     FILE *handle;
     handle = wbFile_getFileHandle(file);
-    wbAssert(handle != NULL);
+    wbAssert(handle != nullptr);
     rewind(handle);
   }
 #ifndef LAZY_FILE_LOAD
@@ -175,11 +175,11 @@ size_t wbFile_size(wbFile_t file) {
   size_t len;
   FILE *handle;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return 0;
   }
 #ifndef LAZY_FILE_LOAD
-  if (wbFile_getData(file) != NULL) {
+  if (wbFile_getData(file) != nullptr) {
     if (wbFile_getLength(file) == 0) {
       wbFile_setLength(file, strlen(wbFile_getData(file)));
     }
@@ -199,7 +199,7 @@ size_t wbFile_size(wbFile_t file) {
 char *wbFile_read(wbFile_t file) {
   size_t len;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return NULL;
   }
 
@@ -219,7 +219,7 @@ char *wbFile_read(wbFile_t file) {
 static char buffer[MAX_CHARS_PER_LINE];
 
 char *wbFile_readLine(wbFile_t file) {
-  if (file == NULL) {
+  if (file == nullptr) {
     return NULL;
   }
 #ifdef LAZY_FILE_LOAD
@@ -240,7 +240,7 @@ char *wbFile_readLine(wbFile_t file) {
   size_t lenToNewLine = 0;
   const char *tmp;
 
-  if (wbFile_getData(file) == NULL) {
+  if (wbFile_getData(file) == nullptr) {
     wbFile_setData(file, wbFile_read(file));
     fclose(wbFile_getFileHandle(file));
     wbFile_setFileHandle(file, NULL);
@@ -275,7 +275,7 @@ void wbFile_write(wbFile_t file, const void *buffer, size_t size,
   size_t res;
   FILE *handle;
 
-  if (file == NULL) {
+  if (file == nullptr) {
     return;
   }
 
@@ -318,11 +318,11 @@ void wbFile_writeLine(wbFile_t file, string buffer0) {
 }
 
 wbBool wbFile_existsQ(const char *path) {
-  if (path == NULL) {
+  if (path == nullptr) {
     return wbFalse;
   } else {
     FILE *file = fopen(path, "r");
-    if (file != NULL) {
+    if (file != nullptr) {
       fclose(file);
       return wbTrue;
     }

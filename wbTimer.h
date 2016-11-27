@@ -113,10 +113,10 @@ struct st_wbTimer_t {
 
 #define wbTimerNode_stoppedQ(node)                                        \
   (wbTimerNode_getStoppedQ(node) == wbTrue)
-#define wbTimerNode_hasNext(node) (wbTimerNode_getNext(node) != NULL)
+#define wbTimerNode_hasNext(node) (wbTimerNode_getNext(node) != nullptr)
 #define wbTimerNode_hasPrevious(node)                                     \
-  (wbTimerNode_getPrevious(node) != NULL)
-#define wbTimerNode_hasParent(node) (wbTimerNode_getParent(node) != NULL)
+  (wbTimerNode_getPrevious(node) != nullptr)
+#define wbTimerNode_hasParent(node) (wbTimerNode_getParent(node) != nullptr)
 
 uint64_t _hrtime(void);
 

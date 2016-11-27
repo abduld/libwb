@@ -28,7 +28,7 @@ static void mkdir_(const char *dir) {
 
 EXTERN_C const char *wbDirectory_create(const char *dir) {
   char tmp[PATH_MAX];
-  char *p = NULL;
+  char *p = nullptr;
   size_t len;
 
 #ifdef WB_USE_WINDOWS

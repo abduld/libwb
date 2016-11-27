@@ -1,7 +1,7 @@
 
 #include "wb.h"
 
-char *solutionJSON = NULL;
+char *solutionJSON = nullptr;
 static string _solution_correctQ("");
 
 static void _onUnsameImageFunction(string str) {
@@ -18,7 +18,7 @@ static wbBool wbSolution_listCorrectQ(const char *expectedOutputFile,
   expectedData = (T *)wbImport(expectedOutputFile, &expectedRows,
                                &expectedColumns, type);
 
-  if (expectedData == NULL) {
+  if (expectedData == nullptr) {
     _solution_correctQ = "Failed to open expected output file.";
     res                = wbFalse;
   } else if (expectedRows != wbSolution_getRows(sol)) {
@@ -68,7 +68,7 @@ static wbBool wbSolution_listCorrectQ(const char *expectedOutputFile,
 
     res = wbTrue;
   matrixCleanup:
-    if (expectedData != NULL) {
+    if (expectedData != nullptr) {
       wbFree(expectedData);
     }
   }
@@ -77,7 +77,7 @@ static wbBool wbSolution_listCorrectQ(const char *expectedOutputFile,
 
 static wbBool wbSolution_correctQ(char *expectedOutputFile,
                                   wbSolution_t sol) {
-  if (expectedOutputFile == NULL) {
+  if (expectedOutputFile == nullptr) {
     _solution_correctQ = "Failed to determined the expected output file.";
     return wbFalse;
   } else if (!wbFile_existsQ(expectedOutputFile)) {
@@ -86,9 +86,9 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile,
     return wbFalse;
   } else if (wbString_sameQ(wbSolution_getType(sol), "image")) {
     wbBool res;
-    wbImage_t solutionImage = NULL;
+    wbImage_t solutionImage = nullptr;
     wbImage_t expectedImage = wbImport(expectedOutputFile);
-    if (expectedImage == NULL) {
+    if (expectedImage == nullptr) {
       _solution_correctQ = "Failed to open expected output file.";
       res                = wbFalse;
     } else if (wbImage_getWidth(expectedImage) !=
@@ -111,11 +111,11 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile,
       res = wbFalse;
     } else {
       solutionImage = (wbImage_t)wbSolution_getData(sol);
-      wbAssert(solutionImage != NULL);
+      wbAssert(solutionImage != nullptr);
       res = wbImage_sameQ(solutionImage, expectedImage,
                           _onUnsameImageFunction);
     }
-    if (expectedImage != NULL) {
+    if (expectedImage != nullptr) {
       wbImage_delete(expectedImage);
     }
     return res;
@@ -141,7 +141,7 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
   wbBool res;
   wbSolution_t sol;
 
-  if (expectedOutputFile == NULL || data == NULL || type0 == NULL) {
+  if (expectedOutputFile == nullptr || data == nullptr || type0 == nullptr) {
     wbLog(ERROR, "Failed to grade solution");
     return wbFalse;
   }
@@ -163,7 +163,7 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
 
   res = wbSolution_correctQ(expectedOutputFile, sol);
 
-  if (outputFile != NULL) {
+  if (outputFile != nullptr) {
     if (wbString_sameQ(type, "image")) {
       wbImage_t inputImage = (wbImage_t)data;
       wbImage_t img        = wbImage_new(wbImage_getWidth(inputImage),
@@ -208,9 +208,9 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns,
   outputFile         = wbArg_getOutputFile(arg);
   type               = wbArg_getType(arg);
 
-  wbAssert(type != NULL);
-  wbAssert(expectedOutputFile != NULL);
-  wbAssert(outputFile != NULL);
+  wbAssert(type != nullptr);
+  wbAssert(expectedOutputFile != nullptr);
+  wbAssert(outputFile != nullptr);
 
   res = wbSolution(expectedOutputFile, outputFile, type, data, rows,
                    columns, depth);

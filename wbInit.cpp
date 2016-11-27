@@ -76,7 +76,7 @@ void wb_init(int *
 
   wbFile_init();
 
-  solutionJSON = NULL;
+  solutionJSON = nullptr;
 
 #ifdef WB_USE_MPI
   atexit(wbMPI_Exit);

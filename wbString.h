@@ -36,7 +36,7 @@ static inline string wbString_quote(string str) {
 }
 
 static inline string wbString_quote(const char *str) {
-  if (str == NULL) {
+  if (str == nullptr) {
     return wbString_quote("");
   } else {
     return wbString_quote(string(str));
@@ -44,7 +44,7 @@ static inline string wbString_quote(const char *str) {
 }
 
 static inline char *wbString_duplicate(const char *str) {
-  if (str == NULL) {
+  if (str == nullptr) {
     return NULL;
   } else {
     char *newstr;
@@ -296,7 +296,7 @@ static inline wbBool wbString_sameQ(const string &x, const string &y) {
 }
 
 static inline char *wbString_toLower(const char *str) {
-  if (str == NULL) {
+  if (str == nullptr) {
     return NULL;
   } else {
     char *res, *iter;

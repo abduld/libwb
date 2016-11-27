@@ -38,8 +38,8 @@ wbImage_t wbImage_new(int width, int height) {
 }
 
 void wbImage_delete(wbImage_t img) {
-  if (img != NULL) {
-    if (wbImage_getData(img) != NULL) {
+  if (img != nullptr) {
+    if (wbImage_getData(img) != nullptr) {
       wbDelete(wbImage_getData(img));
     }
     wbDelete(img);
@@ -67,7 +67,7 @@ static inline float wbImage_getPixel(wbImage_t img, int x, int y, int c) {
 
 wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
                      wbImage_onSameFunction_t onUnSame) {
-  if (a == NULL || b == NULL) {
+  if (a == nullptr || b == nullptr) {
     wbLog(ERROR, "Comparing null images.");
     return wbFalse;
   } else if (a == b) {
@@ -89,8 +89,8 @@ wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
     aData = wbImage_getData(a);
     bData = wbImage_getData(b);
 
-    wbAssert(aData != NULL);
-    wbAssert(bData != NULL);
+    wbAssert(aData != nullptr);
+    wbAssert(bData != nullptr);
 
     width    = wbImage_getWidth(a);
     height   = wbImage_getHeight(a);
@@ -108,7 +108,7 @@ wbBool wbImage_sameQ(wbImage_t a, wbImage_t b,
             y = *bData++;
           }
           if (wbUnequalQ(x, y)) {
-            if (onUnSame != NULL) {
+            if (onUnSame != nullptr) {
               string str = wbString(
                   "Image pixels do not match at position ( row = ",
                   wbString(ii, ", col = ", jj, ", channel = ", kk,

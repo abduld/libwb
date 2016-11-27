@@ -2,10 +2,10 @@
 #include "wb.h"
 
 #ifdef WB_USE_SESSION_ID
-static char * _sessionId = NULL;
+static char * _sessionId = nullptr;
 char * _envSessionId() {
 #ifdef WB_USE_UNIX
-  if (_sessionId != NULL) {
+  if (_sessionId != nullptr) {
     char *env = std::getenv("SESSION_ID");
     if (env) {
       _sessionId = wbString_duplicate(env);
@@ -44,7 +44,7 @@ wbArg_t wbArg_new(int *argc, char ***argv) {
 }
 
 void wbArg_delete(wbArg_t arg) {
-  if (wbArg_getInputCount(arg) > 0 && wbArg_getInputFiles(arg) != NULL) {
+  if (wbArg_getInputCount(arg) > 0 && wbArg_getInputFiles(arg) != nullptr) {
     int ii;
     for (ii = 0; ii < wbArg_getInputCount(arg); ii++) {
       wbDelete(wbArg_getInputFile(arg, ii));
@@ -90,7 +90,7 @@ static char **parseInputFiles(char *arg, int *resCount) {
   files = wbNewArray(char *, count);
 
   token = strtok(arg, ",");
-  while (token != NULL) {
+  while (token != nullptr) {
     files[ii++] = wbString_duplicate(token);
     token       = strtok(NULL, ",");
   }
