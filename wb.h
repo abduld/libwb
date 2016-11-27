@@ -24,6 +24,8 @@
 #pragma warning(                                                          \
     disable : 4244 4056 4305 4800 4267 4996 4756 4661 4385 4101 4800)
 
+#define NOMINMAX // do not define min/max in the standard headers
+
 #define __func__ __FUNCTION__
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS 1
