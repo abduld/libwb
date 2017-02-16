@@ -1,33 +1,6 @@
 
 #include "wb.h"
 
-static void sort(int *data, int *key, int start, int end) {
-  if ((end - start + 1) > 1) {
-    int left = start, right = end;
-    int pivot = key[right];
-    while (left <= right) {
-      while (key[left] > pivot) {
-        left = left + 1;
-      }
-      while (key[right] < pivot) {
-        right = right - 1;
-      }
-      if (left <= right) {
-        int tmp     = key[left];
-        key[left]   = key[right];
-        key[right]  = tmp;
-        tmp         = data[left];
-        data[left]  = data[right];
-        data[right] = tmp;
-        left        = left + 1;
-        right       = right - 1;
-      }
-    }
-    sort(data, key, start, right);
-    sort(data, key, left, end);
-  }
-}
-
 EXTERN_C void CSRToJDS(int dim, int *csrRowPtr, int *csrColIdx,
                        float *csrData, int **jdsRowPerm, int **jdsRowNNZ,
                        int **jdsColStartIdx, int **jdsColIdx,
@@ -45,11 +18,11 @@ EXTERN_C void CSRToJDS(int dim, int *csrRowPtr, int *csrColIdx,
   }
 
   // Sort rows by number of non-zeros
-  sort(*jdsRowPerm, *jdsRowNNZ, 0, dim - 1);
+  wbSortByKey<int, int>(*jdsRowPerm, *jdsRowNNZ, 0, dim - 1);
 
   // Starting point of each compressed column
   int maxRowNNZ = (*jdsRowNNZ)[0]; // Largest number of non-zeros per row
-  DEBUG(printf("jdsRowNNZ = %d\n", maxRowNNZ));
+
   *jdsColStartIdx      = (int *)malloc(sizeof(int) * maxRowNNZ);
   (*jdsColStartIdx)[0] = 0; // First column starts at 0
   for (int col = 0; col < maxRowNNZ - 1; ++col) {

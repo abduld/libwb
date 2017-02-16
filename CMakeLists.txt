@@ -13,13 +13,19 @@ project(wb)
 
 set(current_dir "${CMAKE_CURRENT_SOURCE_DIR}")
 
-if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/cotire.cmake")
-  file(DOWNLOAD "https://raw.githubusercontent.com/sakra/cotire/master/CMake/cotire.cmake" "${CMAKE_CURRENT_BINARY_DIR}/cotire.cmake")
-endif()
-
-
 
 include(${current_dir}/sources.cmake)
+include(CheckCXXCompilerFlag)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_CXX11)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else()
+  message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 
 set(WBLIB_STATIC ${WBLIB})
 set(WBLIB_SHARED lib${WBLIB})

@@ -41,6 +41,9 @@ static wbBool wbSolution_listCorrectQ(const char *expectedOutputFile,
     T *solutionData;
 
     solutionData = (T *)wbSolution_getData(sol);
+    if (wbSolution_getType(sol) == "integral_vector/sorted") {
+        wbSort(solutionData, expectedRows * expectedColumns);
+    }
 
     for (ii = 0; ii < expectedRows; ii++) {
       for (jj = 0; jj < expectedColumns; jj++) {
@@ -122,7 +125,8 @@ static wbBool wbSolution_correctQ(char *expectedOutputFile,
   } else if (wbString_sameQ(wbSolution_getType(sol), "histogram")) {
     return wbSolution_listCorrectQ<unsigned char>(expectedOutputFile, sol,
                                                   "Integer");
-  } else if (wbString_sameQ(wbSolution_getType(sol), "integral_vector")) {
+  } else if (wbString_sameQ(wbSolution_getType(sol), "integral_vector/sorted") ||
+             wbString_sameQ(wbSolution_getType(sol), "integral_vector")) {
     return wbSolution_listCorrectQ<int>(expectedOutputFile, sol,
                                         "Integer");
   } else if (wbString_sameQ(wbSolution_getType(sol), "vector") ||
@@ -173,6 +177,9 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
              rows * columns * wbImage_channels * sizeof(wbReal_t));
       wbExport(outputFile, img);
       wbImage_delete(img);
+    } else if (wbString_sameQ(type, "integral_vector/sort")) {
+      wbSort((int *)data, rows*columns);
+      wbExport(outputFile, (int *)data, rows, columns);
     } else if (wbString_sameQ(type, "integral_vector")) {
       wbExport(outputFile, (int *)data, rows, columns);
     } else if (wbString_sameQ(type, "vector") ||

@@ -146,6 +146,7 @@ extern char *solutionJSON;
 #include "wbMD5.h"
 #include "wbMPI.h"
 #include "wbSolution.h"
+#include "wbSort.h"
 #include "wbSparse.h"
 #include "wbThrust.h"
 #include "wbTimer.h"
