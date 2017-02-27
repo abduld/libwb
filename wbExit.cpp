@@ -13,7 +13,7 @@ void wb_atExit(void) {
   using std::endl;
 
 #ifdef WB_USE_CUDA
-  cudaDeviceSynchronize();
+  // cudaDeviceSynchronize();
 #endif /* WB_USE_CUDA */
 
   int nranks = rankCount();

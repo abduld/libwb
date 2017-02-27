@@ -98,7 +98,7 @@
 #define WB_USE_JSON11 1
 #endif /* WB_USE_JSON11 */
 
-#if WB_USE_JSON11
+#if 1 || WB_USE_JSON11
 #include "vendor/json11.hpp"
 #endif /* WB_USE_JSON11 */
 
