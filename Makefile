@@ -3,13 +3,13 @@
 ##########################################
 WB_LIB_PATH=$(CURDIR)/lib
 WB_SRC_PATH=$(CURDIR)
-CXX=nvcc
+CXX=g++
 
 ##########################################
 ##########################################
 
 DEFINES=-DWB_USE_COURSERA -DWB_USE_CUDA -DWB_USE_JSON11=0
-CXX_FLAGS=-Xcompiler -fpic -O3 -g -std=c++11 -I . -I $(WB_SRC_PATH) -I /usr/local/cuda/include -L /usr/local/cuda/lib64 
+CXX_FLAGS=-fpic -O3 -g -std=c++11 -I . -I $(WB_SRC_PATH) -I /usr/local/cuda/include -L /usr/local/cuda/lib64 
 LIBS=-lm -std=c++11 -lcuda -L $(WB_LIB_PATH)
 
 ##########################################
