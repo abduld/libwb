@@ -174,7 +174,7 @@ wbBool wbSolution(char *expectedOutputFile, char *outputFile, char *type0,
                                   wbImage_getHeight(inputImage),
                                   wbImage_getChannels(inputImage));
       memcpy(wbImage_getData(img), wbImage_getData(inputImage),
-             rows * columns * wbImage_channels * sizeof(wbReal_t));
+             rows * columns * depth * sizeof(wbReal_t));
       wbExport(outputFile, img);
       wbImage_delete(img);
     } else if (wbString_sameQ(type, "integral_vector/sort")) {

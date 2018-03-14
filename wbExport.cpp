@@ -385,7 +385,8 @@ static wbExportKind_t _parseExportExtension(const char *file) {
   } else if (wbString_sameQ(extension, "text") ||
              wbString_sameQ(extension, "txt")) {
     kind = wbExportKind_text;
-  } else if (wbString_sameQ(extension, "ppm")) {
+  } else if (wbString_sameQ(extension, "ppm") ||
+             wbString_sameQ(extension, "pbm")) {
     kind = wbExportKind_ppm;
   } else {
     kind = wbExportKind_unknown;
