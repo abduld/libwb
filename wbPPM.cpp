@@ -90,7 +90,7 @@ wbImage_t wbPPM_import(const char *filename) {
   } else if (strcmp(header, "P6") != 0 && strcmp(header, "P6\n") != 0 &&
              strcmp(header, "P5") != 0 && strcmp(header, "P5\n") != 0 &&
              strcmp(header, "S6") != 0 && strcmp(header, "S6\n") != 0) {
-    printf("Could find magic number for %s\n", filename);
+    printf("Could not find magic number for %s\n", filename);
     goto cleanup;
   }
 
