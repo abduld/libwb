@@ -258,6 +258,10 @@ void wbLogger_append(wbLogLevel_t level, string msg, const char *file,
 
   wbLogger_incrementLength(logger);
 
+#ifdef TEXT_ONLY_OUTPUT
+  printf("%s\n",wbLogEntry_getMessage(elem));
+#endif /* TEXT_ONLY_OUTPUT */
+
   return;
 }
 
