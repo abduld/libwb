@@ -225,9 +225,15 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns,
   if (WB_USE_JSON11) {
     json11::Json json;
     if (res) {
+#ifdef TEXT_ONLY_OUTPUT
+      printf("The solution is correct\n");
+#endif
       json = json11::Json::object{{"correctq", true},
                                   {"message", "The solution is correct"}};
     } else {
+#ifdef TEXT_ONLY_OUTPUT
+      printf("The solution is NOT correct\n");
+#endif
       json = json11::Json::object{{"correctq", false},
                                   {"message", _solution_correctQ}};
     }
@@ -243,12 +249,18 @@ wbBool wbSolution(wbArg_t arg, void *data, int rows, int columns,
     solutionJSON = wbString_duplicate(json.string_value());
   } else {
     if (res) {
+#ifdef TEXT_ONLY_OUTPUT
+      printf("Solution is correct\n");
+#endif
       ss << "{\n";
       ss << wbString_quote("correctq") << ": true,\n";
       ss << wbString_quote("message") << ": "
          << wbString_quote("Solution is correct.") << "\n";
       ss << "}";
     } else {
+#ifdef TEXT_ONLY_OUTPUT
+      printf("Solution is NOT correct\n");
+#endif
       ss << "{\n";
       ss << wbString_quote("correctq") << ": false,\n";
       ss << wbString_quote("message") << ": "
