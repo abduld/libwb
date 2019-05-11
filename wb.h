@@ -67,11 +67,13 @@
   wbAssert(0);                                                            \
   exit(1)
 
+#ifndef TEXT_ONLY_OUTPUT
 #ifdef WB_USE_COURSERA
 #define wbLogger_printOnExit 1
 #else /* WB_USE_COURSERA */
 #define wbLogger_printOnLog 1
 #endif /* WB_USE_COURSERA */
+#endif /* TEXT_ONLY_OUTPUT */
 
 /***********************************************************/
 /***********************************************************/
